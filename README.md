@@ -16,7 +16,7 @@
 - **Role:**
   - UI/UX Design
 
-## Daniel To 📱:
+## Daniel To 📵:
 - **Role:**
   - Testing Lead
 
