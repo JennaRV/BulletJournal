@@ -12,3 +12,6 @@
   - Team Manager
   - Documentation Lead
 
+## Daniel To 📱:
+- **Role:**
+  - Testing Lead
