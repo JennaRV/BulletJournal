@@ -1,23 +1,19 @@
 # Team Rocket
-## Jenna Vincent 📊
-- **Role:**
+
+- Jenna Vincent 📊
   - Data Modeler
 
-## Bao Nguyen 🔧:
-- **Role:**
+- Bao Nguyen 🔧
   - Lead programmer
 
-## Brian Ramos 🥭:
-- **Role:**
+- Brian Ramos 🥭
   - Team Manager
   - Documentation Lead
  
-## Juan Guevara 📱
-- **Role:**
+- Juan Guevara 📱
   - UI/UX Design
 
-## Daniel To 📵:
-- **Role:**
+- Daniel To 📵
   - Testing Lead
 
 [Repo link](https://github.com/JennaRV/BulletJournal)
