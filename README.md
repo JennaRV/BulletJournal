@@ -12,7 +12,7 @@
   - Team Manager
   - Documentation Lead
  
-  - ## Juan Guevara 📱
+## Juan Guevara 📱
 - **Role:**
   - UI/UX Design
 
