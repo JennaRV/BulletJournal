@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 android {
@@ -61,4 +63,20 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation ("androidx.compose.ui:ui:1.6.2")
+
+    implementation ("androidx.navigation:navigation-compose:2.4.0-beta01")
+
+//    implementation("io.supabase:gotrue-kt:<latest_version>")
+//    implementation("io.supabase:postgrest-kt:<latest_version>")
+//    implementation("io.supabase:realtime-kt:<latest_version>")
+//    implementation("io.supabase:storage-kt:<latest_version>")
+
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:0.7.6")
+    implementation("io.ktor:ktor-client-cio:2.3.8")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+
 }
