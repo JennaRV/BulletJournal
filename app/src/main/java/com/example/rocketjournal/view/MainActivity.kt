@@ -20,6 +20,21 @@ import io.github.jan.supabase.postgrest.Postgrest
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import io.github.jan.supabase.SupabaseClient
+//import io.supabase.client.SupabaseClient.Companion.create
+//import io.supabase.client.PostgrestClient
+//import io.supabase.client.SupabaseClient
+//import io.supabase.client.SupabaseClient.Companion.create
+
+
+val supabase = createSupabaseClient(
+    supabaseUrl = "https://mwkkgjpthaidmfbrwcse.supabase.co",
+    supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13a2tnanB0aGFpZG1mYnJ3Y3NlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY1NTA0MTQsImV4cCI6MjAyMjEyNjQxNH0.zlSCONZgUlS2FgNeCdBzvNo_G-2sMxgAhwr9i2fQBI4"
+) {
+    install(Postgrest)
+}
+
+
 
 class MainActivity : ComponentActivity() {
 
@@ -38,6 +53,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+
+
     @Composable
     fun LoginScreen(navController: NavController) {
         AppBackground {
@@ -48,6 +65,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun SignUp(navController: NavController){
         AppBackground {
+            SignUpForm(navController)
 
         }
     }

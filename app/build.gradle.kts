@@ -74,6 +74,10 @@ dependencies {
 //    implementation("io.supabase:realtime-kt:<latest_version>")
 //    implementation("io.supabase:storage-kt:<latest_version>")
 
+    implementation(platform("io.github.jan-tennert.supabase:bom:2.1.4"))
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+    implementation("io.ktor:ktor-client-android:2.3.8")
+
     implementation("io.github.jan-tennert.supabase:postgrest-kt:0.7.6")
     implementation("io.ktor:ktor-client-cio:2.3.8")
 
