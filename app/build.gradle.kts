@@ -66,7 +66,6 @@ dependencies {
 
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation ("androidx.compose.ui:ui:1.6.2")
-
     implementation ("androidx.navigation:navigation-compose:2.4.0-beta01")
 
 //    implementation("io.supabase:gotrue-kt:<latest_version>")

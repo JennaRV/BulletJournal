@@ -1,6 +1,8 @@
-package com.example.rocketjournal.view
+package com.example.rocketjournal
 
-import AppBackground
+
+import AppBackgroundFront
+import AppBackgroundGeneral
 import LoginButtons
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -20,6 +22,7 @@ import io.github.jan.supabase.postgrest.Postgrest
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.rocketjournal.view.Navigation
 
 class MainActivity : ComponentActivity() {
 
@@ -29,25 +32,21 @@ class MainActivity : ComponentActivity() {
         setContent {
             RocketJournalTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "login") {
-                    composable("login") { LoginScreen(navController) }
-                    composable("signup") { SignUp(navController) }
-                    // Define other destinations here
-                }
+                Navigation(navController = navController)
             }
         }
     }
 
     @Composable
     fun LoginScreen(navController: NavController) {
-        AppBackground {
+        AppBackgroundFront {
             LoginButtons(navController)
         }
     }
 
     @Composable
     fun SignUp(navController: NavController){
-        AppBackground {
+        AppBackgroundGeneral {
 
         }
     }
