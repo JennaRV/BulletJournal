@@ -47,7 +47,7 @@ please do!
         ) {
             //Spacer(modifier = Modifier.weight(0.6f))
             Button(
-                onClick = { /* TODO */ },
+                onClick = { navController.navigate("loginPage") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),

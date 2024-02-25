@@ -48,6 +48,7 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = "login") {
                     composable("login") { LoginScreen(navController) }
                     composable("signup") { SignUp(navController) }
+                    composable("loginPage"){LoginPage(navController)}
                     // Define other destinations here
                 }
             }
@@ -82,6 +83,28 @@ class MainActivity : ComponentActivity() {
 
         AppBackground {
             SignUpForm(navController)
+
+        }
+    }
+
+    @Composable
+    fun LoginPage(
+        navController: NavController,
+        viewModel: SupabaseAuthViewModel = viewModel()
+    ) {
+        val context = LocalContext.current
+        val userState by viewModel.userState
+
+        var userEmail by remember { mutableStateOf("") }
+        var userPassword by remember { mutableStateOf("") }
+        var currentUserState by remember { mutableStateOf("") }
+
+        LaunchedEffect(Unit) {
+            viewModel.isUserLoggedIn(context)
+        }
+
+        AppBackground {
+            LogInForm(navController)
 
         }
     }
