@@ -18,7 +18,7 @@ import io.ktor.websocket.Frame
 
 @Composable
 fun Navigation(navController: NavHostController){
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = "login") {
 
         composable("home") { MainDashboard(navController) }
         composable("calendar") {  }
@@ -27,8 +27,9 @@ fun Navigation(navController: NavHostController){
         composable("habit") {  }
         composable("settings") {  }
         composable("profile") {  }
-        composable("login") {  }
-        composable("signup") {  }
+        composable("login") { LoginScreen(navController) }
+        composable("signup") { SignUp(navController) }
+        composable("loginPage"){LoginPage(navController)}
         // Define other destinations here
     }
 }

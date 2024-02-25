@@ -22,26 +22,24 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rocketjournal.viewmodel.MainViewModel
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.navigation.NavController
 
 
 @Composable
 fun LoginButtons(navController: NavController) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
 
         Column(
-/*
-These buttons are not going to be positioned relative to the screen size, I have tried to get it to
-work that way using a spacer but it just sends them to the bottom, if you are able to get it to work
-please do!
- */
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 40.dp)
-                .absolutePadding(top = 100.dp),
+                .absolutePadding(top = screenHeight * 0.25f),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
