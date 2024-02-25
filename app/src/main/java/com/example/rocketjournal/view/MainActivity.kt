@@ -1,6 +1,6 @@
 package com.example.rocketjournal.view
 
-import AppBackground
+import AppBackgroundFront
 import LoginButtons
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -45,67 +45,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             RocketJournalTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "login") {
-                    composable("login") { LoginScreen(navController) }
-                    composable("signup") { SignUp(navController) }
-                    composable("loginPage"){LoginPage(navController)}
-                    // Define other destinations here
-                }
+                Navigation(navController = navController)
             }
-        }
-    }
-
-
-    //The Launcher page when user opens the app
-    @Composable
-    fun LoginScreen(navController: NavController) {
-        AppBackground {
-            LoginButtons(navController)
-        }
-    }
-
-    //Where the user will sign up for
-    @Composable
-    fun SignUp(
-        navController: NavController,
-        viewModel: SupabaseAuthViewModel = viewModel()
-    ){
-        val context = LocalContext.current
-        val userState by viewModel.userState
-
-        var userEmail by remember { mutableStateOf("") }
-        var userPassword by remember { mutableStateOf("") }
-        var currentUserState by remember { mutableStateOf("") }
-
-        LaunchedEffect(Unit){
-            viewModel.isUserLoggedIn(context)
-        }
-
-        AppBackground {
-            SignUpForm(navController)
-
-        }
-    }
-
-    @Composable
-    fun LoginPage(
-        navController: NavController,
-        viewModel: SupabaseAuthViewModel = viewModel()
-    ) {
-        val context = LocalContext.current
-        val userState by viewModel.userState
-
-        var userEmail by remember { mutableStateOf("") }
-        var userPassword by remember { mutableStateOf("") }
-        var currentUserState by remember { mutableStateOf("") }
-
-        LaunchedEffect(Unit) {
-            viewModel.isUserLoggedIn(context)
-        }
-
-        AppBackground {
-            LogInForm(navController)
-
         }
     }
 }

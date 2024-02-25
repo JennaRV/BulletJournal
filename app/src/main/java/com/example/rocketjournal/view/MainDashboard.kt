@@ -1,7 +1,8 @@
 package com.example.rocketjournal.view
 
 
-import AppBackground
+
+import AppBackgroundGeneral
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,7 +36,7 @@ import androidx.navigation.NavController
 @Composable
 fun MainDashboard(navController: NavController) {
 
-    AppBackground {
+    AppBackgroundGeneral {
         val screenWidth = LocalConfiguration.current.screenWidthDp.dp
         val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
