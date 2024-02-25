@@ -10,24 +10,12 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\peype\.android\avd\Medium_Phone_API_34.avd" />
+                  <value value="C:\Users\peype\.android\avd\Smaller_Phone.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-02-21T23:14:37.288244600Z" />
-          <multipleDevicesSelectedInDropDown value="true" />
-          <runningDeviceTargetsSelectedWithDialog>
-            <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\peype\.android\avd\Pixel_7_Pro_API_34_2.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </runningDeviceTargetsSelectedWithDialog>
+          <timeTargetWasSelectedWithDropDown value="2024-02-25T03:45:38.311419300Z" />
           <targetsSelectedWithDialog>
             <Target>
               <type value="QUICK_BOOT_TARGET" />
@@ -35,6 +23,15 @@
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
                   <value value="C:\Users\peype\.android\avd\Smaller_Phone.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\peype\.android\avd\Pixel_7_Pro_API_34_2.avd" />
                 </Key>
               </deviceKey>
             </Target>

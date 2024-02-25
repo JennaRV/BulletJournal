@@ -7,7 +7,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -20,19 +26,14 @@ import io.github.jan.supabase.postgrest.Postgrest
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.rocketjournal.viewmodel.SupabaseAuthViewModel
 import io.github.jan.supabase.SupabaseClient
 //import io.supabase.client.SupabaseClient.Companion.create
 //import io.supabase.client.PostgrestClient
 //import io.supabase.client.SupabaseClient
 //import io.supabase.client.SupabaseClient.Companion.create
 
-
-val supabase = createSupabaseClient(
-    supabaseUrl = "https://mwkkgjpthaidmfbrwcse.supabase.co",
-    supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13a2tnanB0aGFpZG1mYnJ3Y3NlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY1NTA0MTQsImV4cCI6MjAyMjEyNjQxNH0.zlSCONZgUlS2FgNeCdBzvNo_G-2sMxgAhwr9i2fQBI4"
-) {
-    install(Postgrest)
-}
+import io.github.jan.supabase.gotrue.*
 
 
 
@@ -54,7 +55,7 @@ class MainActivity : ComponentActivity() {
     }
 
 
-
+    //The Launcher page when user opens the app
     @Composable
     fun LoginScreen(navController: NavController) {
         AppBackground {
@@ -62,8 +63,23 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    //Where the user will sign up for
     @Composable
-    fun SignUp(navController: NavController){
+    fun SignUp(
+        navController: NavController,
+        viewModel: SupabaseAuthViewModel = viewModel()
+    ){
+        val context = LocalContext.current
+        val userState by viewModel.userState
+
+        var userEmail by remember { mutableStateOf("") }
+        var userPassword by remember { mutableStateOf("") }
+        var currentUserState by remember { mutableStateOf("") }
+
+        LaunchedEffect(Unit){
+            viewModel.isUserLoggedIn(context)
+        }
+
         AppBackground {
             SignUpForm(navController)
 

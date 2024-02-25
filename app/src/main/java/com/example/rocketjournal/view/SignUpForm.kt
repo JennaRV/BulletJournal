@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon.Companion.Text
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.SemanticsProperties.Text
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,7 +34,10 @@ import androidx.compose.ui.text.input.KeyboardType.Companion.Text
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.rocketjournal.model.dataModel.UserState
+import com.example.rocketjournal.viewmodel.SupabaseAuthViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,6 +46,13 @@ fun SignUpForm(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    val authViewModel: SupabaseAuthViewModel = viewModel()
+    val context = LocalContext.current
+    val userState by authViewModel.userState
+
+    var userEmail by remember { mutableStateOf("") }
+    var userPassword by remember { mutableStateOf("") }
+    var currentUserState by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -115,7 +126,15 @@ fun SignUpForm(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { navController.navigate("") },
+                onClick = {
+                    //navController.navigate("")
+                    authViewModel.signUp(
+                        context,
+                        email,
+                        password
+                    )
+
+                          },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -131,6 +150,25 @@ fun SignUpForm(navController: NavController) {
                     color = Color(red = 100, green = 110, blue = 245)
                 )
             }
+            
+            when(userState){
+                is UserState.Loading -> {
+                    LoadingComponent()
+                }
+                is UserState.Success -> {
+                    val message = (userState as UserState.Success).message
+                    currentUserState = message
+                }
+                is UserState.Error -> {
+                    val message = (userState as UserState.Error).message
+                    currentUserState = message
+                }
+            }
+            
+            if(currentUserState.isNotEmpty()){
+                Text(text = currentUserState)
+            }
+
         }
     }
 }

@@ -1,5 +1,5 @@
 //package com.example.rocketjournal.model
-//
+//import io.github.jan
 //import io.supabase.client.PostgrestClient
 //import io.supabase.client.SupabaseClient
 //import io.supabase.client.SupabaseClient.Companion.create
