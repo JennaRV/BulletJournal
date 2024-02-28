@@ -1,28 +1,64 @@
 package com.example.rocketjournal.view
 
 import LoginButtons
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+
+import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposeCompilerApi
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
+
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.rocketjournal.viewmodel.ListsViewModel
+import com.example.test.CalendarScreen
+
 import io.ktor.websocket.Frame
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun Navigation(navController: NavHostController){
-    NavHost(navController = navController, startDestination = "list") {
+
+    NavHost(navController = navController, startDestination = "home") {
 
         composable("home") { MainDashboard(navController) }
-        composable("calendar") {  }
+        composable("calendar") { CalendarScreen(navController)  }
         composable("list") { ListsScreen(navController, viewModel = ListsViewModel()) }
         composable("journal") {  }
         composable("habit") {  }
@@ -38,30 +74,71 @@ fun Navigation(navController: NavHostController){
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    Row (){
-        Button(onClick = {}) {
-            Row {
-                Text(text = "Journals")
-            }
-        }
-        Button(onClick = {navController.navigate("list")}) {
-            Row {
-                Text(text = "List")
-            }
-        }
-        Button(onClick = { navController.navigate("home")}) {
-            Row {
-                Text(text = "Home")
-            }
-        }
-        Button(onClick = { navController.navigate("tasks")}) {
-            Row {
-                Text(text = "Tasks")
-            }
-        }
+    //List for the location and assigning image for icon
+    //TODO: find images to put in the res/drawable folder implement it,
+    //  Icons.Filled.Home is a replacement for now.
+    val actions = listOf(
+        "journal" to Icons.Filled.Home,
+        "list" to Icons.Filled.Home,
+        "home" to Icons.Filled.Home,
+        "calendar" to Icons.Filled.Home,
+        "habit" to Icons.Filled.Home
+    )
+    Column {
 
+        Spacer(modifier = Modifier.weight(0.1f))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFF8B93FC))
+                .border(1.dp, Color.Black, shape = RectangleShape)
+                .height(60.dp)
+
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                actions.forEach { (location, icon) ->
+                    CircleIcon {
+                        ElevatedButtonWithIcon(
+                            icon = icon,
+                            navController = navController,
+                            location = location
+                        )
+                    }
+                }
+            }
+        }
 
     }
 }
+
+@Composable
+fun ElevatedButtonWithIcon(icon: ImageVector, navController: NavController, location: String) {
+    ElevatedButton(
+        onClick = { navController.navigate(location) },
+        modifier = Modifier.size(50.dp),
+        shape = CircleShape,
+        colors = ButtonDefaults.elevatedButtonColors(
+            Color(0xFFBCC0FF)
+        )
+    ) {
+        Icon(icon, contentDescription = location)
+    }
+}
+@Composable
+fun CircleIcon(content: @Composable () -> Unit){
+    Box(
+        modifier = Modifier
+            .size(50.dp)
+            .clip(CircleShape)
+            .border(1.dp, Color.Black, CircleShape)
+    ){
+        content()
+    }
+}
+
 
 
