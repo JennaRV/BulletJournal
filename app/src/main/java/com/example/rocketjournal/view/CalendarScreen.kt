@@ -29,9 +29,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.rocketjournal.view.BottomNavigationBar
 
 @Composable
-fun CalendarScreen() {
+fun CalendarScreen(navController: NavController) {
     val primaryColor = Color(0xFF606BD1)
     val secondaryColor = Color(0xFFBA355D)
     Column(modifier = Modifier
@@ -90,6 +92,7 @@ fun CalendarScreen() {
             ) {
                 journalEntry(text = "Journal Entry #2")
             }
+            BottomNavigationBar(navController = navController)
         }
     }
 }
