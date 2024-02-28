@@ -38,6 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.rocketjournal.model.dataModel.UserState
 import com.example.rocketjournal.viewmodel.SupabaseAuthViewModel
+import com.example.rocketjournal.viewmodel.SupabaseViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,11 +48,13 @@ fun SignUpForm(navController: NavController) {
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     val authViewModel: SupabaseAuthViewModel = viewModel()
+    val supabaseViewModel: SupabaseViewModel = viewModel()
     val context = LocalContext.current
     val userState by authViewModel.userState
 
-    var userEmail by remember { mutableStateOf("") }
-    var userPassword by remember { mutableStateOf("") }
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     var currentUserState by remember { mutableStateOf("") }
 
     Box(
@@ -72,6 +75,60 @@ fun SignUpForm(navController: NavController) {
         ) {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
+                value = firstName,
+                onValueChange = { firstName = it },
+                label = { Text("First Name") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedLabelColor = Color.White, // Label color when focused
+                    unfocusedLabelColor = Color.White, // Label color when not focused
+                    focusedBorderColor = Color.White, // Border color when focused
+                    unfocusedBorderColor = Color.White, // Border color when not focused
+                ),
+                shape = RoundedCornerShape(60.dp)
+
+            )
+            Spacer(modifier = Modifier.height(1.dp))
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = lastName,
+                onValueChange = { lastName= it },
+                label = { Text("Last Name") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedLabelColor = Color.White, // Label color when focused
+                    unfocusedLabelColor = Color.White, // Label color when not focused
+                    focusedBorderColor = Color.White, // Border color when focused
+                    unfocusedBorderColor = Color.White, // Border color when not focused
+                ),
+                shape = RoundedCornerShape(60.dp)
+
+            )
+            Spacer(modifier = Modifier.height(1.dp))
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = username,
+                onValueChange = { username = it },
+                label = { Text("Username") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedLabelColor = Color.White, // Label color when focused
+                    unfocusedLabelColor = Color.White, // Label color when not focused
+                    focusedBorderColor = Color.White, // Border color when focused
+                    unfocusedBorderColor = Color.White, // Border color when not focused
+                ),
+                shape = RoundedCornerShape(60.dp)
+
+            )
+            Spacer(modifier = Modifier.height(1.dp))
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
                 value = email,
                 onValueChange = { email = it },
                 label = { Text("Email") },
@@ -86,7 +143,7 @@ fun SignUpForm(navController: NavController) {
                 shape = RoundedCornerShape(60.dp)
 
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(1.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = password,
@@ -105,7 +162,7 @@ fun SignUpForm(navController: NavController) {
                 shape = RoundedCornerShape(60.dp)
 
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(1.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = confirmPassword,
@@ -124,10 +181,11 @@ fun SignUpForm(navController: NavController) {
                 shape = RoundedCornerShape(60.dp)
 
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(1.dp))
             Button(
                 onClick = {
-                    //navController.navigate("")
+                    navController.navigate("home")
+                    supabaseViewModel.saveUser(firstName,lastName,username,email,password)
                     authViewModel.signUp(
                         context,
                         email,

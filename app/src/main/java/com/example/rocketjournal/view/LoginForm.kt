@@ -108,7 +108,7 @@ fun LogInForm(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                    //navController.navigate("")
+                    navController.navigate("home")
                     authViewModel.login(
                         context,
                         email,
