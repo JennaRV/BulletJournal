@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rocketjournal.model.dataModel.UserState
 import com.example.rocketjournal.model.network.SupabaseClient
-import com.example.rocketjournal.utils.SharedPreferanceHelper
+import com.example.rocketjournal.utils.SharedPreferenceHelper
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.gotrue.providers.builtin.Email
 import kotlinx.coroutines.launch
@@ -39,13 +39,13 @@ class SupabaseAuthViewModel: ViewModel() {
     private fun saveToken(context: Context){
         viewModelScope.launch {
             val accessToken = SupabaseClient.client.auth.currentAccessTokenOrNull() ?: ""
-            val sharedPref = SharedPreferanceHelper(context)
+            val sharedPref = SharedPreferenceHelper(context)
             sharedPref.saveStringData("accessToken", accessToken)
         }
     }
 
     private fun getToken(context: Context): String ? {
-        val sharedPref = SharedPreferanceHelper(context)
+        val sharedPref = SharedPreferenceHelper(context)
         return sharedPref.getStringData("accessToken")
     }
 

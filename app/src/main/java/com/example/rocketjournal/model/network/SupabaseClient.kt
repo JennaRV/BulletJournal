@@ -12,5 +12,6 @@ object SupabaseClient {
     ) {
         install(Auth)
         install(Postgrest)
+
     }
 }

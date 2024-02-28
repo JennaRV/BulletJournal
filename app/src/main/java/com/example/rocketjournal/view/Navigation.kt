@@ -14,15 +14,16 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.rocketjournal.viewmodel.ListsViewModel
 import io.ktor.websocket.Frame
 
 @Composable
 fun Navigation(navController: NavHostController){
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "list") {
 
         composable("home") { MainDashboard(navController) }
         composable("calendar") {  }
-        composable("list") {  }
+        composable("list") { ListsScreen(navController, viewModel = ListsViewModel()) }
         composable("journal") {  }
         composable("habit") {  }
         composable("settings") {  }
@@ -43,7 +44,7 @@ fun BottomNavigationBar(navController: NavController) {
                 Text(text = "Journals")
             }
         }
-        Button(onClick = {}) {
+        Button(onClick = {navController.navigate("list")}) {
             Row {
                 Text(text = "List")
             }
@@ -53,9 +54,14 @@ fun BottomNavigationBar(navController: NavController) {
                 Text(text = "Home")
             }
         }
-
+        Button(onClick = { navController.navigate("tasks")}) {
+            Row {
+                Text(text = "Tasks")
+            }
+        }
 
 
     }
 }
+
 
