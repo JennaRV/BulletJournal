@@ -127,7 +127,7 @@ fun SignUpForm(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                    //navController.navigate("")
+                    navController.navigate("login")
                     authViewModel.signUp(
                         context,
                         email,
@@ -158,6 +158,7 @@ fun SignUpForm(navController: NavController) {
                 is UserState.Success -> {
                     val message = (userState as UserState.Success).message
                     currentUserState = message
+                    navController.navigate("login")
                 }
                 is UserState.Error -> {
                     val message = (userState as UserState.Error).message

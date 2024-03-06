@@ -47,23 +47,32 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.test.CalendarScreen
+import com.example.test.WeeklyScreen
 import io.ktor.websocket.Frame
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun Navigation(navController: NavHostController){
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = "login") {
 
+        // Main Navigation
         composable("home") { MainDashboard(navController) }
         composable("calendar") { CalendarScreen(navController)  }
         composable("list") {  }
         composable("journal") {  }
         composable("habit") {  }
+        // Setting Navigation
         composable("settings") {  }
         composable("profile") {  }
+        // Login Navigation
         composable("login") { LoginScreen(navController) }
         composable("signup") { SignUp(navController) }
         composable("loginPage"){LoginPage(navController)}
+        // Other Navigation
+        composable("weekly") { WeeklyScreen(navController) }
+
+
+
         // Define other destinations here
     }
 }

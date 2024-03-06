@@ -108,12 +108,13 @@ fun LogInForm(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                    //navController.navigate("")
-                    authViewModel.login(
-                        context,
-                        email,
-                        password
-                    )
+                    if(currentUserState.isNotEmpty()) {
+                        authViewModel.login(
+                            context,
+                            email,
+                            password
+                        )
+                    }
 
                 },
                 modifier = Modifier
@@ -139,6 +140,7 @@ fun LogInForm(navController: NavController) {
                 is UserState.Success -> {
                     val message = (userState as UserState.Success).message
                     currentUserState = message
+                    navController.navigate("home")
                 }
                 is UserState.Error -> {
                     val message = (userState as UserState.Error).message

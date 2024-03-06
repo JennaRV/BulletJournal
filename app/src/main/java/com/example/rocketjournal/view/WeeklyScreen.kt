@@ -1,5 +1,6 @@
 package com.example.test
 
+import android.widget.ToggleButton
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,14 +28,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.rocketjournal.view.BottomNavigationBar
 
 @Composable
-fun WeeklyScreen() {
+fun WeeklyScreen(navController: NavController) {
     val primaryColor = Color(0xFF606BD1)
     val secondaryColor = Color(0xFFBA355D)
     Column(modifier = Modifier
         .background(primaryColor)
-        .fillMaxSize()
+
         .drawBehind {
             drawCircle(
                 color = secondaryColor,
@@ -47,12 +50,12 @@ fun WeeklyScreen() {
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            toggleButton()
+            ToggleButton(navController)
         }
 
         Row(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(10.dp)
         ) {
             ThreePartWidget()
         }
@@ -65,6 +68,7 @@ fun WeeklyScreen() {
         DayEntry("Fri", 23)
         DayEntry("Sat", 24)
     }
+    BottomNavigationBar(navController)
 }
 
 @Preview
@@ -129,7 +133,10 @@ fun DayEntry(day: String, date: Int) {
             .padding(16.dp)
             .background(mainColor, shape = RoundedCornerShape(10.dp))
             .fillMaxWidth()
-            .border(BorderStroke(width = 1.dp, color = Color.Black),  shape = RoundedCornerShape(10.dp))
+            .border(
+                BorderStroke(width = 1.dp, color = Color.Black),
+                shape = RoundedCornerShape(10.dp)
+            )
     ) {
         Text(
             "$day $date",
