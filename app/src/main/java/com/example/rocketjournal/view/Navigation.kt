@@ -46,7 +46,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.rocketjournal.viewmodel.ListsViewModel
+import com.example.rocketjournal.model.Repositories.AuthenticationRepository
+import com.example.rocketjournal.viewmodel.SignUpViewModel
 import com.example.test.CalendarScreen
 
 import io.ktor.websocket.Frame
@@ -55,11 +56,11 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 @Composable
 fun Navigation(navController: NavHostController){
 
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = "login") {
 
         composable("home") { MainDashboard(navController) }
         composable("calendar") { CalendarScreen(navController)  }
-        composable("list") { ListsScreen(navController, viewModel = ListsViewModel()) }
+        composable("list") { ListsScreen(navController) }
         composable("journal") {  }
         composable("habit") {  }
         composable("settings") {  }

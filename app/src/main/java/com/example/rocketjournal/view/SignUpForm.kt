@@ -18,6 +18,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,21 +38,18 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.rocketjournal.model.dataModel.UserState
-import com.example.rocketjournal.viewmodel.SupabaseAuthViewModel
-import com.example.rocketjournal.viewmodel.SupabaseViewModel
+import com.example.rocketjournal.viewmodel.SignUpViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpForm(navController: NavController) {
+fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    val authViewModel: SupabaseAuthViewModel = viewModel()
-    val supabaseViewModel: SupabaseViewModel = viewModel()
     val context = LocalContext.current
-    val userState by authViewModel.userState
-
+    //val signUpViewModel: SignUpViewModel
+   // val userState: UserState
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
@@ -73,6 +71,8 @@ fun SignUpForm(navController: NavController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            var email = signUpViewModel.email.collectAsState(initial = "")
+            val password = signUpViewModel.password.collectAsState()
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = firstName,
@@ -129,8 +129,8 @@ fun SignUpForm(navController: NavController) {
             Spacer(modifier = Modifier.height(1.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = email,
-                onValueChange = { email = it },
+                value = email.value,
+                onValueChange = { signUpViewModel.onEmailChange(it) },
                 label = { Text("Email") },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedTextColor = Color.White,
@@ -146,8 +146,8 @@ fun SignUpForm(navController: NavController) {
             Spacer(modifier = Modifier.height(1.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = password,
-                onValueChange = { password = it },
+                value = password.value,
+                onValueChange = { signUpViewModel.onPasswordChange(it) },
                 label = { Text("Password") },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -185,12 +185,8 @@ fun SignUpForm(navController: NavController) {
             Button(
                 onClick = {
                     navController.navigate("home")
-                    supabaseViewModel.saveUser(firstName,lastName,username,email,password)
-                    authViewModel.signUp(
-                        context,
-                        email,
-                        password
-                    )
+        //            supabaseViewModel.saveUser(firstName,lastName,username,email,password)
+                    signUpViewModel.onSignUp()
 
                           },
                 modifier = Modifier
@@ -208,24 +204,24 @@ fun SignUpForm(navController: NavController) {
                     color = Color(red = 100, green = 110, blue = 245)
                 )
             }
-            
-            when(userState){
-                is UserState.Loading -> {
-                    LoadingComponent()
-                }
-                is UserState.Success -> {
-                    val message = (userState as UserState.Success).message
-                    currentUserState = message
-                }
-                is UserState.Error -> {
-                    val message = (userState as UserState.Error).message
-                    currentUserState = message
-                }
-            }
-            
-            if(currentUserState.isNotEmpty()){
-                Text(text = currentUserState)
-            }
+
+//            when(userState){
+//                is UserState.Loading -> {
+//                    LoadingComponent()
+//                }
+//                is UserState.Success -> {
+//                    val message = (userState as UserState.Success).message
+//                    currentUserState = message
+//                }
+//                is UserState.Error -> {
+//                    val message = (userState as UserState.Error).message
+//                    currentUserState = message
+//                }
+//            }
+//
+//            if(currentUserState.isNotEmpty()){
+//                Text(text = currentUserState)
+//            }
 
         }
     }
