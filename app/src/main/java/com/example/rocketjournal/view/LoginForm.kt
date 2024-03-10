@@ -18,6 +18,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,18 +38,16 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.rocketjournal.model.dataModel.UserState
-import com.example.rocketjournal.viewmodel.SupabaseAuthViewModel
+import com.example.rocketjournal.viewmodel.SignInViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LogInForm(navController: NavController) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun LogInForm(navController: NavController, signInViewModel: SignInViewModel) {
+//    var email by remember { mutableStateOf("") }
+//    var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    val authViewModel: SupabaseAuthViewModel = viewModel()
     val context = LocalContext.current
-    val userState by authViewModel.userState
 
     var userEmail by remember { mutableStateOf("") }
     var userPassword by remember { mutableStateOf("") }
@@ -70,10 +69,12 @@ fun LogInForm(navController: NavController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val email = signInViewModel.email.collectAsState(initial = "")
+            val password = signInViewModel.password.collectAsState()
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = email,
-                onValueChange = { email = it },
+                value = email.value,
+                onValueChange = { signInViewModel.onEmailChange(it) },
                 label = { Text("Email") },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedTextColor = Color.White,
@@ -89,8 +90,8 @@ fun LogInForm(navController: NavController) {
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = password,
-                onValueChange = { password = it },
+                value = password.value,
+                onValueChange = { signInViewModel.onPasswordChange(it) },
                 label = { Text("Password") },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -108,6 +109,10 @@ fun LogInForm(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
+
+                    navController.navigate("home")
+                    signInViewModel.onSignIn()
+
                     if(currentUserState.isNotEmpty()) {
                         authViewModel.login(
                             context,
@@ -132,6 +137,26 @@ fun LogInForm(navController: NavController) {
                     color = Color(red = 100, green = 110, blue = 245)
                 )
             }
+
+
+//            when(userState){
+//                is UserState.Loading -> {
+//                    LoadingComponent()
+//                }
+//                is UserState.Success -> {
+//                    val message = (userState as UserState.Success).message
+//                    currentUserState = message
+//                }
+//                is UserState.Error -> {
+//                    val message = (userState as UserState.Error).message
+//                    currentUserState = message
+//                }
+//            }
+//
+//            if(currentUserState.isNotEmpty()){
+//                Text(text = currentUserState)
+//            }
+//
 
             when(userState){
                 is UserState.Loading -> {
