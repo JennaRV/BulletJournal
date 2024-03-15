@@ -185,9 +185,13 @@ fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
             Button(
                 onClick = {
 
-                    navController.navigate("home")
+
         //            supabaseViewModel.saveUser(firstName,lastName,username,email,password)
                     signUpViewModel.onSignUp()
+
+                    navController.navigate("login")
+
+
                           },
                 modifier = Modifier
                     .fillMaxWidth()

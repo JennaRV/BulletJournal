@@ -109,12 +109,11 @@ fun LogInForm(navController: NavController, signInViewModel: SignInViewModel) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-
                     navController.navigate("home")
                     signInViewModel.onSignIn()
 
-
-                },
+                    }
+                ,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -150,6 +149,8 @@ fun LogInForm(navController: NavController, signInViewModel: SignInViewModel) {
 //                Text(text = currentUserState)
 //            }
 //
+
+
 
 
 
