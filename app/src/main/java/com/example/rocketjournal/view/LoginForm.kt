@@ -109,8 +109,17 @@ fun LogInForm(navController: NavController, signInViewModel: SignInViewModel) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
+
                     navController.navigate("home")
                     signInViewModel.onSignIn()
+
+                    if(currentUserState.isNotEmpty()) {
+                        authViewModel.login(
+                            context,
+                            email,
+                            password
+                        )
+                    }
 
                 },
                 modifier = Modifier
@@ -128,6 +137,7 @@ fun LogInForm(navController: NavController, signInViewModel: SignInViewModel) {
                     color = Color(red = 100, green = 110, blue = 245)
                 )
             }
+
 
 //            when(userState){
 //                is UserState.Loading -> {
@@ -147,6 +157,26 @@ fun LogInForm(navController: NavController, signInViewModel: SignInViewModel) {
 //                Text(text = currentUserState)
 //            }
 //
+
+            when(userState){
+                is UserState.Loading -> {
+                    LoadingComponent()
+                }
+                is UserState.Success -> {
+                    val message = (userState as UserState.Success).message
+                    currentUserState = message
+                    navController.navigate("home")
+                }
+                is UserState.Error -> {
+                    val message = (userState as UserState.Error).message
+                    currentUserState = message
+                }
+            }
+
+            if(currentUserState.isNotEmpty()){
+                Text(text = currentUserState)
+            }
+
         }
     }
 }
