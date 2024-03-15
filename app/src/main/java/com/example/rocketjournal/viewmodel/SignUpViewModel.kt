@@ -3,6 +3,7 @@ package com.example.rocketjournal.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rocketjournal.model.Repositories.AuthenticationRepository
+import com.example.rocketjournal.model.Repositories.UserReopsitory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +12,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val authenticationRepository: AuthenticationRepository
+    private val authenticationRepository: AuthenticationRepository,
+    private val userReopsitory: UserReopsitory
 ) : ViewModel() {
 
     private val _email = MutableStateFlow("")
