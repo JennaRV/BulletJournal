@@ -188,15 +188,6 @@ fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
                     navController.navigate("home")
         //            supabaseViewModel.saveUser(firstName,lastName,username,email,password)
                     signUpViewModel.onSignUp()
-
-                    navController.navigate("login")
-                    authViewModel.signUp(
-                        context,
-                        email,
-                        password
-                    )
-
-
                           },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -232,26 +223,6 @@ fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
 //            if(currentUserState.isNotEmpty()){
 //                Text(text = currentUserState)
 //            }
-
-            
-            when(userState){
-                is UserState.Loading -> {
-                    LoadingComponent()
-                }
-                is UserState.Success -> {
-                    val message = (userState as UserState.Success).message
-                    currentUserState = message
-                    navController.navigate("login")
-                }
-                is UserState.Error -> {
-                    val message = (userState as UserState.Error).message
-                    currentUserState = message
-                }
-            }
-            
-            if(currentUserState.isNotEmpty()){
-                Text(text = currentUserState)
-            }
 
 
         }

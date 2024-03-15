@@ -113,13 +113,6 @@ fun LogInForm(navController: NavController, signInViewModel: SignInViewModel) {
                     navController.navigate("home")
                     signInViewModel.onSignIn()
 
-                    if(currentUserState.isNotEmpty()) {
-                        authViewModel.login(
-                            context,
-                            email,
-                            password
-                        )
-                    }
 
                 },
                 modifier = Modifier
@@ -158,24 +151,7 @@ fun LogInForm(navController: NavController, signInViewModel: SignInViewModel) {
 //            }
 //
 
-            when(userState){
-                is UserState.Loading -> {
-                    LoadingComponent()
-                }
-                is UserState.Success -> {
-                    val message = (userState as UserState.Success).message
-                    currentUserState = message
-                    navController.navigate("home")
-                }
-                is UserState.Error -> {
-                    val message = (userState as UserState.Error).message
-                    currentUserState = message
-                }
-            }
 
-            if(currentUserState.isNotEmpty()){
-                Text(text = currentUserState)
-            }
 
         }
     }
