@@ -56,7 +56,7 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 @Composable
 fun Navigation(navController: NavHostController){
 
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "list") {
 
         composable("home") { MainDashboard(navController) }
         composable("calendar") { CalendarScreen(navController)  }

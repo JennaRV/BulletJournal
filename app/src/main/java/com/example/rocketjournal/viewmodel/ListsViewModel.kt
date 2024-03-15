@@ -26,23 +26,9 @@ class ListsViewModel @Inject constructor(
 
     init {
         getLists()
-        observeLists()
     }
 
-    fun observeLists(){
-        viewModelScope.launch {
-            listFlow.collect { listFlow ->
-                listFlow?.let {
-                    populateLists(it)
-                }
-            }
-        }
-    }
-    fun populateLists(listFlow: List<ListData>){
-        for (c in listFlow){
-            lists.put(c.list_id, c)
-        }
-    }
+
     fun getLists() {
         viewModelScope.launch {
             _isLoading.value = true
