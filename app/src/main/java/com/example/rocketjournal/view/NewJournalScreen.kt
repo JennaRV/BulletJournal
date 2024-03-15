@@ -150,6 +150,24 @@ fun JounalCreation() {
                         fontSize = MaterialTheme.typography.bodySmall.fontSize
                     )
                 )
+
+                Button(onClick = { /*TODO*/ }, modifier = Modifier
+                        .offset(offsetX, screenHeight * 0.005f)
+                        .size(boxWidth, 60.dp)
+                        .clipToBounds()
+                        .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
+                        .align(Alignment.CenterHorizontally)
+                        .shadow(10.dp, RoundedCornerShape(15.dp)), shape = RoundedCornerShape(15.dp), colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFB98231)
+                    )) {
+                        Text(
+                        text = "Save",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                        )
+                    }
+
             }
 
 
@@ -158,6 +176,7 @@ fun JounalCreation() {
         }
     }
 }
+
 
 //@OptIn(ExperimentalMaterial3Api::class)
 //@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
