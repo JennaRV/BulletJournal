@@ -188,7 +188,9 @@ fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
 
         //            supabaseViewModel.saveUser(firstName,lastName,username,email,password)
                     signUpViewModel.onSignUp()
+
                     navController.navigate("login")
+
 
                           },
                 modifier = Modifier
@@ -225,9 +227,6 @@ fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
 //            if(currentUserState.isNotEmpty()){
 //                Text(text = currentUserState)
 //            }
-
-            
-
 
 
         }

@@ -111,8 +111,8 @@ fun LogInForm(navController: NavController, signInViewModel: SignInViewModel) {
                 onClick = {
                     navController.navigate("home")
                     signInViewModel.onSignIn()
-                    }
 
+                    }
                 ,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -148,6 +148,7 @@ fun LogInForm(navController: NavController, signInViewModel: SignInViewModel) {
 //            if(currentUserState.isNotEmpty()){
 //                Text(text = currentUserState)
 //            }
+
 
 
 
