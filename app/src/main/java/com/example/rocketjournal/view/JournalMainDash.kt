@@ -138,8 +138,8 @@ fun BackButton() {
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp) // Adjust padding as needed
             .border(
-                BorderStroke(2.dp, Color.Black),
-                shape = RoundedCornerShape(15.dp)
+                BorderStroke(1.dp, Color.Black),
+                shape = RoundedCornerShape(25.dp)
             )
             .height(50.dp),
         shape = RoundedCornerShape(60.dp),
@@ -217,8 +217,23 @@ fun JournalEntriesList() {
 fun JournalEntryItem(entry: JournalEntry) {
     // Composable to display a single journal entry
     // You can customize this as per your design
-    Text(text = entry.title)
-    Text(text = entry.content)
-    Text(text = entry.date)
+
+    //Contains the title, date, and content of the journal entry
+    //in a box that looks like a button
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .background(Color(0xFFB98231), shape = RoundedCornerShape(15.dp))
+            .clickable { /* Handle click on journal entry */ }
+            .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
+            .padding(16.dp)
+    ) {
+        Column {
+            Text(text = entry.title)
+            Text(text = entry.date)
+            Text(text = entry.content)
+        }
+    }
 }
 
