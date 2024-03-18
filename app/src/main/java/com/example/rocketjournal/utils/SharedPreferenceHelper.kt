@@ -2,7 +2,7 @@ package com.example.rocketjournal.utils
 
 import android.content.Context
 
-class SharedPreferanceHelper(private val context: Context) {
+class SharedPreferenceHelper(private val context: Context) {
 
     companion object{
         private const val MY_PREF_KEY = "MY_PREF"

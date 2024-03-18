@@ -3,12 +3,16 @@ package com.example.test
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,9 +21,13 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -52,7 +60,7 @@ fun CalendarScreen(navController: NavController) {
             Row(modifier = Modifier
                 .padding(16.dp)
             ) {
-                toggleButton()
+                ToggleButton(navController)
             }
 
             Row(modifier = Modifier
@@ -97,46 +105,62 @@ fun CalendarScreen(navController: NavController) {
     }
 }
 
-@Preview
 @Composable
-fun toggleButton() {
-    val selectedColor = Color(0xFFB98231)
-    val unselectedColor = Color(0xFFE8D5BA)
-    var leftSelected = remember {mutableStateOf(true)}
+fun ToggleButton(navController: NavController) {
+    val currentDestination = navController.currentDestination?.route
 
-    Row{
-        Button(
-            onClick = { leftSelected.value = !leftSelected.value },
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(unselectedColor),
-            border = BorderStroke(width = 2.dp, color = Color.Black)
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(0.dp)
-                    .weight(1f)
-                    .border(BorderStroke(width = 1.dp, color = Color.Black))
-            ) {
-                Text(
-                    "Monthly",
-                    modifier = Modifier
-                        .background(if (leftSelected.value) selectedColor else unselectedColor)
-                        .padding(10.dp)
-                        .weight(0.5f),
-                    style = TextStyle(color = Color.Black, fontSize = 16.sp, textAlign = TextAlign.Center)
-                )
-                Text(
-                    "Weekly",
-                    modifier = Modifier
-                        .background(if (!leftSelected.value) selectedColor else unselectedColor)
-                        .padding(10.dp)
-                        .weight(0.5f),
-                    style = TextStyle(color = Color.Black, fontSize = 16.sp, textAlign = TextAlign.Center)
-                )
-            }
-        }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        RoundedEndButton(
+            text = "Monthly",
+            isSelected = currentDestination == "calendar",
+            onClick = { navController.navigate("calendar") },
+            isFirstButton = true
+        )
+        RoundedEndButton(
+            text = "Weekly",
+            isSelected = currentDestination == "weekly",
+            onClick = { navController.navigate("weekly") },
+            isFirstButton = false
+        )
     }
 }
+
+@Composable
+fun RoundedEndButton(text: String, isSelected: Boolean, onClick: () -> Unit, isFirstButton: Boolean) {
+    val selectedColor = Color(0xFFB98231)
+    val unselectedColor = Color(0xFFE8D5BA)
+
+    val cornerRadiusStart = if (isFirstButton) 20.dp else 0.dp
+    val cornerRadiusEnd = if (!isFirstButton) 20.dp else 0.dp
+
+    val shape = RoundedCornerShape(
+        topStart = if (isFirstButton) cornerRadiusStart else 0.dp,
+        topEnd = if (!isFirstButton) cornerRadiusEnd else 0.dp,
+        bottomStart = if (isFirstButton) cornerRadiusStart else 0.dp,
+        bottomEnd = if (!isFirstButton) cornerRadiusEnd else 0.dp
+    )
+
+    Box(
+        modifier = Modifier
+            .clickable { onClick() }
+            .size(width = 150.dp, height = 60.dp)
+            .clip(shape)
+            .border(width = 1.dp,
+                color = Color.Black,
+                shape = shape)
+            .background(color = if (isSelected) selectedColor else unselectedColor),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            style = TextStyle(color = Color.Black, fontSize = 16.sp, textAlign = TextAlign.Center)
+        )
+    }
+}
+
 
 @Preview
 @Composable
