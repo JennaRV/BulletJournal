@@ -38,12 +38,12 @@ class ListsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getLists(): List<ListsDTO>? {
+        //this is retrieving the user UID from the authentication process
         val currentUser = supabaseClient.auth.retrieveUserForCurrentSession(updateSession = true)
         val currentUserId = currentUser?.id ?: throw IllegalStateException("User ID not available")
 
-        println("Current user ID: $currentUserId")
-
         return withContext(Dispatchers.IO) {
+            //this is attempting to find the user with that user UID (user_auth_id) and retrieving their user_id.  not working :(
             val userIDQueryResult = postgrest.from("user")
                 .select(columns = Columns.list("user_id")) {
                     filter {
@@ -51,6 +51,7 @@ class ListsRepositoryImpl @Inject constructor(
                     }
                 }.decodeList<Int>()
 
+            //this is supposed to retrieve a;; the lists with the current users user_id
             val result = postgrest.from("task_list")
                 .select(){
                     filter {
@@ -65,15 +66,6 @@ class ListsRepositoryImpl @Inject constructor(
 
     override suspend fun getList(id: Int): ListsDTO {
 
-//        val currentUser = supabaseClient.auth.retrieveUserForCurrentSession(updateSession = true)
-//        val currentUserId = currentUser?.id ?: throw IllegalStateException("User ID not available")
-//
-//        val userIDQueryResult = postgrest.from("user")
-//            .select() {
-//                filter {
-//                    eq("user_auth_id", currentUserId)
-//                }
-//            }
 
         return withContext(Dispatchers.IO) {
             postgrest.from("task_list").select() {
