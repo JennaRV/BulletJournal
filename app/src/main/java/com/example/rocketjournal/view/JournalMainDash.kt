@@ -23,12 +23,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -55,7 +57,7 @@ import com.example.rocketjournal.model.dataModel.ListData
 import com.example.rocketjournal.viewmodel.JournalEntryViewModel
 import java.security.KeyStore.Entry
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewModel = hiltViewModel()) {
 
@@ -69,6 +71,8 @@ fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewMod
 
         val boxWidth = screenWidth * 0.9f
         val offsetX = screenWidth * 0.05f
+
+
 
         Column {
 
@@ -137,7 +141,7 @@ fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewMod
             // NEW ENTRIES WILL GO HERE
             //JournalEntriesList()
 
-            //placeholderEntry()
+            //PlaceholderEntry()
 
             Column {
                 if (isLoading) {
@@ -155,37 +159,11 @@ fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewMod
 
 
 
+
             BottomNavigationBar(navController = navController)
         }
     }
 }
-
-//@Composable
-//fun BackButton(navController: NavController) {
-//    //insert (navController: NavController) as a parameter to use this function
-//    Button(
-//        onClick = {navController.navigate("home")}, // navController.navigate("home") or something
-//        modifier = Modifier
-//            .padding(horizontal = 16.dp, vertical = 8.dp) // Adjust padding as needed
-//            .border(
-//                BorderStroke(1.dp, Color.Black),
-//                shape = RoundedCornerShape(25.dp)
-//            )
-//            .height(50.dp),
-//        shape = RoundedCornerShape(60.dp),
-//        colors = ButtonDefaults.buttonColors(
-//            containerColor = Color(0xFFB98231)
-//        )
-//    ) {
-//        Icon(
-//            imageVector = Icons.Default.ArrowBack,
-//            contentDescription = "Back",
-//            modifier = Modifier
-//                .size(width = 70.dp, height = 30.dp), // or any size you prefer
-//            Color.Black
-//        )
-//    }
-//}
 
 @Composable
 fun SettingsButton(
@@ -198,6 +176,7 @@ fun SettingsButton(
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Icon(
+
             imageVector = Icons.Default.Menu,
             contentDescription = "Settings",
             modifier = Modifier
@@ -230,7 +209,7 @@ fun EntryDataItemView(entry: JournalEntryData) {
 
 @Preview
 @Composable
-fun placeholderEntry() {
+fun PlaceholderEntry() {
     // A box to represent a placeholder journal Entry
     Box(
         modifier = Modifier
@@ -240,12 +219,43 @@ fun placeholderEntry() {
             .fillMaxWidth()
             .height(100.dp)
             .padding(16.dp),
-        contentAlignment = Alignment.Center
+//        contentAlignment = Alignment.Center
     ) {
         Column {
-            Text(text = "LONG TEXT")
+            //Text that says 'Title of entry' with a bold header font
+            Text(text = "Title of Entry", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+
+            //Text that has the lorem ipsum content of the entry that only desplays a few lines
+            Text(text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sagittis tincidunt sapien at facilisis. Sed aliquam sem sed erat sagittis maximus. Donec non tortor purus. Aliquam non pretium diam. Nulla ullamcorper enim vel dui dictum, ac auctor magna finibus. Sed hendrerit est vitae sapien gravid", maxLines = 3)
+
 
         }
     }
 
+}
+
+@Composable
+fun BackButton2() {
+    Button(
+        onClick = { /* Handle button click */},
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp) // Adjust padding as needed
+            .border(
+                BorderStroke(1.dp, Color.Black),
+                shape = RoundedCornerShape(25.dp)
+            )
+            .height(50.dp),
+        shape = RoundedCornerShape(60.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFFB98231)
+        )
+    ) {
+        Icon(
+            imageVector = Icons.Default.Close,
+            contentDescription = "Back",
+            modifier = Modifier
+                .size(width = 70.dp, height = 30.dp), // or any size you prefer
+            Color.Black
+        )
+    }
 }
