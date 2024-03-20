@@ -44,16 +44,10 @@ import com.example.rocketjournal.viewmodel.SignUpViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    val context = LocalContext.current
-    //val signUpViewModel: SignUpViewModel
-   // val userState: UserState
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    var currentUserState by remember { mutableStateOf("") }
+    val firstName by signUpViewModel.firstName.collectAsState()
+    val lastName by signUpViewModel.lastName.collectAsState()
+    val username by signUpViewModel.username.collectAsState()
+    var confirmPassword = ""
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -76,7 +70,7 @@ fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = firstName,
-                onValueChange = { firstName = it },
+                onValueChange = { signUpViewModel.firstName.value = it },
                 label = { Text("First Name") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -94,7 +88,7 @@ fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = lastName,
-                onValueChange = { lastName= it },
+                onValueChange = { signUpViewModel.lastName.value = it },
                 label = { Text("Last Name") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -112,7 +106,7 @@ fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = username,
-                onValueChange = { username = it },
+                onValueChange = { signUpViewModel.username.value = it },
                 label = { Text("Username") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 colors = TextFieldDefaults.outlinedTextFieldColors(

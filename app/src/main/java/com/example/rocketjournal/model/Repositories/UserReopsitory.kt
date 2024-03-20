@@ -20,7 +20,8 @@ interface UserReopsitory {
         username: String,
         email: String,
         password: String,
-        theme: String
+        theme: String,
+        user_auth_id: String
     )
 
 }

@@ -18,13 +18,14 @@ class UserRepositoryImpl @Inject constructor(
         return try {
             withContext(Dispatchers.IO){
                 val userDTO = UserDTO(
-                    user_id = user.user_id,
+                    //user_id = user.user_id,
                     first_name = user.first_name,
                     last_name = user.last_name,
                     username = user.username,
                     email = user.email,
                     password = user.password,
-                    theme = user.theme
+                    theme = user.theme,
+                    user_auth_id = user.user_auth_id
                 )
                 postgrest.from("user").insert(userDTO)
                 true
@@ -70,7 +71,8 @@ class UserRepositoryImpl @Inject constructor(
         username: String,
         email: String,
         password: String,
-        theme: String
+        theme: String,
+        user_auth_id: String
     ) {
         TODO("Not yet implemented")
     }
