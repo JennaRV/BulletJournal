@@ -67,9 +67,9 @@ import com.example.rocketjournal.view.JournalMainDash
 
 
 
-@Preview
+//@Preview
 @Composable
-fun JounalCreation() {
+fun NewJournalScreen(navController: NavController) {
     AppBackgroundGeneral {
         val screenWidth = LocalConfiguration.current.screenWidthDp.dp
         val screenHeight = LocalConfiguration.current.screenHeightDp.dp
@@ -81,7 +81,7 @@ fun JounalCreation() {
 
             //A back button
             Row {
-                BackButton()  //Add navController = navController Later
+                BackButton(navController = navController)  //Add navController = navController Later
                 Spacer(modifier = Modifier.weight(1f))
                 SettingsButton(onClick = { /* Handle settings button click */ })
 

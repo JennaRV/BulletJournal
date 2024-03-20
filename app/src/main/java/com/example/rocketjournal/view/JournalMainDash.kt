@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,11 +26,15 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -43,14 +48,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.rocketjournal.model.dataModel.JournalEntryData
+import com.example.rocketjournal.model.dataModel.ListData
+import com.example.rocketjournal.viewmodel.JournalEntryViewModel
+import java.security.KeyStore.Entry
 
 
-
-
-@Preview
 @Composable
-fun JournalMainDash() {
+fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewModel = hiltViewModel()) {
+
+    val entriesState = viewModel.entryList.collectAsState(initial = emptyList()).value ?: emptyList()
+    val isLoading = viewModel.isLoading.collectAsState(initial = true).value
+
+
     AppBackgroundGeneral {
         val screenWidth = LocalConfiguration.current.screenWidthDp.dp
         val screenHeight = LocalConfiguration.current.screenHeightDp.dp
@@ -60,9 +72,10 @@ fun JournalMainDash() {
 
         Column {
 
-            //A back button
             Row {
-                BackButton()  //Add navController = navController Later
+
+                //Top Navigation Row
+                BackButton(navController = navController)  //Add navController = navController Later
                 Spacer(modifier = Modifier.weight(1f))
                 SettingsButton(onClick = { /* Handle settings button click */ })
 
@@ -98,7 +111,8 @@ fun JournalMainDash() {
 
             //Small Button for "New Entries"
             Button(
-                onClick = { /* Handle button click */ },
+                //Takes user to new Journal Creation Screen
+                onClick = { navController.navigate("newJournal") },
                 modifier = Modifier
                     .padding(horizontal = 40.dp, vertical = 3.dp)
                     .offset(offsetX, screenHeight * 0.005f)
@@ -121,41 +135,57 @@ fun JournalMainDash() {
             }
 
             // NEW ENTRIES WILL GO HERE
-            JournalEntriesList()
+            //JournalEntriesList()
+
+            //placeholderEntry()
+
+            Column {
+                if (isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                } else if (entriesState.isEmpty()) {
+                    Text("No Entries Available", modifier = Modifier.align(Alignment.CenterHorizontally))
+                } else {
+                    LazyColumn {
+                        items(entriesState) { entry ->
+                            EntryDataItemView(entry = entry)
+                        }
+                    }
+                }
+            }
 
 
 
-            Spacer(modifier = Modifier.size(20.dp))
+            BottomNavigationBar(navController = navController)
         }
     }
 }
 
-@Composable
-fun BackButton() {
-    //insert (navController: NavController) as a parameter to use this function
-    Button(
-        onClick = {/* Handle button click */}, // navController.navigate("home") or something
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp) // Adjust padding as needed
-            .border(
-                BorderStroke(1.dp, Color.Black),
-                shape = RoundedCornerShape(25.dp)
-            )
-            .height(50.dp),
-        shape = RoundedCornerShape(60.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFB98231)
-        )
-    ) {
-        Icon(
-            imageVector = Icons.Default.ArrowBack,
-            contentDescription = "Back",
-            modifier = Modifier
-                .size(width = 70.dp, height = 30.dp), // or any size you prefer
-            Color.Black
-        )
-    }
-}
+//@Composable
+//fun BackButton(navController: NavController) {
+//    //insert (navController: NavController) as a parameter to use this function
+//    Button(
+//        onClick = {navController.navigate("home")}, // navController.navigate("home") or something
+//        modifier = Modifier
+//            .padding(horizontal = 16.dp, vertical = 8.dp) // Adjust padding as needed
+//            .border(
+//                BorderStroke(1.dp, Color.Black),
+//                shape = RoundedCornerShape(25.dp)
+//            )
+//            .height(50.dp),
+//        shape = RoundedCornerShape(60.dp),
+//        colors = ButtonDefaults.buttonColors(
+//            containerColor = Color(0xFFB98231)
+//        )
+//    ) {
+//        Icon(
+//            imageVector = Icons.Default.ArrowBack,
+//            contentDescription = "Back",
+//            modifier = Modifier
+//                .size(width = 70.dp, height = 30.dp), // or any size you prefer
+//            Color.Black
+//        )
+//    }
+//}
 
 @Composable
 fun SettingsButton(
@@ -178,62 +208,44 @@ fun SettingsButton(
 }
 
 
-//Dataclass that will hold a journal entry
-data class JournalEntry(
-    val entryID : Int,
-    val journalID: Int,
-    val title: String,
-    val date: String,
-    val content: String
-)
-
-//This is a function that will fetch all Journals from the database, if user has created any
-fun fetchJournalEntries(): List<JournalEntry>{
-
-    //Connects to database here?
-
-    return TODO("Provide the return value")
-}
-
 @Composable
-fun JournalEntriesList() {
-    val journalEntries = remember { mutableStateListOf<JournalEntry>() }
+fun EntryDataItemView(entry: JournalEntryData) {
 
-    LaunchedEffect(Unit) {
-        // Fetch journal entries from Supabase
-        val entries = fetchJournalEntries()
-        // Update the state with fetched entries
-        journalEntries.addAll(entries)
-    }
-
-    LazyColumn {
-        items(journalEntries) { entry ->
-            JournalEntryItem(entry)
-        }
-    }
-}
-
-@Composable
-fun JournalEntryItem(entry: JournalEntry) {
-    // Composable to display a single journal entry
-    // You can customize this as per your design
-
-    //Contains the title, date, and content of the journal entry
-    //in a box that looks like a button
     Box(
         modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .border(BorderStroke(2.dp, Color.Black), RoundedCornerShape(15.dp))
+            .background(color = Color(0xFFE8D5BA), shape = RoundedCornerShape(15.dp))
             .fillMaxWidth()
-            .padding(16.dp)
-            .background(Color(0xFFB98231), shape = RoundedCornerShape(15.dp))
-            .clickable { /* Handle click on journal entry */ }
-            .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
-            .padding(16.dp)
+            .height(100.dp)
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Column {
-            Text(text = entry.title)
-            Text(text = entry.date)
-            Text(text = entry.content)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(entry.content)
         }
     }
 }
 
+@Preview
+@Composable
+fun placeholderEntry() {
+    // A box to represent a placeholder journal Entry
+    Box(
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .border(BorderStroke(2.dp, Color.Black), RoundedCornerShape(15.dp))
+            .background(color = Color(0xFFE8D5BA), shape = RoundedCornerShape(15.dp))
+            .fillMaxWidth()
+            .height(100.dp)
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column {
+            Text(text = "LONG TEXT")
+
+        }
+    }
+
+}

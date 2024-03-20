@@ -111,8 +111,8 @@ fun BackButton(navController: NavController) {
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp) // Adjust padding as needed
             .border(
-                BorderStroke(2.dp, Color.Black),
-                shape = RoundedCornerShape(15.dp)
+                BorderStroke(1.dp, Color.Black),
+                shape = RoundedCornerShape(25.dp)
             )
             .height(50.dp),
         shape = RoundedCornerShape(60.dp),
