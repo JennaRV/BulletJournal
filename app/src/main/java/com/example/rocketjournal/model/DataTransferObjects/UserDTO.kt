@@ -23,7 +23,7 @@ data class UserDTO(
     @SerialName("password")
     var password: String,
 
-    @SerialName("Theme")
+    @SerialName("theme")
     var theme: String = "default",
 
     @SerialName("user_auth_id")

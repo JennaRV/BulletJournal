@@ -3,6 +3,8 @@ package com.example.rocketjournal.model.Repositories.RepoImplementation
 import com.example.rocketjournal.model.DataTransferObjects.UserDTO
 import com.example.rocketjournal.model.Repositories.UserReopsitory
 import com.example.rocketjournal.model.dataModel.UserData
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.storage.Storage
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +13,8 @@ import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val postgrest: Postgrest,
-    private val storage: Storage
+    private val storage: Storage,
+    private val supabaseClient: SupabaseClient
 ) : UserReopsitory {
 
     override suspend fun createUser(user: UserData): Boolean {
@@ -76,4 +79,23 @@ class UserRepositoryImpl @Inject constructor(
     ) {
         TODO("Not yet implemented")
     }
+
+    suspend fun getCurrentUserID(): Int? {
+        //this is retrieving the user UID from the authentication process
+        val currentUser = supabaseClient.auth.retrieveUserForCurrentSession(updateSession = true)
+        val currentUserId = currentUser?.id ?: throw IllegalStateException("User ID not available")
+
+        return withContext(Dispatchers.IO) {
+            //this is attempting to find the user with that user UID (user_auth_id) and retrieving the userDTO associated with it.
+            val userIDQueryResult = postgrest.from("user")
+                .select() {
+                    filter {
+                        eq("user_auth_id", currentUserId)
+                    }
+                }.decodeSingle<UserDTO>().user_id
+            userIDQueryResult
+        }
+
+    }
+
 }

@@ -11,7 +11,8 @@ import javax.inject.Inject
 
 class JournalRepositoryImpl @Inject constructor(
     private val postgrest: Postgrest,
-    private val storage: Storage
+    private val storage: Storage,
+    private val userRepositoryImpl: UserRepositoryImpl
 ) : JournalRepository {
 
     override suspend fun createJournal(journal: JournalData): Boolean {
@@ -33,7 +34,11 @@ class JournalRepositoryImpl @Inject constructor(
     override suspend fun getJournals(): List<JournalDTO>? {
         return withContext(Dispatchers.IO) {
             val result = postgrest.from("journal")
-                .select().decodeList<JournalDTO>()
+                .select(){
+                    filter {
+                        userRepositoryImpl.getCurrentUserID()?.let { eq("user_id", it) }
+                    }
+                }.decodeList<JournalDTO>()
             result
         }
     }
