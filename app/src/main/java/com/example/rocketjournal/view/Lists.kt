@@ -55,13 +55,21 @@ import com.example.rocketjournal.viewmodel.ListsViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltViewModel()) {
+
+    //the listsState is a list of all to-do lists, this will fetch the lists from the database,
+    //its initial/default value is an empty list, if the database is empty, otherwise it will be populates with
+    //the to-do lists
     val listsState = viewModel.listFlow.collectAsState(initial = emptyList()).value ?: emptyList()
+    //this is the boolean that states that the program is in a "loading state"
     val isLoading = viewModel.isLoading.collectAsState(initial = true).value
 
     AppBackgroundGeneral {
         Column {
             BackButton(navController)
             MyListsHeader()
+
+            //this is where the lists are displayed, it will either have a loading progress indicator,
+            //display that o lists were fetched, or display the lists
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             } else if (listsState.isEmpty()) {

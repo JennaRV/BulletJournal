@@ -16,6 +16,8 @@ import javax.inject.Inject
 class ListsViewModel @Inject constructor(
     private val listsRepository: ListsRepository
 ) : ViewModel() {
+
+    //this is the list of all to-do lists
     private val _listsFlow = MutableStateFlow<List<ListData>?>(listOf())
     val listFlow: Flow<List<ListData>?> = _listsFlow
 
@@ -29,6 +31,7 @@ class ListsViewModel @Inject constructor(
     }
 
 
+    //this is where the listFlow is populated with the lists from the database
     fun getLists() {
         viewModelScope.launch {
             _isLoading.value = true
