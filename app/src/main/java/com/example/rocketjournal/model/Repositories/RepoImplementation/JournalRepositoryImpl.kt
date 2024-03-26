@@ -36,6 +36,7 @@ class JournalRepositoryImpl @Inject constructor(
             val result = postgrest.from("journal")
                 .select(){
                     filter {
+
                         userRepositoryImpl.getCurrentUserID()?.let { eq("user_id", it) }
                     }
                 }.decodeList<JournalDTO>()

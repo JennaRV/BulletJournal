@@ -52,16 +52,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.rocketjournal.model.dataModel.JournalData
 import com.example.rocketjournal.model.dataModel.JournalEntryData
 import com.example.rocketjournal.model.dataModel.ListData
 import com.example.rocketjournal.viewmodel.JournalEntryViewModel
+import com.example.rocketjournal.viewmodel.JournalViewModel
 import java.security.KeyStore.Entry
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewModel = hiltViewModel()) {
+fun JournalMainDash(navController: NavController, viewModel: JournalViewModel = hiltViewModel()) {
 
-    val entriesState = viewModel.entryList.collectAsState(initial = emptyList()).value ?: emptyList()
+    val entriesState = viewModel.journalList.collectAsState(initial = emptyList()).value ?: emptyList()
     val isLoading = viewModel.isLoading.collectAsState(initial = true).value
 
 
@@ -150,8 +152,8 @@ fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewMod
                     Text("No Entries Available", modifier = Modifier.align(Alignment.CenterHorizontally))
                 } else {
                     LazyColumn {
-                        items(entriesState) { entry ->
-                            EntryDataItemView(entry = entry)
+                        items(entriesState) { journal ->
+                            JournalDataItemView(journal = journal)
                         }
                     }
                 }
@@ -188,7 +190,7 @@ fun SettingsButton(
 
 
 @Composable
-fun EntryDataItemView(entry: JournalEntryData) {
+fun JournalDataItemView(journal: JournalData) {
 
     Box(
         modifier = Modifier
@@ -202,7 +204,7 @@ fun EntryDataItemView(entry: JournalEntryData) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Spacer(modifier = Modifier.width(8.dp))
-            Text(entry.content)
+            Text(journal.journal_id.toString())
         }
     }
 }
