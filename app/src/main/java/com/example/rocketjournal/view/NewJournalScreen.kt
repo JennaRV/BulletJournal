@@ -38,6 +38,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,6 +49,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
@@ -130,7 +132,8 @@ fun NewJournalScreen(navController: NavController) {
                     onValueChange = { title = it },
                     label = { Text("Title") },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(15.dp)
                 )
 
                 TextField(
@@ -148,16 +151,20 @@ fun NewJournalScreen(navController: NavController) {
                     ),
                     textStyle = LocalTextStyle.current.copy(
                         fontSize = MaterialTheme.typography.bodySmall.fontSize
-                    )
+                    ),
+                    shape = RoundedCornerShape(15.dp)
                 )
 
-                Button(onClick = { /*TODO*/ }, modifier = Modifier
-                        .offset(offsetX, screenHeight * 0.005f)
+                Button(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .offset(offsetX * 0.0012f, screenHeight * 0.0012f)
                         .size(boxWidth, 60.dp)
-                        .clipToBounds()
                         .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
-                        .align(Alignment.CenterHorizontally)
-                        .shadow(10.dp, RoundedCornerShape(15.dp)), shape = RoundedCornerShape(15.dp), colors = ButtonDefaults.buttonColors(
+                        .shadow(10.dp, RoundedCornerShape(15.dp))
+                        .align(CenterHorizontally),
+                    shape = RoundedCornerShape(15.dp),
+                    colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFB98231)
                     )) {
                         Text(
@@ -168,11 +175,11 @@ fun NewJournalScreen(navController: NavController) {
                         )
                     }
 
+
+
+
             }
 
-
-
-            Spacer(modifier = Modifier.size(20.dp))
         }
     }
 }

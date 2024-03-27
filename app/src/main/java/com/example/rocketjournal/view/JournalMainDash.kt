@@ -81,7 +81,8 @@ fun JournalMainDash(navController: NavController, viewModel: JournalViewModel = 
             Row {
 
                 //Top Navigation Row
-                BackButton(navController = navController)  //Add navController = navController Later
+                //BackButton(navController = navController)  //Add navController = navController Later
+                journalHeader()
                 Spacer(modifier = Modifier.weight(1f))
                 SettingsButton(onClick = { /* Handle settings button click */ })
 
@@ -143,7 +144,7 @@ fun JournalMainDash(navController: NavController, viewModel: JournalViewModel = 
             // NEW ENTRIES WILL GO HERE
             //JournalEntriesList()
 
-            //PlaceholderEntry()
+            PlaceholderEntry()
 
             Column {
                 if (isLoading) {
@@ -260,4 +261,40 @@ fun BackButton2() {
             Color.Black
         )
     }
+}
+
+@Composable
+fun journalHeader(){
+    //A header that looks like a button that says Journals
+
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+
+    val boxWidth = screenWidth * 0.5f
+    val offsetX = screenWidth * 0.05f
+
+
+    Button(
+        onClick = { /* Handle button click */ },
+        modifier = Modifier
+            .offset(offsetX, screenHeight * 0.0012f)
+            .size(boxWidth, 60.dp)
+            .clipToBounds()
+            .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
+            .shadow(10.dp, RoundedCornerShape(15.dp)),
+        shape = RoundedCornerShape(15.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFFB98231)
+        )
+
+    ) {
+        Text(
+            text = "Journals",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+    }
+
+
 }
