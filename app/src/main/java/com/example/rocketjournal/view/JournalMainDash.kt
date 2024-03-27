@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -35,6 +36,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -87,21 +89,15 @@ fun JournalMainDash(navController: NavController, viewModel: JournalViewModel = 
 
         Column {
 
-            Row {
 
-                //Top Navigation Row
-                //BackButton(navController = navController)  //Add navController = navController Later
-                journalHeader()
-                Spacer(modifier = Modifier.weight(1f))
-                SettingsButton(onClick = { /* Handle settings button click */ })
 
-            }
+            HeaderRow(title = "Journals", onSettingsClick = { /* Handle settings click */ })
 
             Spacer(modifier = Modifier.size(20.dp))
 
             //A header that looks like a button that says Journals
             Button(
-                onClick = { /* Handle button click */ },
+                onClick = {  navController.navigate("newJournal")  },
                 modifier = Modifier
                     .offset(offsetX, screenHeight * 0.0012f)
                     .size(boxWidth, 60.dp)
@@ -115,7 +111,7 @@ fun JournalMainDash(navController: NavController, viewModel: JournalViewModel = 
                 
             ) {
                 Text(
-                    text = "Journals",
+                    text = "New Entry",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -125,65 +121,56 @@ fun JournalMainDash(navController: NavController, viewModel: JournalViewModel = 
 
             Spacer(modifier = Modifier.size(20.dp))
 
-            //Small Button for "New Entries"
-            Button(
-                //Takes user to new Journal Creation Screen
-                onClick = { navController.navigate("newJournal") },
-                modifier = Modifier
-                    .padding(horizontal = 40.dp, vertical = 3.dp)
-                    .offset(offsetX, screenHeight * 0.005f)
-                    .size(95.dp, 40.dp)
-                    .clipToBounds()
-                    .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
-                    .shadow(10.dp, RoundedCornerShape(15.dp))
-                    .align(Alignment.End),
-                shape = RoundedCornerShape(15.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFB98231)
-                )
-            ) {
-                Text(
-                    text = "New Entries",
-                    fontSize = 8.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-            }
 
             // NEW ENTRIES WILL GO HERE
             //JournalEntriesList()
 
             //PlaceholderEntry()
 
-            LazyColumn {
-                item {
-                    if (isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 16.dp)
-                                .align(Alignment.CenterHorizontally)
-                        )
-                    } else if (entriesState.isEmpty()) {
-                        Text(
-                            text = "No Entries Available",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 16.dp)
-                                .align(Alignment.CenterHorizontally)
-                        )
+//            LazyColumn {
+//                item {
+//                    if (isLoading) {
+//                        CircularProgressIndicator(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(vertical = 16.dp)
+//                                .align(Alignment.CenterHorizontally)
+//                        )
+//                    } else if (entriesState.isEmpty()) {
+//                        Text(
+//                            text = "No Entries Available",
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(vertical = 16.dp)
+//                                .align(Alignment.CenterHorizontally)
+//                        )
+//                    }
+//                }
+//                items(entriesState) { journal ->
+//                    JournalDataItemView(journal = journal)
+//                }
+//
+//
+//            }
+
+
+            Box(modifier = Modifier.fillMaxSize()){
+                LazyColumn (
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 60.dp) // Adjust the value as needed
+
+                ){
+                    items(8) {
+                        PlaceholderEntry()
                     }
                 }
-                items(entriesState) { journal ->
-                    JournalDataItemView(journal = journal)
-                }
+
+                BottomNavigationBar(navController = navController)
             }
+            //LazyColum that holds 5 placeholderEntries
 
 
-
-
-
-            BottomNavigationBar(navController = navController)
         }
     }
 }
@@ -319,4 +306,35 @@ fun journalHeader(){
     }
 
 
+}
+
+
+@Composable
+fun TitleText(title: String) {
+    Text(
+        text = "$title",
+        color = Color.White,
+        style = MaterialTheme.typography.displaySmall,
+        modifier = Modifier.padding(start = 16.dp) // Adjust padding as needed
+    )
+}
+
+
+@Composable
+fun HeaderRow(title: String, onSettingsClick: () -> Unit) {
+    //Small Spacer
+    Spacer(modifier = Modifier.size(10.dp))
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Title text aligned to the left
+        TitleText(title = title)
+
+        // Spacer to push settings button to the right
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Settings button aligned to the right
+        SettingsButton(onClick = onSettingsClick)
+    }
 }
