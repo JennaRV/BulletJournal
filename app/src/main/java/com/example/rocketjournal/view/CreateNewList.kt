@@ -95,7 +95,7 @@ fun CreateList() {
     var listName = ""
     var isDatePickerVisible by remember { mutableStateOf(false) }
     var isTimePickerVisible by remember { mutableStateOf(false) }
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+//    val selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     var selectedTime by remember { mutableStateOf<LocalTime?>(null) }
 
     OpenSheetButton(onClick = {
@@ -169,6 +169,8 @@ fun CreateList() {
 fun DateTimePickerComponent() {
     val datePickerState = rememberDatePickerState()
     var showDatePicker by remember { mutableStateOf(false) }
+    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+
 
     val timePickerState = rememberTimePickerState()
     var showTimePicker by remember { mutableStateOf(false) }
@@ -178,7 +180,7 @@ fun DateTimePickerComponent() {
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+       // verticalArrangement = Arrangement.Center,
     ) {
 
         Text(text = "No Date Selected", modifier = Modifier.padding(bottom = 16.dp))
@@ -215,14 +217,14 @@ fun DateTimePickerComponent() {
             confirmButton = {
                 TextButton(
                     onClick = {
-                        val selectedDate = Calendar.getInstance().apply {
+                        val selectedDateFromPicker = Calendar.getInstance().apply {
                             timeInMillis = datePickerState.selectedDateMillis!!
-                        }
-                        if (selectedDate.after(Calendar.getInstance())) {
-
+                        }.time
+                        if (selectedDateFromPicker.after(Calendar.getInstance().time)) {
+                            datePickerState.selectedDateMillis
                             showDatePicker = false
                         } else {
-
+                            // Handle error or display a message
                         }
                     }
                 ) { Text("OK") }
