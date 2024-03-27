@@ -8,6 +8,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+//import androidx.compose.foundation.layout.ColumnScopeInstance.align
+//import androidx.compose.foundation.layout.FlowRowScopeInstance.align
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -73,6 +76,12 @@ fun JournalMainDash(navController: NavController, viewModel: JournalViewModel = 
 
         val boxWidth = screenWidth * 0.9f
         val offsetX = screenWidth * 0.05f
+
+        val journalList by viewModel.journalList.collectAsState(initial = emptyList())
+
+        LaunchedEffect(Unit) {
+            viewModel.getJournals()
+        }
 
 
 
@@ -144,21 +153,32 @@ fun JournalMainDash(navController: NavController, viewModel: JournalViewModel = 
             // NEW ENTRIES WILL GO HERE
             //JournalEntriesList()
 
-            PlaceholderEntry()
+            //PlaceholderEntry()
 
-            Column {
-                if (isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-                } else if (entriesState.isEmpty()) {
-                    Text("No Entries Available", modifier = Modifier.align(Alignment.CenterHorizontally))
-                } else {
-                    LazyColumn {
-                        items(entriesState) { journal ->
-                            JournalDataItemView(journal = journal)
-                        }
+            LazyColumn {
+                item {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp)
+                                .align(Alignment.CenterHorizontally)
+                        )
+                    } else if (entriesState.isEmpty()) {
+                        Text(
+                            text = "No Entries Available",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp)
+                                .align(Alignment.CenterHorizontally)
+                        )
                     }
                 }
+                items(entriesState) { journal ->
+                    JournalDataItemView(journal = journal)
+                }
             }
+
 
 
 
@@ -167,6 +187,7 @@ fun JournalMainDash(navController: NavController, viewModel: JournalViewModel = 
         }
     }
 }
+
 
 @Composable
 fun SettingsButton(
@@ -282,6 +303,7 @@ fun journalHeader(){
             .clipToBounds()
             .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
             .shadow(10.dp, RoundedCornerShape(15.dp)),
+
         shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFFB98231)
