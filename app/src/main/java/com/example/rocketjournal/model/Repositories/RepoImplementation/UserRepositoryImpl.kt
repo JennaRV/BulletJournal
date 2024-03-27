@@ -28,7 +28,8 @@ class UserRepositoryImpl @Inject constructor(
                     email = user.email,
                     password = user.password,
                     theme = user.theme,
-                    user_auth_id = user.user_auth_id
+                    user_auth_id = user.user_auth_id,
+                    journal_id = user.journal_id
                 )
                 postgrest.from("user").insert(userDTO)
                 true
@@ -75,7 +76,8 @@ class UserRepositoryImpl @Inject constructor(
         email: String,
         password: String,
         theme: String,
-        user_auth_id: String
+        user_auth_id: String,
+        journal_id: Int
     ) {
         TODO("Not yet implemented")
     }

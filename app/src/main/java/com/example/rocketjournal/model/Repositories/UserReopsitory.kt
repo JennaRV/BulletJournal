@@ -21,7 +21,8 @@ interface UserReopsitory {
         email: String,
         password: String,
         theme: String,
-        user_auth_id: String
+        user_auth_id: String,
+        journal_id: Int
     )
 
 }

@@ -27,5 +27,8 @@ data class UserDTO(
     var theme: String = "default",
 
     @SerialName("user_auth_id")
-    var user_auth_id: String
+    var user_auth_id: String,
+
+    @SerialName("journal_id")
+    val journal_id: Int
 )
