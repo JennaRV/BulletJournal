@@ -81,6 +81,7 @@ fun Navigation(navController: NavHostController){
 
 
         // Define other destinations here
+        composable("practice") { CreateList() }
     }
 }
 

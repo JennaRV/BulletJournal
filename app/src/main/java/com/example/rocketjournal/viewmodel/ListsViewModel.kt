@@ -58,7 +58,8 @@ class ListsViewModel @Inject constructor(
                 list_id = listData.list_id,
                 user_id = listData.user_id, // Assuming you need to pass this based on your repository method signature
                 name = listData.name,
-                is_complete = listData.is_complete
+                is_complete = listData.is_complete,
+                deadline = listData.deadline
             )
             // Fetch updated lists again or update local list state as necessary
             getLists()
@@ -70,7 +71,8 @@ class ListsViewModel @Inject constructor(
             list_id = this.list_id ?: -1,
             user_id = this.user_id,
             name = this.name,
-            is_complete = this.is_complete
+            is_complete = this.is_complete,
+            deadline = this.deadline ?: null
         )
     }
 }

@@ -44,6 +44,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.collectAsState
 //import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.unit.dp
@@ -67,6 +68,7 @@ fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltVi
         Column {
             BackButton(navController)
             MyListsHeader()
+            CreateList()
 
             //this is where the lists are displayed, it will either have a loading progress indicator,
             //display that o lists were fetched, or display the lists
@@ -81,6 +83,7 @@ fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltVi
                     }
                 }
             }
+
         }
     }
 }
@@ -171,4 +174,11 @@ fun ListDataItemView(list: ListData, onCheckedChange: (ListData) -> Unit) {
 }
 
 
+
+
+@Preview
+@Composable
+fun CreateListPreview(){
+    CreateList()
+}
 

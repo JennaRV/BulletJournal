@@ -2,6 +2,7 @@ package com.example.rocketjournal.model.Repositories
 
 import com.example.rocketjournal.model.DataTransferObjects.ListsDTO
 import com.example.rocketjournal.model.dataModel.ListData
+import kotlinx.datetime.LocalDateTime
 
 interface ListsRepository {
     suspend fun createList(list: ListData): Boolean
@@ -9,6 +10,6 @@ interface ListsRepository {
     suspend fun getList(id: Int): ListsDTO?
     suspend fun deleteList(id: Int)
     suspend fun updateList(
-        list_id: Int, user_id: Int, name: String, is_complete: Boolean
+        list_id: Int, user_id: Int, name: String, is_complete: Boolean, deadline: LocalDateTime?
     )
 }
