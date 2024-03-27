@@ -12,6 +12,7 @@ import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.storage.Storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.LocalDateTime
 import javax.inject.Inject
 
 class ListsRepositoryImpl @Inject constructor(
@@ -27,7 +28,8 @@ class ListsRepositoryImpl @Inject constructor(
                 val listsDTO = ListsDTO(
                     user_id = list.user_id,
                     name = list.name,
-                    is_complete = list.is_complete
+                    is_complete = list.is_complete,
+                    deadline = list.deadline
                 )
                 postgrest.from("task_list").insert(listsDTO)
                 true
@@ -44,7 +46,7 @@ class ListsRepositoryImpl @Inject constructor(
             val result = postgrest.from("task_list")
                 .select(){
                     filter {
-                        userRepositoryImpl.getCurrentUserID()?.let { eq("user_id", it) }
+                       // userRepositoryImpl.getCurrentUserID()?.let { eq("user_id", it) }
                     }
                 }
                 .decodeList<ListsDTO>()
@@ -76,7 +78,8 @@ class ListsRepositoryImpl @Inject constructor(
         list_id: Int,
         user_id: Int,
         name: String,
-        is_complete: Boolean
+        is_complete: Boolean,
+        deadline: LocalDateTime?
     ) {
         withContext(Dispatchers.IO) {
             postgrest.from("task_list").update({

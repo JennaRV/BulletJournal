@@ -51,6 +51,7 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -71,6 +72,9 @@ fun JournalMainDash(navController: NavController, viewModel: JournalViewModel = 
     val entriesState = viewModel.journalList.collectAsState(initial = emptyList()).value ?: emptyList()
     val isLoading = viewModel.isLoading.collectAsState(initial = true).value
 
+//    val entriesState = viewModel.entryList.collectAsState(initial = emptyList()).value ?: emptyList()
+//    val isLoading = viewModel.isLoading.collectAsState(initial = true).value
+
 
     AppBackgroundGeneral {
         val screenWidth = LocalConfiguration.current.screenWidthDp.dp
@@ -79,11 +83,6 @@ fun JournalMainDash(navController: NavController, viewModel: JournalViewModel = 
         val boxWidth = screenWidth * 0.9f
         val offsetX = screenWidth * 0.05f
 
-        val journalList by viewModel.journalList.collectAsState(initial = emptyList())
-
-        LaunchedEffect(Unit) {
-            viewModel.getJournals()
-        }
 
 
 
@@ -148,29 +147,16 @@ fun JournalMainDash(navController: NavController, viewModel: JournalViewModel = 
 //                }
 //                items(entriesState) { journal ->
 //                    JournalDataItemView(journal = journal)
+////                    JournalEntryDataItemView(journal = journalEntry)
 //                }
 //
 //
 //            }
 
 
-            Box(modifier = Modifier.fillMaxSize()){
-                LazyColumn (
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = 60.dp) // Adjust the value as needed
+            PlaceholderEntryList(navController =navController)
 
-                ){
-                    items(8) {
-                        PlaceholderEntry()
-                    }
-                }
-
-                BottomNavigationBar(navController = navController)
-            }
-            //LazyColum that holds 5 placeholderEntries
-
-
+            BottomNavigationBar(navController = navController)
         }
     }
 }
@@ -209,11 +195,38 @@ fun JournalDataItemView(journal: JournalData) {
             .fillMaxWidth()
             .height(100.dp)
             .padding(16.dp),
+        //contentAlignment = Alignment.Center
+    ) {
+        Column {
+           // Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "Journal ID: " + journal.journal_id.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+
+            Text("User ID: " + journal.user_id.toString())
+
+        }
+    }
+}
+
+@Composable
+fun JournalEntryDataItemView(journal: JournalEntryData) {
+
+    Box(
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .border(BorderStroke(2.dp, Color.Black), RoundedCornerShape(15.dp))
+            .background(color = Color(0xFFE8D5BA), shape = RoundedCornerShape(15.dp))
+            .fillMaxWidth()
+            .height(100.dp)
+            .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(journal.journal_id.toString())
+
+
+        Row (verticalAlignment = Alignment.CenterVertically) {
+            //Spacer(modifier = Modifier.width(8.dp))
+            Text(text = journal.journal_id.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Text(text = journal.content, maxLines = 3)
+
         }
     }
 }
@@ -246,64 +259,22 @@ fun PlaceholderEntry() {
 }
 
 @Composable
-fun BackButton2() {
-    Button(
-        onClick = { /* Handle button click */},
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp) // Adjust padding as needed
-            .border(
-                BorderStroke(1.dp, Color.Black),
-                shape = RoundedCornerShape(25.dp)
-            )
-            .height(50.dp),
-        shape = RoundedCornerShape(60.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFB98231)
-        )
-    ) {
-        Icon(
-            imageVector = Icons.Default.Close,
-            contentDescription = "Back",
+fun PlaceholderEntryList(navController: NavController){
+    Box(modifier = Modifier.fillMaxSize()){
+        LazyColumn (
             modifier = Modifier
-                .size(width = 70.dp, height = 30.dp), // or any size you prefer
-            Color.Black
-        )
+                .fillMaxSize()
+                .padding(bottom = 60.dp) // Adjust the value as needed
+
+        ){
+            items(8) {
+                PlaceholderEntry()
+            }
+        }
+
+        BottomNavigationBar(navController = navController)
     }
-}
 
-@Composable
-fun journalHeader(){
-    //A header that looks like a button that says Journals
-
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-
-    val boxWidth = screenWidth * 0.5f
-    val offsetX = screenWidth * 0.05f
-
-
-    Button(
-        onClick = { /* Handle button click */ },
-        modifier = Modifier
-            .offset(offsetX, screenHeight * 0.0012f)
-            .size(boxWidth, 60.dp)
-            .clipToBounds()
-            .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
-            .shadow(10.dp, RoundedCornerShape(15.dp)),
-
-        shape = RoundedCornerShape(15.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFB98231)
-        )
-
-    ) {
-        Text(
-            text = "Journals",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
-    }
 
 
 }
@@ -338,3 +309,11 @@ fun HeaderRow(title: String, onSettingsClick: () -> Unit) {
         SettingsButton(onClick = onSettingsClick)
     }
 }
+
+
+//  Row(verticalAlignment = Alignment.CenterVertically) {
+//            Spacer(modifier = Modifier.width(8.dp))
+//            Text(text = journal.journal_id.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+//            Text(text = journal.content, maxLines = 3)
+//
+//        }

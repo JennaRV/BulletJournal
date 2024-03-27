@@ -1,8 +1,4 @@
 package com.example.rocketjournal.model.dataModel
-
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class UserData (
     val user_id: Int? = null,
     val first_name: String = "",

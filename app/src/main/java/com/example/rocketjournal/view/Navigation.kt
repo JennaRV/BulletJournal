@@ -84,6 +84,9 @@ fun Navigation(navController: NavHostController){
         //Brian's Login
         //bramos@ggc.edu
         //123456!
+
+        composable("practice") { CreateList() }
+
     }
 }
 
