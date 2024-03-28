@@ -106,15 +106,18 @@ class UserRepositoryImpl @Inject constructor(
         val currentUser = supabaseClient.auth.retrieveUserForCurrentSession(updateSession = true)
         val currentUserId = currentUser?.id ?: throw IllegalStateException("User ID not available")
 
+        val currentUserIdforJournalEntry = getCurrentUserID()?.let { it } ?: throw IllegalStateException("User ID not available")
 
         return withContext(Dispatchers.IO) {
             //this is attempting to find the user with that user UID (user_auth_id) and retrieving the userDTO associated with it.
             val JournalQueryResult = postgrest.from("user")
                 .select() {
                     filter {
-                        if (currentUserId != null) {
-                            eq("user_auth_id", currentUserId)
-                        }
+//                        if (currentUserId != null) {
+//                            eq("user_auth_id", currentUserId)
+//                        }
+                        eq("user_auth_id", currentUserId)
+                        //eq(column = "user_id", value = currentUserIdforJournalEntry)
                     }
                 }.decodeSingle<UserDTO>().journal_id
             JournalQueryResult
