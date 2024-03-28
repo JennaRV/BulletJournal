@@ -69,7 +69,8 @@ class SignUpViewModel @Inject constructor(
                     email = emailValue,
                     password = passwordValue,
                     theme = "default",
-                    user_auth_id = userAuthId
+                    user_auth_id = userAuthId,
+                   // journal_id = journal
                 )
 
                 //this checks if the create user function was successful.

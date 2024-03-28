@@ -30,5 +30,5 @@ data class UserDTO(
     var user_auth_id: String,
 
     @SerialName("journal_id")
-    val journal_id: Int
+    val journal_id: Int?= null
 )

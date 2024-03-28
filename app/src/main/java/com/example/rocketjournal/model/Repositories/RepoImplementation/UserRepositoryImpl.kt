@@ -29,7 +29,7 @@ class UserRepositoryImpl @Inject constructor(
                     password = user.password,
                     theme = user.theme,
                     user_auth_id = user.user_auth_id,
-                    journal_id = user.journal_id
+                    //journal_id = user.journal_id
                 )
                 postgrest.from("user").insert(userDTO)
                 true
