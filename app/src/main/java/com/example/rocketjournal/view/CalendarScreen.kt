@@ -38,7 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.rocketjournal.view.BottomNavigationBar
+
 
 @Composable
 fun CalendarScreen(navController: NavController) {
@@ -100,8 +100,7 @@ fun CalendarScreen(navController: NavController) {
             ) {
                 journalEntry(text = "Journal Entry #2")
             }
-            BottomNavigationBar(navController = navController)
-        }
+            }
     }
 }
 

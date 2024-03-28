@@ -44,8 +44,9 @@ fun MainDashboard(navController: NavController) {
         val boxWidth = screenWidth * 0.9f
         val offsetX = screenWidth * 0.05f
 
-        Column {
 
+        Column {
+            Spacer(modifier = Modifier.size(10.dp,20.dp))
             Button(
                 onClick = { /* Handle button click */ },
                 modifier = Modifier
@@ -150,7 +151,7 @@ fun MainDashboard(navController: NavController) {
                 }
             }
 
-            BottomNavigationBar(navController)
+
 
         }
     }

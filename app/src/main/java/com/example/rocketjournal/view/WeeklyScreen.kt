@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.rocketjournal.view.BottomNavigationBar
+
 
 @Composable
 fun WeeklyScreen(navController: NavController) {
@@ -68,7 +68,7 @@ fun WeeklyScreen(navController: NavController) {
         DayEntry("Fri", 23)
         DayEntry("Sat", 24)
     }
-    BottomNavigationBar(navController)
+
 }
 
 @Preview
