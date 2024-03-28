@@ -60,13 +60,13 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 @Composable
 fun Navigation(navController: NavHostController){
 
-    NavHost(navController = navController, startDestination = "list") {
+    NavHost(navController = navController, startDestination = "login") {
 
         // Main Navigation
         composable("home") { MainDashboard(navController) }
         composable("calendar") { CalendarScreen(navController)  }
         composable("list") { ListsScreen(navController) }
-        composable("journal") {  }
+        composable("journal") { JournalMainDash(navController)}
         composable("habit") {  }
         // Setting Navigation
         composable("settings") {  }
@@ -80,6 +80,9 @@ fun Navigation(navController: NavHostController){
 
 
         // Define other destinations here
+
+        //newJournal
+        composable("newJournal") { NewJournalScreen(navController) }
 
     }
 }

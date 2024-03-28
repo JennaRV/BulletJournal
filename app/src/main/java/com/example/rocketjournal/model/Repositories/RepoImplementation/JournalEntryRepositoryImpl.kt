@@ -39,9 +39,24 @@ class JournalEntryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getJournalEntries(): List<JournalEntryDTO>? {
+
+        val currentUserJournalId = getCurrentUserJournalID() ?: return emptyList()
+
         return withContext(Dispatchers.IO) {
-            val result = postgrest.from("journal_entries")
-                .select().decodeList<JournalEntryDTO>()
+            val result = postgrest.from("journal_entry")
+                .select{
+                    filter {
+                        //userRepositoryImpl.getCurrentUserID()?.let { eq("user_id", it) }
+                        //eq("journal_id", currentUserJournalId)
+                        //println(currentUserJournalId)
+                        println("CK1")
+                        println("getJournalEntries: $currentUserJournalId")
+                        userRepositoryImpl.getCurrentUserJournalID()?.let { eq("journal_id", it)}
+                        println("CK2")
+                    }
+                }
+                .decodeList<JournalEntryDTO>()
+            println("getJournalEntries: $result")
             result
         }
     }

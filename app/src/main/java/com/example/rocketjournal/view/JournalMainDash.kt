@@ -67,13 +67,13 @@ import java.security.KeyStore.Entry
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JournalMainDash(navController: NavController, viewModel: JournalViewModel = hiltViewModel()) {
+fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewModel = hiltViewModel()) {
 
-    val entriesState = viewModel.journalList.collectAsState(initial = emptyList()).value ?: emptyList()
-    val isLoading = viewModel.isLoading.collectAsState(initial = true).value
-
-//    val entriesState = viewModel.entryList.collectAsState(initial = emptyList()).value ?: emptyList()
+//    val entriesState = viewModel.journalList.collectAsState(initial = emptyList()).value ?: emptyList()
 //    val isLoading = viewModel.isLoading.collectAsState(initial = true).value
+
+    val entriesState = viewModel.entryList.collectAsState(initial = emptyList()).value ?: emptyList()
+    val isLoading = viewModel.isLoading.collectAsState(initial = true).value
 
 
     AppBackgroundGeneral {
@@ -126,35 +126,35 @@ fun JournalMainDash(navController: NavController, viewModel: JournalViewModel = 
 
             //PlaceholderEntry()
 
-//            LazyColumn {
-//                item {
-//                    if (isLoading) {
-//                        CircularProgressIndicator(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .padding(vertical = 16.dp)
-//                                .align(Alignment.CenterHorizontally)
-//                        )
-//                    } else if (entriesState.isEmpty()) {
-//                        Text(
-//                            text = "No Entries Available",
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .padding(vertical = 16.dp)
-//                                .align(Alignment.CenterHorizontally)
-//                        )
-//                    }
-//                }
-//                items(entriesState) { journal ->
+            LazyColumn {
+                item {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp)
+                                .align(Alignment.CenterHorizontally)
+                        )
+                    } else if (entriesState.isEmpty()) {
+                        Text(
+                            text = "No Entries Available",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp)
+                                .align(Alignment.CenterHorizontally)
+                        )
+                    }
+                }
+                items(entriesState) { journalEntry ->
 //                    JournalDataItemView(journal = journal)
-////                    JournalEntryDataItemView(journal = journalEntry)
-//                }
-//
-//
-//            }
+                    JournalEntryDataItemView(journal = journalEntry)
+                }
 
 
-            PlaceholderEntryList(navController =navController)
+            }
+
+
+            //PlaceholderEntryList(navController =navController)
 
             BottomNavigationBar(navController = navController)
         }

@@ -8,5 +8,5 @@ data class UserData (
     val password: String = "",
     val theme: String = "default",
     val user_auth_id: String,
-    val journal_id: Int
+    val journal_id: Int? = null
 )

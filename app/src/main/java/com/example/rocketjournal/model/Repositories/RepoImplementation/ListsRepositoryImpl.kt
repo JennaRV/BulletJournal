@@ -46,7 +46,7 @@ class ListsRepositoryImpl @Inject constructor(
             val result = postgrest.from("task_list")
                 .select(){
                     filter {
-                       // userRepositoryImpl.getCurrentUserID()?.let { eq("user_id", it) }
+                       userRepositoryImpl.getCurrentUserID()?.let { eq("user_id", it) }
                     }
                 }
                 .decodeList<ListsDTO>()
