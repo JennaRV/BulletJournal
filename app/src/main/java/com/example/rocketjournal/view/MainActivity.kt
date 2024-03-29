@@ -26,6 +26,7 @@ import io.github.jan.supabase.postgrest.Postgrest
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.rocketjournal.viewmodel.SignOutViewModel
 //import com.example.rocketjournal.viewmodel.SupabaseAuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.SupabaseClient
@@ -35,6 +36,7 @@ import io.github.jan.supabase.SupabaseClient
 //import io.supabase.client.SupabaseClient.Companion.create
 
 import io.github.jan.supabase.gotrue.*
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -45,8 +47,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RocketJournalTheme {
+
                 val navController = rememberNavController()
-                Navigation(navController = navController)
+                Navigation(navController)
+
             }
         }
     }

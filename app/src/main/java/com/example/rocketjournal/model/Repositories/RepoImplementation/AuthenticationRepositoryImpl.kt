@@ -40,5 +40,14 @@ class AuthenticationRepositoryImpl @Inject constructor(
             false
         }
     }
+    override suspend fun signOut() : Boolean{
+        return try {
+            auth.signOut()
+            true
+        } catch (e : Exception){
+            false
+        }
+    }
+
 
 }

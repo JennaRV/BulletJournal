@@ -79,12 +79,15 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.rocketjournal.model.Repositories.AuthenticationRepository
+import com.example.rocketjournal.viewmodel.SignInViewModel
+import com.example.rocketjournal.viewmodel.SignOutViewModel
 import com.example.rocketjournal.viewmodel.SignUpViewModel
 import com.example.test.CalendarScreen
 
@@ -101,6 +104,9 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Navigation(navController: NavHostController){
+    // should use the signOutViewModel instances.
+    val signOutViewModel: SignOutViewModel = viewModel()
+
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentRoute = navBackStackEntry?.destination?.route
     var showBottomBar by rememberSaveable { mutableStateOf(true) }
@@ -111,15 +117,13 @@ fun Navigation(navController: NavHostController){
     }
 
     showBottomBar = when (currentRoute) {
-        "login" -> false // on this screen bottom bar should be hidden
-        "signup" -> false // here too
+        // on this screen bottom bar should be hidden
+        "login" -> false
+        "signup" -> false
         "loginPage" -> false
         else -> true // in all other cases show bottom bar
     }
-
-
-
-        ModalNavigationDrawer(
+        ModalNavigationDrawer( // Shows the drawer on the left
             drawerContent = {
                 ModalDrawerSheet (modifier = Modifier.width(280.dp)){
                     Box(modifier = Modifier
@@ -158,8 +162,9 @@ fun Navigation(navController: NavHostController){
                             coroutine.launch {
                                 drawerState.close()
                             }
-
+                            signOutViewModel.signOut()
                             navController.navigate("login")
+
 
                         })
                 }
@@ -239,72 +244,6 @@ fun Navigation(navController: NavHostController){
         }
 
 }
-
-
-//@Composable
-//fun BottomNavigationBar(navController: NavController) {
-//    val actions = listOf(
-//        "journal" to Icons.Filled.Home,
-//        "list" to Icons.AutoMirrored.Filled.List,
-//        "home" to Icons.Filled.Home,
-//        "calendar" to Icons.Filled.DateRange,
-//        "event" to Icons.Filled.Home
-//    )
-//    Column {
-//
-//        Spacer(modifier = Modifier.weight(0.1f))
-//        Box(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .background(Color(0xFF8B93FC))
-//                .border(1.dp, Color.Black, shape = RectangleShape)
-//                .height(60.dp)
-//
-//        ) {
-//            Row(
-//                modifier = Modifier.fillMaxSize(),
-//                horizontalArrangement = Arrangement.SpaceEvenly,
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                actions.forEach { (location, icon) ->
-//                    CircleIcon {
-//                        ElevatedButtonWithIcon(
-//                            icon = icon,
-//                            navController = navController,
-//                            location = location
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//
-//    }
-//}
-//
-//@Composable
-//fun ElevatedButtonWithIcon(icon: ImageVector, navController: NavController, location: String) {
-//    ElevatedButton(
-//        onClick = { navController.navigate(location) },
-//        modifier = Modifier.size(50.dp),
-//        shape = CircleShape,
-//        colors = ButtonDefaults.elevatedButtonColors(
-//            Color(0xFFBCC0FF)
-//        )
-//    ) {
-//        Icon(icon, contentDescription = location)
-//    }
-//}
-//@Composable
-//fun CircleIcon(content: @Composable () -> Unit){
-//    Box(
-//        modifier = Modifier
-//            .size(50.dp)
-//            .clip(CircleShape)
-//            .border(1.dp, Color.Black, CircleShape)
-//    ){
-//        content()
-//    }
-//}
 
 
 
