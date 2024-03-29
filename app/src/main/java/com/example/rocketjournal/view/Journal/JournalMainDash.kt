@@ -1,7 +1,8 @@
-package com.example.rocketjournal.view
+package com.example.rocketjournal.view.Journal
 
 import AppBackgroundGeneral
-import android.graphics.drawable.Icon
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -10,28 +11,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 //import androidx.compose.foundation.layout.ColumnScopeInstance.align
 //import androidx.compose.foundation.layout.FlowRowScopeInstance.align
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,19 +33,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,11 +48,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.rocketjournal.model.dataModel.JournalData
 import com.example.rocketjournal.model.dataModel.JournalEntryData
-import com.example.rocketjournal.model.dataModel.ListData
+import com.example.rocketjournal.view.BottomNavigationBar
 import com.example.rocketjournal.viewmodel.JournalEntryViewModel
-import com.example.rocketjournal.viewmodel.JournalViewModel
-import java.security.KeyStore.Entry
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewModel = hiltViewModel()) {
@@ -107,7 +95,7 @@ fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewMod
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFB98231)
                 )
-                
+
             ) {
                 Text(
                     text = "New Entry",
@@ -147,7 +135,7 @@ fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewMod
                 }
                 items(entriesState) { journalEntry ->
 //                    JournalDataItemView(journal = journal)
-                    JournalEntryDataItemView(journal = journalEntry)
+                    JournalEntryDataItemView(navController, journal = journalEntry)
                 }
 
 
@@ -187,6 +175,7 @@ fun SettingsButton(
 @Composable
 fun JournalDataItemView(journal: JournalData) {
 
+
     Box(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -194,21 +183,29 @@ fun JournalDataItemView(journal: JournalData) {
             .background(color = Color(0xFFE8D5BA), shape = RoundedCornerShape(15.dp))
             .fillMaxWidth()
             .height(100.dp)
-            .padding(16.dp),
-        //contentAlignment = Alignment.Center
+            .padding(16.dp)
+            .clickable { /* Handle click event here if needed */ }
     ) {
         Column {
-           // Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Journal ID: " + journal.journal_id.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            // Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Journal ID: " + journal.journal_id.toString(),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
 
             Text("User ID: " + journal.user_id.toString())
 
         }
     }
+
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun JournalEntryDataItemView(journal: JournalEntryData) {
+fun JournalEntryDataItemView(navController: NavController, journal: JournalEntryData) {
+
+    val formattedDate = formatDate(journal.created_at)
 
     Box(
         modifier = Modifier
@@ -217,15 +214,22 @@ fun JournalEntryDataItemView(journal: JournalEntryData) {
             .background(color = Color(0xFFE8D5BA), shape = RoundedCornerShape(15.dp))
             .fillMaxWidth()
             .height(100.dp)
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable {
+                       /* Handle click event here if needed */
+                navController.navigate("journalEntry")
+            },
         contentAlignment = Alignment.Center
     ) {
 
 
-        Row (verticalAlignment = Alignment.CenterVertically) {
-            //Spacer(modifier = Modifier.width(8.dp))
-            Text(text = journal.journal_id.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Text(text = journal.content, maxLines = 3)
+        Column {
+            //Text that says 'Title of entry' with a bold header font
+            Text(text = "$formattedDate", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+
+            //Text that has the lorem ipsum content of the entry that only desplays a few lines
+            Text(text = "${journal.content}", maxLines = 3)
+
 
         }
     }
@@ -311,9 +315,10 @@ fun HeaderRow(title: String, onSettingsClick: () -> Unit) {
 }
 
 
-//  Row(verticalAlignment = Alignment.CenterVertically) {
-//            Spacer(modifier = Modifier.width(8.dp))
-//            Text(text = journal.journal_id.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
-//            Text(text = journal.content, maxLines = 3)
-//
-//        }
+// Function to format the date string
+@RequiresApi(Build.VERSION_CODES.O)
+fun formatDate(dateTime: kotlinx.datetime.LocalDateTime): String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    return dateTime.month.toString() + " " + dateTime.dayOfMonth.toString() + ", " + dateTime.year.toString()
+
+}

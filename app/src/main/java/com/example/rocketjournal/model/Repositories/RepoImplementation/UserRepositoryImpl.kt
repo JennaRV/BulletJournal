@@ -113,11 +113,7 @@ class UserRepositoryImpl @Inject constructor(
             val JournalQueryResult = postgrest.from("user")
                 .select() {
                     filter {
-//                        if (currentUserId != null) {
-//                            eq("user_auth_id", currentUserId)
-//                        }
                         eq("user_auth_id", currentUserId)
-                        //eq(column = "user_id", value = currentUserIdforJournalEntry)
                     }
                 }.decodeSingle<UserDTO>().journal_id
             JournalQueryResult
