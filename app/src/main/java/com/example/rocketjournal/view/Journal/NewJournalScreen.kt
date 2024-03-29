@@ -2,7 +2,6 @@ package com.example.rocketjournal.view.Journal
 
 import AppBackgroundGeneral
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -36,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -46,10 +45,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.rocketjournal.view.BackButton
+import java.time.LocalDate
 
 
 //import com.example.rocketjournal.view.Journal.
@@ -178,62 +179,54 @@ fun daterPicker() {
     val state = rememberDatePickerState()
     val openDialog = remember { mutableStateOf(true) }
 
-    Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-        .border(BorderStroke(2.dp, Color.Black), RoundedCornerShape(15.dp))
-        .background(color = Color(0xFFE8D5BA), shape = RoundedCornerShape(15.dp))
-        .fillMaxWidth()
-        .height(100.dp)
-        .padding(16.dp)
-    ) {
-        if (openDialog.value) {
-            DatePickerDialog(
-                onDismissRequest = {
-                    openDialog.value = false
-                },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            openDialog.value = false
-                        }
-                    ) {
-                        Text("OK")
+    if (openDialog.value) {
+        DatePickerDialog(
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        openDialog.value = false
                     }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = {
-                            openDialog.value = false
-                        }
-                    ) {
-                        Text("CANCEL")
+                ) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        openDialog.value = false
                     }
-                },
+                ) {
+                    Text("CANCEL")
+                }
+            },
+            modifier = Modifier
+                .padding(16.dp)
+                //.background(Color(0xFFE8D5BA)) // Set background color
+                //.border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))//
+                .animateContentSize()
+                .shadow(10.dp)
+                .background(shape = RoundedCornerShape(15.dp), color = Color(0xFFE8D5BA)),
+            colors = DatePickerDefaults.colors(
+                containerColor = Color.White,
+                titleContentColor = Color.Yellow,
+                headlineContentColor = Color.Green,
+                weekdayContentColor = Color.Blue,
+                selectedDayContentColor = Color(red = 214, green = 66, blue = 105),
+            ),
+            shape = RoundedCornerShape(15.dp),
+        ) {
+            DatePicker(
+                state = state,
                 modifier = Modifier
-                    .padding(16.dp)
-                    //.background(Color(0xFFE8D5BA)) // Set background color
-                    //.border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))//
-                    .animateContentSize()
-                    .shadow(10.dp)
-                    .background(shape = RoundedCornerShape(15.dp), color = Color(0xFFE8D5BA)),
-                colors = DatePickerDefaults.colors(
-                    containerColor = Color.White,
-                    titleContentColor = Color.Yellow,
-                    headlineContentColor = Color.Green,
-                    weekdayContentColor = Color.Blue,
-                    selectedDayContentColor = Color(red = 214, green = 66, blue = 105),
-                ),
-                shape = RoundedCornerShape(15.dp),
-            ) {
-                DatePicker(
-                    state = state,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFFE8D5BA)) // Set background color
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    showModeToggle = false
+                    .fillMaxWidth()
+                    .background(Color(0xFFE8D5BA)) // Set background color
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                showModeToggle = false
 
-                )
-            }
+            )
         }
     }
 
@@ -250,68 +243,14 @@ fun daterPicker() {
 
 
 }
+@Preview
+@Composable
+fun DatePickerTest(){
+    val date = remember { LocalDate.now() }
 
-//@RequiresApi(Build.VERSION_CODES.O)
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun DateSelection(
-//    selectedDate: LocalDate?,
-//    onDateSelected: (LocalDate) -> Unit
-//) {
-//    val datePickerState = rememberDatePickerState(selectedDate ?: now())
-//
-//    Column {
-//        DatePicker(
-//            state = datePickerState,
-//            onDateChange = { newDate ->
-//                onDateSelected(newDate)
-//            },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .background(Color(0xFFE8D5BA)) // Set background color
-//                .padding(horizontal = 16.dp, vertical = 8.dp)
-//        )
-//        datePickerState.date?.let { date ->
-//            Text(
-//                text = date.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy")), // Format date as desired
-//                color = Color.Black, // Set text color
-//                textAlign = TextAlign.Center,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(vertical = 4.dp)
-//            )
-//        }
-//    }
-//}
-//
-//@RequiresApi(Build.VERSION_CODES.O)
-//fun convertMillisToLocalDate(millis: Long) : LocalDate {
-//    return Instant
-//        .m
-//        .ofEpochMilli(millis)
-//        .atZone(ZoneId.systemDefault())
-//        .toLocalDate()
-//}
-//
-//@RequiresApi(Build.VERSION_CODES.O)
-//fun convertMillisToLocalDateWithFormatter(date: LocalDate, dateTimeFormatter: DateTimeFormatter) : LocalDate {
-//    //Convert the date to a long in millis using a dateformmater
-//    val dateInMillis = LocalDate.parse(date.format(dateTimeFormatter), dateTimeFormatter)
-//        .atStartOfDay(ZoneId.systemDefault())
-//        .toInstant()
-//        .toEpochMilli()
-//
-//    //Convert the millis to a localDate object
-//    return Instant
-//        .ofEpochMilli(dateInMillis)
-//        .atZone(ZoneId.systemDefault())
-//        .toLocalDate()
-//}
-//
-//
-//@RequiresApi(Build.VERSION_CODES.O)
-//fun dateToString(date: LocalDate): String {
-//    val dateFormatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM, yyyy", Locale.getDefault())
-//    val dateInMillis = convertMillisToLocalDateWithFormatter(date, dateFormatter)
-//    return dateFormatter.format(dateInMillis)
-//}
+    Box(modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = date.toString())
+    }
+}
