@@ -49,7 +49,8 @@ import androidx.navigation.compose.composable
 import com.example.rocketjournal.model.Repositories.AuthenticationRepository
 import com.example.rocketjournal.viewmodel.SignUpViewModel
 import com.example.test.CalendarScreen
-
+import com.example.test.EventCreation
+import com.example.test.MainEvent
 
 
 import com.example.test.WeeklyScreen
@@ -67,7 +68,7 @@ fun Navigation(navController: NavHostController){
         composable("calendar") { CalendarScreen(navController)  }
         composable("list") { ListsScreen(navController) }
         composable("journal") { JournalMainDash(navController)}
-        composable("habit") {  }
+        composable("event") { MainEvent(navController) }
         // Setting Navigation
         composable("settings") {  }
         composable("profile") {  }
@@ -81,8 +82,11 @@ fun Navigation(navController: NavHostController){
 
         // Define other destinations here
 
-        //newJournal
+        //New Journal
         composable("newJournal") { NewJournalScreen(navController) }
+
+        //Event Creation Page
+        //composable("newEvent") { EventCreation(navController) }
 
     }
 }
@@ -98,7 +102,7 @@ fun BottomNavigationBar(navController: NavController) {
         "list" to Icons.Filled.Home,
         "home" to Icons.Filled.Home,
         "calendar" to Icons.Filled.Home,
-        "habit" to Icons.Filled.Home
+        "event" to Icons.Filled.Home
     )
     Column {
 
