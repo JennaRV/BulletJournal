@@ -152,7 +152,7 @@ fun Navigation(navController: NavHostController){
                             coroutine.launch {
                                 drawerState.close()
                             }
-                            navController.navigate("settings")
+
                         })
                     NavigationDrawerItem(
                         label = { Text(text = "Logout") },
@@ -228,7 +228,7 @@ fun Navigation(navController: NavHostController){
                     composable("event") {  }
                     // Setting Navigation
                     composable("settings") {  }
-                    composable("profile") {  }
+                    composable("profile") { ProfileUI(navController) }
                     // Login Navigation
                     composable("login") { LoginScreen(navController) }
                     composable("signup") { SignUp(navController) }

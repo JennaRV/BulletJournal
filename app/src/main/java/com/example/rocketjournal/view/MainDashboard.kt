@@ -56,7 +56,7 @@ fun MainDashboard(navController: NavController) {
                     .border(1.dp, Color.Black, shape = RoundedCornerShape(35.dp)),
                 shape = RoundedCornerShape(35.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFB98231)
+                    containerColor = Color(0xFFF8B450)
                 )
             ) {
                 Text(
@@ -81,7 +81,7 @@ fun MainDashboard(navController: NavController) {
                 Box(modifier = Modifier
                     .fillMaxWidth()
                     .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
-                    .background(Color(0xFFB98231), shape = RoundedCornerShape(15.dp))
+                    .background(Color(0xFFF8B450), shape = RoundedCornerShape(15.dp))
                     .align(Alignment.Top),
                     contentAlignment = Alignment.Center)
                 {
@@ -109,7 +109,7 @@ fun MainDashboard(navController: NavController) {
                 Box(modifier = Modifier
                     .fillMaxWidth()
                     .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
-                    .background(Color(0xFFB98231), shape = RoundedCornerShape(15.dp))
+                    .background(Color(0xFFFFC167), shape = RoundedCornerShape(15.dp))
                     .align(Alignment.Top),
                     contentAlignment = Alignment.Center)
                 {
