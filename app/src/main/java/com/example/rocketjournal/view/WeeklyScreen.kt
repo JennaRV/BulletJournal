@@ -64,10 +64,8 @@ fun WeeklyScreen(navController: NavController, viewModel: CalendarViewModel = hi
         ) {
             ThreePartWidget(viewModel)
         }
-        var counter = viewModel.currentWeekStart.value
-        while(counter.isBefore(viewModel.currentWeekEnd.value) or counter.isEqual(viewModel.currentWeekEnd.value)) {
-            DayEntry(counter)
-            counter = counter.plusDays(1)
+        for(i in 0..6) {
+            DayEntry(viewModel.currentWeekStart.value.plusDays(i.toLong()))
         }
     }
     BottomNavigationBar(navController)
@@ -88,10 +86,7 @@ fun ThreePartWidget(viewModel: CalendarViewModel) {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Button(
-            onClick = {
-                viewModel.currentWeekStart.value = viewModel.currentWeekStart.value.minusDays(7)
-                viewModel.currentWeekEnd.value = viewModel.currentWeekEnd.value.minusDays(7)
-            },
+            onClick = { viewModel.currentWeekStart.value = viewModel.currentWeekStart.value.minusDays(7) },
             modifier = Modifier.fillMaxHeight(),
             colors = ButtonDefaults.buttonColors(backgroundColor),
             border = BorderStroke(width = 1.dp, color = Color.Black)
@@ -105,7 +100,7 @@ fun ThreePartWidget(viewModel: CalendarViewModel) {
                     + "\n"
                     + viewModel.currentWeekStart.value.dayOfMonth
                     + "-"
-                    + viewModel.currentWeekEnd.value.dayOfMonth,
+                    + viewModel.currentWeekStart.value.plusDays(6).dayOfMonth,
             modifier = Modifier
                 .weight(.35f)
                 .padding(horizontal = 10.dp)
@@ -122,10 +117,7 @@ fun ThreePartWidget(viewModel: CalendarViewModel) {
             ),
         )
         Button(
-            onClick = {
-                viewModel.currentWeekStart.value = viewModel.currentWeekStart.value.plusDays(7)
-                viewModel.currentWeekEnd.value = viewModel.currentWeekEnd.value.plusDays(7)
-                      },
+            onClick = { viewModel.currentWeekStart.value = viewModel.currentWeekStart.value.plusDays(7) },
             modifier = Modifier.fillMaxHeight(),
             colors = ButtonDefaults.buttonColors(backgroundColor),
             border = BorderStroke(width = 1.dp, color = Color.Black)

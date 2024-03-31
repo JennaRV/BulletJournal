@@ -19,6 +19,4 @@ class CalendarViewModel : ViewModel() {
 
     // data for weekly view
     var currentWeekStart = mutableStateOf(today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY)))
-    var currentWeekEnd = mutableStateOf(currentWeekStart.value.plusDays(6))
-
 }
