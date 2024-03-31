@@ -19,14 +19,18 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+//import androidx.compose.material3.ExposedDropdownMenuDefaults.outlinedTextFieldColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+//import androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -41,6 +45,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,6 +67,8 @@ fun EventCreation(navController: NavController) {
 
         val boxWidth = screenWidth * 0.9f
         val offsetX = screenWidth * 0.05f
+
+
         Column(modifier = Modifier
             .fillMaxSize()
             .drawBehind {
@@ -85,6 +93,10 @@ fun EventCreation(navController: NavController) {
                 // Settings button aligned to the right
                 CancelButton(navController)
             }
+            NameTextField()
+            Spacer(modifier = Modifier.size(10.dp))
+            DetailsTextField()
+            Spacer(modifier = Modifier.size(20.dp))
             DateButton()
             Spacer(modifier = Modifier.size(10.dp))
             TimeButton()
@@ -141,6 +153,48 @@ fun CancelButton(navController: NavController) {
 }
 
 @Composable
+fun NameTextField() {
+    var eventName = ""
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        value = eventName,
+        onValueChange = { eventName = it },
+        label = {
+            Text(
+                "Name",
+                color = Color.White
+            )
+                },
+        visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        shape = RoundedCornerShape(10.dp),
+    )
+}
+
+@Composable
+fun DetailsTextField() {
+    var eventDetail = ""
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        value = eventDetail,
+        onValueChange = { eventDetail = it },
+        label = {
+            Text(
+                "Details",
+                color = Color.White
+            )
+        },
+        visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        shape = RoundedCornerShape(10.dp),
+    )
+}
+
+@Composable
 fun DateButton() {
     Button(
         onClick = { },
@@ -149,7 +203,7 @@ fun DateButton() {
 
         modifier = Modifier
             .background(Color.White.copy(alpha = 0.0f), shape = RoundedCornerShape(10.dp))
-            .padding(0.dp)
+            .padding(16.dp)
             .fillMaxWidth()
 
     ) {
@@ -176,7 +230,7 @@ fun TimeButton() {
 
         modifier = Modifier
             .background(Color.White.copy(alpha = 0.0f), shape = RoundedCornerShape(10.dp))
-            .padding(0.dp)
+            .padding(16.dp)
             .fillMaxWidth()
 
     ) {
@@ -203,7 +257,7 @@ fun AddEntryButton() {
 
         modifier = Modifier
             .background(Color.White.copy(alpha = 0.0f), shape = RoundedCornerShape(10.dp))
-            .padding(0.dp)
+            .padding(16.dp)
             .fillMaxWidth(0.5f)
 
     ) {
@@ -220,132 +274,3 @@ fun AddEntryButton() {
         )
     }
 }
-
-//    val primaryColor = Color(0xFF606BD1)
-//    val secondaryColor = Color(0xFFBA355D)
-//    Column(modifier = Modifier
-//            .background(primaryColor)
-//            .fillMaxSize()
-//            .drawBehind {
-//                drawCircle(
-//                        color = secondaryColor,
-//                        radius = 700f,
-//                        center = Offset(size.width / 2, size.height / 6)
-//                )
-//                drawRect(
-//                        color = Color.White.copy(alpha = 0.5f),
-//                        topLeft = Offset(0f, size.height/30),
-//
-//                )
-//            }
-//    ) {
-//        Column (
-//                modifier = Modifier
-//                        .fillMaxSize()
-//        ) {
-//            Row(
-//                    modifier = Modifier
-//                            .padding(35.dp)
-//            ) {
-//                Text(
-//                        "Details",
-//                        modifier = Modifier
-//                                .fillMaxWidth(),
-//                        //fontWeight = FontWeight.Bold,
-//                        style = TextStyle(
-//                                color = Color.White,
-//                                fontSize = 25.sp,
-//                                textAlign = TextAlign.Center
-//                        )
-//                )
-//
-//            }
-//            Row(
-//                    modifier = Modifier
-//                            .padding(16.dp),
-//
-//                    ) {
-//                Button(
-//                        onClick = { },
-//                        shape = RoundedCornerShape(10.dp),
-//                        colors = ButtonDefaults.buttonColors(Color.White.copy(alpha = 0.5f)),
-//
-//                        modifier = Modifier
-//                                .background(Color.White.copy(alpha = 0.0f), shape = RoundedCornerShape(10.dp))
-//                                .padding(0.dp)
-//                                .fillMaxWidth()
-//
-//                ) {
-//                    Text(
-//                            "Date",
-//                            modifier = Modifier
-//                                    .fillMaxWidth(),
-//                            fontWeight = FontWeight.Bold,
-//                            style = TextStyle(
-//                                    color = Color.White,
-//                                    fontSize = 25.sp,
-//                                    textAlign = TextAlign.Center
-//                            )
-//                    )
-//                }
-//            }
-//            Row(
-//                    modifier = Modifier
-//                            .padding(16.dp),
-//
-//                    ) {
-//                Button(
-//                        onClick = { },
-//                        shape = RoundedCornerShape(10.dp),
-//                        colors = ButtonDefaults.buttonColors(Color.White.copy(alpha = 0.5f)),
-//
-//                        modifier = Modifier
-//                                .background(Color.White.copy(alpha = 0.0f), shape = RoundedCornerShape(10.dp))
-//                                .padding(0.dp)
-//                                .fillMaxWidth()
-//
-//                ) {
-//                    Text(
-//                            "Time",
-//                            modifier = Modifier
-//                                    .fillMaxWidth(),
-//                            fontWeight = FontWeight.Bold,
-//                            style = TextStyle(
-//                                    color = Color.White,
-//                                    fontSize = 25.sp,
-//                                    textAlign = TextAlign.Center
-//                            )
-//                    )
-//                }
-//            }
-//            Row(
-//                    modifier = Modifier
-//                            .padding(16.dp),
-//
-//                    ) {
-//                Button(
-//                        onClick = { },
-//                        shape = RoundedCornerShape(10.dp),
-//                        colors = ButtonDefaults.buttonColors(Color.White.copy(alpha = 0.5f)),
-//
-//                        modifier = Modifier
-//                                .background(Color.White.copy(alpha = 0.0f), shape = RoundedCornerShape(10.dp))
-//                                .padding(0.dp)
-//                                .fillMaxWidth(0.5f)
-//
-//                ) {
-//                    Text(
-//                            "Add Entry",
-//                            modifier = Modifier
-//                                    .fillMaxWidth(),
-//                            fontWeight = FontWeight.Bold,
-//                            style = TextStyle(
-//                                    color = Color.White,
-//                                    fontSize = 25.sp,
-//                                    textAlign = TextAlign.Center
-//                            )
-//                    )
-//                }
-//            }
-//        }
-//    }
