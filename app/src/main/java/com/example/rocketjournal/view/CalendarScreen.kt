@@ -189,8 +189,8 @@ fun Calendar(viewModel: CalendarViewModel) {
             // Change Month Backwards Button
             Button(
                 onClick = {
-                    viewModel.month.value = viewModel.month.value.minus(1)
-                    viewModel.shownDate.value = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value, 1)
+                    viewModel.month.value = viewModel.month.value.minusMonths(1)
+                    viewModel.shownDate.value = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value.month, 1)
                 },
                 colors = ButtonDefaults.buttonColors(unselectedColor),
                 border = BorderStroke(width = 1.dp, color = Color.Black)
@@ -214,8 +214,8 @@ fun Calendar(viewModel: CalendarViewModel) {
             // Change Month Forward Button
             Button(
                 onClick = {
-                    viewModel.month.value = viewModel.month.value.plus(1)
-                    viewModel.shownDate.value = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value, 1)
+                    viewModel.month.value = viewModel.month.value.plusMonths(1)
+                    viewModel.shownDate.value = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value.month, 1)
                 },
                 colors = ButtonDefaults.buttonColors(unselectedColor),
                 border = BorderStroke(width = 1.dp, color = Color.Black)
@@ -228,18 +228,18 @@ fun Calendar(viewModel: CalendarViewModel) {
 
         }
         // fill calendar with weekButtons
-        val firstDay = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value, 1)
+        val firstDay = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value.month, 1)
         var counter = firstDay
-        var firstDayOfWeek = counter.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        var firstDayOfWeek = counter.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
 
-        while (counter.month == viewModel.month.value){
+        while (counter.month == viewModel.month.value.month){
             val weekDates = mutableListOf<LocalDate>()
             for (i in 0 until 7) {
                 weekDates.add(firstDayOfWeek.plusDays(i.toLong()))
             }
             WeekButtons(weekDates, viewModel)
             counter = counter.plusDays(7)
-            firstDayOfWeek = counter.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+            firstDayOfWeek = counter.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
         }
     }
 }
@@ -270,7 +270,7 @@ fun WeekButtons(weekDates : List<LocalDate>, viewModel: CalendarViewModel) {
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        for(date in weekDates) {DayButton(if (date.month == viewModel.month.value) date.dayOfMonth.toString() else "")}
+        for(date in weekDates) {DayButton(if (date.month == viewModel.month.value.month) date.dayOfMonth.toString() else "")}
     }
 }
 
