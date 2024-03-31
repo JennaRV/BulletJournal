@@ -17,13 +17,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -32,7 +27,6 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-//import androidx.compose.material3.ExposedDropdownMenuDefaults.outlinedTextFieldColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
@@ -40,11 +34,11 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTimePickerState
-//import androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -66,6 +60,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -75,8 +70,6 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.rocketjournal.model.dataModel.EventData
-//import com.example.rocketjournal.view.BottomNavigationBar
-//import com.example.rocketjournal.view.HeaderRow
 import com.example.rocketjournal.viewmodel.EventViewModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -105,23 +98,23 @@ fun EventCreation(navController: NavController) {
             set(java.util.Calendar.DAY_OF_MONTH, 23)
         }.timeInMillis
     }
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = date,
-        yearRange = 1990..2023
-    )
-    var showDatePicker by remember { mutableStateOf(false) }
-
-    val timePickerState = rememberTimePickerState(
-        initialHour = 12,
-        initialMinute = 30,
-    )
-    var showTimePicker by remember { mutableStateOf(false) }
-
-    //mutable variables
-    var isDatePickerVisible by remember { mutableStateOf(false) }
-    var isTimePickerVisible by remember { mutableStateOf(false) }
-    val selectedDate by remember { mutableStateOf<LocalDate?>(null) }
-    var selectedTime by remember { mutableStateOf<LocalTime?>(null) }
+//    val datePickerState = rememberDatePickerState(
+//        initialSelectedDateMillis = date,
+//        yearRange = 1990..2023
+//    )
+//    var showDatePicker by remember { mutableStateOf(false) }
+//
+//    val timePickerState = rememberTimePickerState(
+//        initialHour = 12,
+//        initialMinute = 30,
+//    )
+//    var showTimePicker by remember { mutableStateOf(false) }
+//
+//    //mutable variables
+//    var isDatePickerVisible by remember { mutableStateOf(false) }
+//    var isTimePickerVisible by remember { mutableStateOf(false) }
+//    val selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+//    var selectedTime by remember { mutableStateOf<LocalTime?>(null) }
 
 
         Column(modifier = Modifier
@@ -160,6 +153,7 @@ fun EventCreation(navController: NavController) {
 
 @Composable
 fun TitleText(title: String) {
+
     Box(
         modifier = Modifier
             .padding(horizontal = 8.dp)
@@ -202,9 +196,10 @@ fun CancelButton(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NameTextField() {
-    var eventName = ""
+    var eventName by remember {mutableStateOf(TextFieldValue())}
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
@@ -217,15 +212,23 @@ fun NameTextField() {
                 color = Color.White
             )
                 },
-        visualTransformation = PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        //visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         shape = RoundedCornerShape(10.dp),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
+            focusedLabelColor = Color.White, // Label color when focused
+            unfocusedLabelColor = Color.White, // Label color when not focused
+            focusedBorderColor = Color.White, // Border color when focused
+            unfocusedBorderColor = Color.White, // Border color when not focused
+        ),
     )
 }
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsTextField() {
-    var eventDetail = ""
+    var eventDetail by remember {mutableStateOf(TextFieldValue())}
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
@@ -238,9 +241,17 @@ fun DetailsTextField() {
                 color = Color.White
             )
         },
-        visualTransformation = PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        //visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         shape = RoundedCornerShape(10.dp),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
+            focusedLabelColor = Color.White, // Label color when focused
+            unfocusedLabelColor = Color.White, // Label color when not focused
+            focusedBorderColor = Color.White, // Border color when focused
+            unfocusedBorderColor = Color.White, // Border color when not focused
+        ),
     )
 }
 
