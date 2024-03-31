@@ -86,7 +86,7 @@ fun Navigation(navController: NavHostController){
         composable("newJournal") { NewJournalScreen(navController) }
 
         //Event Creation Page
-        //composable("newEvent") { EventCreation(navController) }
+        composable("newEvent") { EventCreation(navController) }
 
     }
 }

@@ -56,12 +56,8 @@ import com.example.rocketjournal.viewmodel.EventViewModel
 //@Preview
 @Composable
 fun MainEvent(navController: NavController, viewModel: EventViewModel = hiltViewModel()) {
-//    val primaryColor = Color(0xFF606BD1)
-//    val secondaryColor = Color(0xFFBA355D)
-//    val darkColor = Color(0xFFB98231)
-//    val lightColor = Color(0xFFE8D5BA)
 
-    val entriesState = viewModel.eventList.collectAsState(initial = emptyList()).value ?: emptyList()
+    val eventState = viewModel.eventList.collectAsState(initial = emptyList()).value ?: emptyList()
     val isLoading = viewModel.isLoading.collectAsState(initial = true).value
 
     AppBackgroundGeneral {
@@ -77,9 +73,9 @@ fun MainEvent(navController: NavController, viewModel: EventViewModel = hiltView
 
             Spacer(modifier = Modifier.size(20.dp))
 
-            //Event Creation
+            //Create an Event
             Button(
-                onClick = { navController.navigate("home") },
+                onClick = { navController.navigate("newEvent") },
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .border(
@@ -104,6 +100,7 @@ fun MainEvent(navController: NavController, viewModel: EventViewModel = hiltView
 
             Spacer(modifier = Modifier.size(20.dp))
 
+            //This is where the events go
             LazyColumn {
                 item {
                     if (isLoading) {
@@ -113,7 +110,7 @@ fun MainEvent(navController: NavController, viewModel: EventViewModel = hiltView
                                 .padding(vertical = 16.dp)
                                 .align(Alignment.CenterHorizontally)
                         )
-                    } else if (entriesState.isEmpty()) {
+                    } else if (eventState.isEmpty()) {
                         Text(
                             text = "No Events Available",
                             modifier = Modifier
@@ -123,7 +120,7 @@ fun MainEvent(navController: NavController, viewModel: EventViewModel = hiltView
                         )
                     }
                 }
-                items(entriesState) { eventEntry ->
+                items(eventState) { eventEntry ->
                     EventDataItemView(event = eventEntry)
 
                 }
@@ -146,7 +143,7 @@ fun EventDataItemView(event: EventData) {
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        Column{
+        Column (horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = event.name, fontSize = 20.sp, fontWeight = FontWeight.Bold)
 
             Text(text = event.details, maxLines = 2)
@@ -205,200 +202,5 @@ fun BackButton(navController: NavController) {
         )
     }
 }
-
-
-
-
-
-
-//    Column(modifier = Modifier
-//        .background(primaryColor)
-//        .fillMaxSize()
-//        .drawBehind {
-//            drawCircle(
-//                color = secondaryColor,
-//                radius = 700f,
-//                center = Offset(size.width / 2, size.height / 6)
-//            )
-//        }
-//    ) {
-//        Column (modifier = Modifier
-//            .fillMaxSize()) {
-//            Row(modifier = Modifier
-//                .padding(16.dp)
-//            ) {
-//                Button(
-//                    onClick = { },
-//                    shape = RoundedCornerShape(10.dp),
-//                    colors = ButtonDefaults.buttonColors(darkColor),
-//                    modifier = Modifier
-//                        .background(darkColor, shape = RoundedCornerShape(10.dp))
-//                        .padding(0.dp)
-//                        .fillMaxWidth(.30f)
-//                ) {
-//                    Text(
-//                        "<-------",
-//                        modifier = Modifier
-//                            .fillMaxWidth(),
-//                        fontWeight = FontWeight.Bold,
-//                        style = TextStyle(
-//                            color = Color.Black,
-//                            fontSize = 14.sp,
-//                            textAlign = TextAlign.Center
-//                        )
-//                    )
-//                }
-//
-//            }
-//            Row(
-//                modifier = Modifier
-//                    .padding(16.dp)
-//            ) {
-//                Row(
-//                    modifier = Modifier
-//                        .background(darkColor, shape = RoundedCornerShape(10.dp))
-//                        .padding(12.dp)
-//                        .fillMaxWidth()
-//                ) {
-//                    Text(
-//                        "My Events",
-//                        modifier = Modifier
-//                            .fillMaxWidth(),
-//                        fontWeight = FontWeight.Bold,
-//                        style = TextStyle(
-//                            color = Color.Black,
-//                            fontSize = 25.sp,
-//                            textAlign = TextAlign.Center
-//                        )
-//                    )
-//
-//                }
-//            }
-//            Row(
-//                modifier = Modifier
-//                    .padding(16.dp),
-//                horizontalArrangement = Arrangement.End
-//            ) {
-//                Button(
-//                    onClick = { },
-//                    shape = RoundedCornerShape(10.dp),
-//                    colors = ButtonDefaults.buttonColors(darkColor),
-//
-//                    modifier = Modifier
-//                        .background(darkColor, shape = RoundedCornerShape(10.dp))
-//                        .padding(0.dp)
-//                        .fillMaxWidth(.30f)
-//
-//                ) {
-//                    Text(
-//                        "Add Entry",
-//                        modifier = Modifier
-//                            .fillMaxWidth(),
-//                        fontWeight = FontWeight.Bold,
-//                        style = TextStyle(
-//                            color = Color.Black,
-//                            fontSize = 14.sp,
-//                            textAlign = TextAlign.Center
-//                        )
-//                    )
-//                }
-//            }
-//            Row(
-//                modifier = Modifier
-//                    .padding(16.dp)
-//            ) {
-//                Row(
-//                    modifier = Modifier
-//                        .background(lightColor, shape = RoundedCornerShape(10.dp))
-//                        .padding(40.dp)
-//                        .fillMaxWidth()
-//                ){
-//                    Row(
-//                        modifier = Modifier
-//                            .background(lightColor, shape = RoundedCornerShape(10.dp))
-//                            .padding(10.dp)
-//                            .fillMaxWidth()
-//                    ) {
-//                        Text (
-//                            "Event Name",
-//                            modifier = Modifier
-//                                .fillMaxWidth(),
-//                            fontWeight = FontWeight.Bold,
-//                            style = TextStyle(
-//                                color = Color.Black,
-//                                fontSize = 25.sp,
-//                                textAlign = TextAlign.Center
-//                            )
-//                        )
-//
-//                    }
-//                }
-//            }
-//            Row(
-//                modifier = Modifier
-//                    .padding(16.dp)
-//            ) {
-//                Row(
-//                    modifier = Modifier
-//                        .background(lightColor, shape = RoundedCornerShape(10.dp))
-//                        .padding(40.dp)
-//                        .fillMaxWidth()
-//                ){
-//                    Row(
-//                        modifier = Modifier
-//                            .background(lightColor, shape = RoundedCornerShape(10.dp))
-//                            .padding(10.dp)
-//                            .fillMaxWidth()
-//                    ) {
-//                        Text (
-//                            "Event Name",
-//                            modifier = Modifier
-//                                .fillMaxWidth(),
-//                            fontWeight = FontWeight.Bold,
-//                            style = TextStyle(
-//                                color = Color.Black,
-//                                fontSize = 25.sp,
-//                                textAlign = TextAlign.Center
-//                            )
-//                        )
-//
-//                    }
-//                }
-//            }
-//            Row(
-//                modifier = Modifier
-//                    .padding(16.dp)
-//            ) {
-//                Row(
-//                    modifier = Modifier
-//                        .background(lightColor, shape = RoundedCornerShape(10.dp))
-//                        .padding(40.dp)
-//                        .fillMaxWidth()
-//                ){
-//                    Row(
-//                        modifier = Modifier
-//                            .background(lightColor, shape = RoundedCornerShape(10.dp))
-//                            .padding(10.dp)
-//                            .fillMaxWidth()
-//                    ) {
-//                        Text (
-//                            "Event Name",
-//                            modifier = Modifier
-//                                .fillMaxWidth(),
-//                            fontWeight = FontWeight.Bold,
-//                            style = TextStyle(
-//                                color = Color.Black,
-//                                fontSize = 25.sp,
-//                                textAlign = TextAlign.Center
-//                            )
-//                        )
-//
-//                    }
-//                }
-//            }
-//        }
-//
-//    }
-
 
 
