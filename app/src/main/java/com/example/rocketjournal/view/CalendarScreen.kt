@@ -232,7 +232,7 @@ fun Calendar(navController: NavController, viewModel: CalendarViewModel) {
         var counter = firstDay
         var firstDayOfWeek = counter.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
 
-        while (counter.month == viewModel.month.value.month){
+        while (counter.month == viewModel.month.value.month || firstDayOfWeek.month == viewModel.month.value.month){
             val weekDates = mutableListOf<LocalDate>()
             for (i in 0 until 7) {
                 weekDates.add(firstDayOfWeek.plusDays(i.toLong()))
@@ -246,7 +246,8 @@ fun Calendar(navController: NavController, viewModel: CalendarViewModel) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DayButton(navController: NavController, day: LocalDate, showDate: Boolean) {
+fun DayButton(navController: NavController, day: LocalDate, showDate: Boolean, isToday: Boolean) {
+    val selectedColor = Color(0xFFB98231)
     val unselectedColor = Color(0xFFE8D5BA)
     TextButton(
         onClick = {navController.navigate("daily/$day")},
@@ -254,7 +255,7 @@ fun DayButton(navController: NavController, day: LocalDate, showDate: Boolean) {
         modifier = Modifier
             .width(48.dp)
             .padding(2.dp),
-        colors = ButtonDefaults.buttonColors(unselectedColor),
+        colors = ButtonDefaults.buttonColors(if(isToday and showDate)selectedColor else unselectedColor ),
         border = BorderStroke(width = 1.dp, color = Color.Black),
     ) {
         Text(text = if(showDate)day.dayOfMonth.toString() else "",
@@ -271,7 +272,13 @@ fun WeekButtons(navController: NavController, weekDates : List<LocalDate>, viewM
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        for(date in weekDates) { DayButton(navController, date, (date.month == viewModel.month.value.month))}
+        for(date in weekDates) { DayButton(
+            navController,
+            date,
+            (date.month == viewModel.month.value.month),
+            date.isEqual(viewModel.today)
+            )
+        }
     }
 }
 
