@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,7 +32,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -99,13 +97,13 @@ fun CalendarScreen(navController: NavController, viewModel: CalendarViewModel = 
             Row(
                 modifier = Modifier.padding(12.dp)
             ) {
-                journalEntry(text = "Journal Entry #1")
+                JournalEntry(text = "Journal Entry #1")
             }
 
             Row(
                 modifier = Modifier.padding(12.dp)
             ) {
-                journalEntry(text = "Journal Entry #2")
+                JournalEntry(text = "Journal Entry #2")
             }
             BottomNavigationBar(navController = navController)
         }
@@ -239,7 +237,7 @@ fun Calendar(viewModel: CalendarViewModel) {
             for (i in 0 until 7) {
                 weekDates.add(firstDayOfWeek.plusDays(i.toLong()))
             }
-            weekButtons(weekDates, viewModel)
+            WeekButtons(weekDates, viewModel)
             counter = counter.plusDays(7)
             firstDayOfWeek = counter.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
         }
@@ -247,7 +245,7 @@ fun Calendar(viewModel: CalendarViewModel) {
 }
 
 @Composable
-fun dayButton(day: String) {
+fun DayButton(day: String) {
     val unselectedColor = Color(0xFFE8D5BA)
     TextButton(
         onClick = { /*TODO*/ },
@@ -263,26 +261,21 @@ fun dayButton(day: String) {
             fontWeight = FontWeight.Bold)
     }
 }
-@Composable
-@Preview
-fun previewButton(){
-    dayButton(day = "55")
-}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun weekButtons(weekDates : List<LocalDate>, viewModel: CalendarViewModel) {
+fun WeekButtons(weekDates : List<LocalDate>, viewModel: CalendarViewModel) {
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        for(date in weekDates) {dayButton(if (date.month == viewModel.month.value) date.dayOfMonth.toString() else "")}
+        for(date in weekDates) {DayButton(if (date.month == viewModel.month.value) date.dayOfMonth.toString() else "")}
     }
 }
 
 @Composable
-fun journalEntry(text: String) {
+fun JournalEntry (text: String) {
     val unselectedColor = Color(0xFFE8D5BA)
     Row(
         modifier = Modifier
