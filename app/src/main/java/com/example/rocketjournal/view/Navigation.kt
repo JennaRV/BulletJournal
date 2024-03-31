@@ -1,6 +1,8 @@
 package com.example.rocketjournal.view
 
 import LoginButtons
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -57,10 +59,11 @@ import com.example.test.WeeklyScreen
 import io.ktor.websocket.Frame
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(navController: NavHostController){
 
-    NavHost(navController = navController, startDestination = "list") {
+    NavHost(navController = navController, startDestination = "login") {
 
         // Main Navigation
         composable("home") { MainDashboard(navController) }
@@ -77,6 +80,15 @@ fun Navigation(navController: NavHostController){
         composable("loginPage"){LoginPage(navController)}
         // Other Navigation
         composable("weekly") { WeeklyScreen(navController) }
+        composable("task_list/{listId}") { backStackEntry ->
+            // Extract the listId from the backStackEntry
+            val listId = backStackEntry.arguments?.getString("listId")?.toIntOrNull()
+
+            // Pass the listId to your TaskList composable
+            if (listId != null) {
+                TaskList(navController, listId)
+            }
+        }
 
 
         // Define other destinations here

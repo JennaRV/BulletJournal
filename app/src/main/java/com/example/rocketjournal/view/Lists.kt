@@ -1,7 +1,9 @@
 package com.example.rocketjournal.view
 
 import AppBackgroundGeneral
+import android.os.Build
 import android.widget.ListView
+import androidx.annotation.RequiresApi
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -38,6 +40,7 @@ import com.example.rocketjournal.model.dataModel.ListData // Ensure you have a d
 import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -45,17 +48,28 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 //import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.rocketjournal.model.DataTransferObjects.ListsDTO
+import com.example.rocketjournal.model.dataModel.TaskData
 import com.example.rocketjournal.viewmodel.ListsViewModel
+import com.example.rocketjournal.viewmodel.TaskViewModel
+import kotlinx.coroutines.launch
+
 //import io.github.jan.supabase.postgrest.Postgrest.Companion.key
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltViewModel()) {
+fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltViewModel(), taskViewModel: TaskViewModel = hiltViewModel()) {
 
     //the listsState is a list of all to-do lists, this will fetch the lists from the database,
     //its initial/default value is an empty list, if the database is empty, otherwise it will be populates with
@@ -63,6 +77,12 @@ fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltVi
     val listsState = viewModel.listFlow.collectAsState(initial = emptyList()).value ?: emptyList()
     //this is the boolean that states that the program is in a "loading state"
     val isLoading = viewModel.isLoading.collectAsState(initial = true).value
+
+    val coroutine = rememberCoroutineScope()
+    val tasksMap by remember { mutableStateOf(mutableMapOf<Int, List<TaskData>>()) }
+
+
+
 
     AppBackgroundGeneral {
         Column {
@@ -79,12 +99,23 @@ fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltVi
             } else {
                 LazyColumn {
                     items(listsState) { list ->
-                        ListDataItemView(list = list, onCheckedChange = viewModel::updateList)
+                        ListDataItemView(
+                            list = list,
+                            onListClicked = { clickedList ->
+                                // Handle navigation or any other action here
+                                // For example, navigate to another screen
+                                navController.navigate("task_list/${clickedList.list_id}")
+                            },
+                            onDeleteClicked = {
+                                viewModel.deleteList(list)
+                            }
+                        )
                     }
                 }
             }
 
         }
+        BottomNavigationBar(navController)
     }
 }
 
@@ -142,7 +173,11 @@ fun BackButton(navController: NavController) {
 }
 
 @Composable
-fun ListDataItemView(list: ListData, onCheckedChange: (ListData) -> Unit) {
+fun ListDataItemView(
+    list: ListData,
+    onListClicked: (ListData) -> Unit,
+    onDeleteClicked: (ListData) -> Unit,
+) {
     Box(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -150,14 +185,15 @@ fun ListDataItemView(list: ListData, onCheckedChange: (ListData) -> Unit) {
             .background(color = Color(0xFFE8D5BA), shape = RoundedCornerShape(15.dp))
             .fillMaxWidth()
             .height(100.dp)
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable { onListClicked(list) }, // Use clickable modifier
         contentAlignment = Alignment.Center
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = list.is_complete,
                 onCheckedChange = { isChecked ->
-                    onCheckedChange(list.copy(is_complete = isChecked))
+                    onListClicked(list.copy(is_complete = isChecked))
                 },
                 colors = CheckboxDefaults.colors(
                     checkedColor = Color(0xFFB98231), // Color when checked
@@ -166,19 +202,58 @@ fun ListDataItemView(list: ListData, onCheckedChange: (ListData) -> Unit) {
                 ),
                 modifier = Modifier,
 
-            )
+                )
             Spacer(modifier = Modifier.width(8.dp))
             Text(list.name)
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "Delete",
+                tint = Color.Black, // Adjust the color as needed
+                modifier = Modifier
+                    .clickable {
+                        onDeleteClicked(list) // Invoke the delete callback
+                    }
+            )
         }
     }
 }
 
 
+//@Composable
+//fun ListDataItemView2(
+//    list: ListData,
+//    viewModel: ListsViewModel,
+//    navController: NavController
+//) {
+//    val isChecked = list.list_id in viewModel.checkedLists.value
+//
+//    Row(
+//        modifier = Modifier
+//            .padding(horizontal = 16.dp, vertical = 8.dp)
+//            .border(BorderStroke(2.dp, Color.Black), RoundedCornerShape(15.dp))
+//            .background(color = Color(0xFFE8D5BA), shape = RoundedCornerShape(15.dp))
+//            .fillMaxWidth()
+//            .height(100.dp)
+//            .padding(16.dp)
+//            .clickable {
+//                viewModel.toggleList(list.list_id) // Toggle the checked state in the ViewModel
+//            },
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        Checkbox(
+//            checked = isChecked,
+//            onCheckedChange = { isChecked ->
+//                viewModel.toggleList(list.list_id) // Toggle the checked state in the ViewModel
+//            },
+//            colors = CheckboxDefaults.colors(
+//                checkedColor = Color(0xFFB98231), // Color when checked
+//                uncheckedColor = Color.Black, // Color when unchecked
+//                checkmarkColor = Color(0xFFE8D5BA) // Color of the checkmark
+//            )
+//        )
+//        Spacer(modifier = Modifier.width(8.dp))
+//        Text(list.name)
+//    }
+//}
 
-
-@Preview
-@Composable
-fun CreateListPreview(){
-    CreateList()
-}
 
