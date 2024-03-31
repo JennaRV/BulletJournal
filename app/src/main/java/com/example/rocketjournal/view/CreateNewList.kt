@@ -82,6 +82,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import javax.inject.Scope
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -185,7 +186,10 @@ fun CreateList(viewModel: ListsViewModel = hiltViewModel()) {
                     //Log.e("", "$deadline")
                     // Call the view model function to add the list
                         viewModel.onCreateList()
-                        !sheetState.isVisible
+                        viewModel.name.value = ""
+                        scope.launch {
+                            sheetState.hide()
+                        }
 
                 },
                 modifier = Modifier
