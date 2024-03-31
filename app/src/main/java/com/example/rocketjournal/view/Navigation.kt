@@ -255,7 +255,15 @@ fun Navigation(navController: NavHostController){
                 // Other Navigation
                 composable("weekly") { WeeklyScreen(navController) }
                 composable("daily/{date}") {backStackEntry -> DailyScreen(navController, backStackEntry.arguments?.getString("date"))}
+                composable("task_list/{listId}") { backStackEntry ->
+                    // Extract the listId from the backStackEntry
+                    val listId = backStackEntry.arguments?.getString("listId")?.toIntOrNull()
 
+                    // Pass the listId to your TaskList composable
+                    if (listId != null) {
+                        TaskList(navController, listId)
+                    }
+                }
                 //newJournal
                 composable("newJournal") { NewJournalScreen(navController) }
                 composable("journalEntry") { JournalEntry(navController) }

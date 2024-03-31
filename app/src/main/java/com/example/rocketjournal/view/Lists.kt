@@ -115,7 +115,7 @@ fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltVi
             }
 
         }
-        BottomNavigationBar(navController)
+
     }
 }
 

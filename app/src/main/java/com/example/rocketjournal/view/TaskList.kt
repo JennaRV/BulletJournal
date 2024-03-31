@@ -107,7 +107,7 @@ fun TaskList(
                 AddListItemButton(listID = listID)
 
             }
-            BottomNavigationBar(navController)
+
 
         }
 
