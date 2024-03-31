@@ -1,7 +1,5 @@
 package com.example.rocketjournal.view
 
-
-
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -62,6 +60,7 @@ fun Navigation(navController: NavHostController){
         composable("loginPage"){LoginPage(navController)}
         // Other Navigation
         composable("weekly") { WeeklyScreen(navController) }
+        composable("daily/{date}") {backStackEntry -> DailyScreen(navController, backStackEntry.arguments?.getString("date"))}
 
 
         // Define other destinations here
