@@ -42,7 +42,6 @@ fun WeeklyScreen(navController: NavController, viewModel: CalendarViewModel = hi
     val secondaryColor = Color(0xFFBA355D)
     Column(modifier = Modifier
         .background(primaryColor)
-
         .drawBehind {
             drawCircle(
                 color = secondaryColor,
@@ -151,7 +150,7 @@ fun DayEntry(date: LocalDate) {
             modifier = Modifier
                 .background(backgroundColor, shape = RoundedCornerShape(10.dp))
                 .padding(4.dp)
-                .height(48.dp), //band-aid solution, does not responsively scale ,
+                .height(48.dp),
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
         ) // Display the day

@@ -70,7 +70,7 @@ fun CalendarScreen(navController: NavController, viewModel: CalendarViewModel = 
             Row(modifier = Modifier
                 .padding(16.dp)
             ) {
-                Calendar(viewModel)
+                Calendar(navController, viewModel)
             }
 
             Row(
@@ -171,7 +171,7 @@ fun RoundedEndButton(text: String, isSelected: Boolean, onClick: () -> Unit, isF
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Calendar(viewModel: CalendarViewModel) {
+fun Calendar(navController: NavController, viewModel: CalendarViewModel) {
     val selectedColor = Color(0xFFB98231)
     val unselectedColor = Color(0xFFE8D5BA)
     Column(
@@ -237,18 +237,19 @@ fun Calendar(viewModel: CalendarViewModel) {
             for (i in 0 until 7) {
                 weekDates.add(firstDayOfWeek.plusDays(i.toLong()))
             }
-            WeekButtons(weekDates, viewModel)
+            WeekButtons(navController, weekDates, viewModel)
             counter = counter.plusDays(7)
             firstDayOfWeek = counter.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DayButton(day: String) {
+fun DayButton(navController: NavController, day: LocalDate, showDate: Boolean) {
     val unselectedColor = Color(0xFFE8D5BA)
     TextButton(
-        onClick = { /*TODO*/ },
+        onClick = {navController.navigate("daily/$day")},
         shape = CircleShape,
         modifier = Modifier
             .width(48.dp)
@@ -256,7 +257,7 @@ fun DayButton(day: String) {
         colors = ButtonDefaults.buttonColors(unselectedColor),
         border = BorderStroke(width = 1.dp, color = Color.Black),
     ) {
-        Text(text = day,
+        Text(text = if(showDate)day.dayOfMonth.toString() else "",
             color = Color.Black,
             fontWeight = FontWeight.Bold)
     }
@@ -264,13 +265,13 @@ fun DayButton(day: String) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun WeekButtons(weekDates : List<LocalDate>, viewModel: CalendarViewModel) {
+fun WeekButtons(navController: NavController, weekDates : List<LocalDate>, viewModel: CalendarViewModel) {
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        for(date in weekDates) {DayButton(if (date.month == viewModel.month.value.month) date.dayOfMonth.toString() else "")}
+        for(date in weekDates) { DayButton(navController, date, (date.month == viewModel.month.value.month))}
     }
 }
 

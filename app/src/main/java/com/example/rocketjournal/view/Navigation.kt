@@ -1,6 +1,8 @@
 package com.example.rocketjournal.view
 
 import LoginButtons
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -57,6 +59,7 @@ import com.example.test.WeeklyScreen
 import io.ktor.websocket.Frame
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(navController: NavHostController){
 
@@ -77,6 +80,7 @@ fun Navigation(navController: NavHostController){
         composable("loginPage"){LoginPage(navController)}
         // Other Navigation
         composable("weekly") { WeeklyScreen(navController) }
+        composable("daily/{date}") {backStackEntry -> DailyScreen(navController, backStackEntry.arguments?.getString("date"))}
 
 
 
