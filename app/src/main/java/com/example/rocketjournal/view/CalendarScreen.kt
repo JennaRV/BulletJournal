@@ -1,5 +1,7 @@
 package com.example.test
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,13 +21,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,11 +36,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.rocketjournal.view.BottomNavigationBar
+import com.example.rocketjournal.viewmodel.CalendarViewModel
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
 
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarScreen(navController: NavController) {
+fun CalendarScreen(navController: NavController, viewModel: CalendarViewModel = hiltViewModel()) {
     val primaryColor = Color(0xFF606BD1)
     val secondaryColor = Color(0xFFBA355D)
     Column(modifier = Modifier
@@ -66,7 +72,7 @@ fun CalendarScreen(navController: NavController) {
             Row(modifier = Modifier
                 .padding(16.dp)
             ) {
-                Calendar()
+                Calendar(viewModel)
             }
 
             Row(
@@ -74,6 +80,7 @@ fun CalendarScreen(navController: NavController) {
                     .background(primaryColor)
                     .fillMaxWidth()
             ) {
+                // Add Journal Entry Button
                 Button(
                     onClick = { /*TODO*/ },
                     modifier = Modifier
@@ -148,9 +155,11 @@ fun RoundedEndButton(text: String, isSelected: Boolean, onClick: () -> Unit, isF
             .clickable { onClick() }
             .size(width = 150.dp, height = 60.dp)
             .clip(shape)
-            .border(width = 1.dp,
+            .border(
+                width = 1.dp,
                 color = Color.Black,
-                shape = shape)
+                shape = shape
+            )
             .background(color = if (isSelected) selectedColor else unselectedColor),
         contentAlignment = Alignment.Center
     ) {
@@ -162,9 +171,9 @@ fun RoundedEndButton(text: String, isSelected: Boolean, onClick: () -> Unit, isF
 }
 
 
-@Preview
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Calendar() {
+fun Calendar(viewModel: CalendarViewModel) {
     val selectedColor = Color(0xFFB98231)
     val unselectedColor = Color(0xFFE8D5BA)
     Column(
@@ -176,48 +185,99 @@ fun Calendar() {
             modifier = Modifier
                 .background(selectedColor, shape = RoundedCornerShape(10.dp))
                 .padding(12.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
+            // Change Month Backwards Button
+            Button(
+                onClick = {
+                    viewModel.month.value = viewModel.month.value.minus(1)
+                    viewModel.shownDate.value = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value, 1)
+                },
+                colors = ButtonDefaults.buttonColors(unselectedColor),
+                border = BorderStroke(width = 1.dp, color = Color.Black)
+            ) {
+                Text(
+                    "<---", // replace with icon
+                    color = Color.Black,
+                )
+            }
             Text(
-                "Calendar",
-                modifier = Modifier
-                    .fillMaxWidth(),
+                viewModel.month.value.toString(),
                 fontWeight = FontWeight.Bold,
                 style = TextStyle(
                     color = Color.Black,
                     fontSize = 25.sp,
                     textAlign = TextAlign.Center
-                )
+                ),
+                modifier = Modifier
+                    .width(160.dp),
             )
+            // Change Month Forward Button
+            Button(
+                onClick = {
+                    viewModel.month.value = viewModel.month.value.plus(1)
+                    viewModel.shownDate.value = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value, 1)
+                },
+                colors = ButtonDefaults.buttonColors(unselectedColor),
+                border = BorderStroke(width = 1.dp, color = Color.Black)
+            ) {
+                Text(
+                    "--->", // replace with icon
+                    color = Color.Black,
+                )
+            }
+
         }
-        repeat(4) {weekButtons()}
+        // fill calendar with weekButtons
+        val firstDay = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value, 1)
+        var counter = firstDay
+        var firstDayOfWeek = counter.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+
+        while (counter.month == viewModel.month.value){
+            val weekDates = mutableListOf<LocalDate>()
+            for (i in 0 until 7) {
+                weekDates.add(firstDayOfWeek.plusDays(i.toLong()))
+            }
+            weekButtons(weekDates, viewModel)
+            counter = counter.plusDays(7)
+            firstDayOfWeek = counter.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        }
     }
 }
 
 @Composable
-fun dayButton() {
+fun dayButton(day: String) {
     val unselectedColor = Color(0xFFE8D5BA)
-    ElevatedButton(
+    TextButton(
         onClick = { /*TODO*/ },
         shape = CircleShape,
         modifier = Modifier
             .width(48.dp)
             .padding(2.dp),
         colors = ButtonDefaults.buttonColors(unselectedColor),
-        border = BorderStroke(width = 1.dp, color = Color.Black)
+        border = BorderStroke(width = 1.dp, color = Color.Black),
     ) {
-
+        Text(text = day,
+            color = Color.Black,
+            fontWeight = FontWeight.Bold)
     }
 }
-
 @Composable
-fun weekButtons() {
+@Preview
+fun previewButton(){
+    dayButton(day = "55")
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun weekButtons(weekDates : List<LocalDate>, viewModel: CalendarViewModel) {
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        repeat(7) {dayButton()}
+        for(date in weekDates) {dayButton(if (date.month == viewModel.month.value) date.dayOfMonth.toString() else "")}
     }
 }
 
