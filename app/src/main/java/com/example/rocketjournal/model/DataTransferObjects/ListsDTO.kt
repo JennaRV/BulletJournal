@@ -1,5 +1,6 @@
 package com.example.rocketjournal.model.DataTransferObjects
 
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -16,6 +17,9 @@ data class ListsDTO(
     val name: String,
 
     @SerialName("is_complete")
-    var is_complete: Boolean
+    var is_complete: Boolean,
+
+    @SerialName("deadline")
+    var deadline: LocalDateTime? = null
 
 )

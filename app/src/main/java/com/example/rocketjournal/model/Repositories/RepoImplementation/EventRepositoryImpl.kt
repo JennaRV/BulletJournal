@@ -13,7 +13,8 @@ import javax.inject.Inject
 
 class EventRepositoryImpl @Inject constructor(
     private val postgrest: Postgrest,
-    private val storage: Storage
+    private val storage: Storage,
+    private val userRepositoryImpl: UserRepositoryImpl
 ) : EventRepository {
 
     override suspend fun createEvent(event: EventData): Boolean {
@@ -38,7 +39,11 @@ class EventRepositoryImpl @Inject constructor(
     override suspend fun getEvents(): List<EventDTO>? {
         return withContext(Dispatchers.IO) {
             val result = postgrest.from("event")
-                .select().decodeList<EventDTO>()
+                .select(){
+                    filter {
+                        userRepositoryImpl.getCurrentUserID()?.let { eq("user_id", it) }
+                    }
+                }.decodeList<EventDTO>()
             result
         }
     }

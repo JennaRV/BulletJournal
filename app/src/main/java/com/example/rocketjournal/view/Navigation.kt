@@ -1,7 +1,12 @@
 package com.example.rocketjournal.view
 
+
 import LoginButtons
 import android.annotation.SuppressLint
+
+import android.os.Build
+import androidx.annotation.RequiresApi
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -10,14 +15,13 @@ import androidx.compose.foundation.layout.Column
 
 
 
+
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-
-import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -29,6 +33,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
+
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Create
@@ -41,12 +46,14 @@ import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -65,36 +72,44 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 
+import androidx.compose.runtime.Composable
+
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
+
+
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.rocketjournal.model.Repositories.AuthenticationRepository
 import com.example.rocketjournal.viewmodel.SignInViewModel
 import com.example.rocketjournal.viewmodel.SignOutViewModel
 import com.example.rocketjournal.viewmodel.SignUpViewModel
+
+import com.example.rocketjournal.view.Journal.JournalEntry
+import com.example.rocketjournal.view.Journal.JournalMainDash
+import com.example.rocketjournal.view.Journal.NewJournalScreen
+
 import com.example.test.CalendarScreen
-
-
-
 import com.example.test.WeeklyScreen
 import io.github.jan.supabase.SupabaseClient
+
 
 import io.ktor.websocket.Frame
 import kotlinx.coroutines.launch
@@ -102,6 +117,7 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(navController: NavHostController){
     // should use the signOutViewModel instances.
@@ -115,6 +131,7 @@ fun Navigation(navController: NavHostController){
     val selected = remember{
         mutableStateOf(Icons.Default.Home)
     }
+
 
     showBottomBar = when (currentRoute) {
         // on this screen bottom bar should be hidden
@@ -130,6 +147,28 @@ fun Navigation(navController: NavHostController){
                         .background(Color(0xFFEBAD53))
                         .height(150.dp)
                         .fillMaxWidth()){
+
+
+
+
+    NavHost(navController = navController, startDestination = "login") {
+
+        // Main Navigation
+        composable("home") { MainDashboard(navController) }
+        composable("calendar") { CalendarScreen(navController)  }
+        composable("list") { ListsScreen(navController) }
+        composable("journal") { JournalMainDash(navController) }
+        composable("habit") {  }
+        // Setting Navigation
+        composable("settings") {  }
+        composable("profile") {  }
+        // Login Navigation
+        composable("login") { LoginScreen(navController) }
+        composable("signup") { SignUp(navController) }
+        composable("loginPage"){LoginPage(navController)}
+        // Other Navigation
+        composable("weekly") { WeeklyScreen(navController) }
+        composable("daily/{date}") {backStackEntry -> DailyScreen(navController, backStackEntry.arguments?.getString("date"))}
 
 
                     }
@@ -235,6 +274,18 @@ fun Navigation(navController: NavHostController){
                     composable("loginPage"){LoginPage(navController)}
                     // Other Navigation
                     composable("weekly") { WeeklyScreen(navController) }
+
+        // Define other destinations here
+
+        //newJournal
+
+        composable("newJournal") { NewJournalScreen(navController) }
+        composable("journalEntry") { JournalEntry(navController) }
+
+
+
+    }
+}
 
 
 

@@ -48,30 +48,33 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun updateUser(userData: UserData) {
-        viewModelScope.launch {
-            userReopsitory.updateUser(
-                user_id = userData.user_id,
-                first_name = userData.first_name,
-                last_name = userData.last_name,
-                username = userData.username,
-                email = userData.email,
-                password = userData.password,
-                theme = userData.theme
-            )
-            getUsers()
-        }
-    }
+//    fun updateUser(userData: UserData) {
+//        viewModelScope.launch {
+//            userReopsitory.updateUser(
+//                //user_id = userData.user_id,
+//                first_name = userData.first_name,
+//                last_name = userData.last_name,
+//                username = userData.username,
+//                email = userData.email,
+//                password = userData.password,
+//                theme = userData.theme,
+//                user_auth_id = userData.user_auth_id
+//            )
+//            getUsers()
+//        }
+//    }
 
     private fun UserDTO.asDomainModel(): UserData {
         return UserData(
-            user_id = this.user_id ?: -1,
+            //user_id = this.user_id ?: -1,
             first_name = this.first_name,
             last_name = this.last_name,
             username = this.username,
             email = this.email,
             password = this.password,
-            theme = this.theme
+            theme = this.theme,
+            user_auth_id = this.user_auth_id,
+            journal_id = this.journal_id
         )
     }
 
