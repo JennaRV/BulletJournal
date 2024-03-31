@@ -201,12 +201,12 @@ fun Navigation(navController: NavHostController){
                             verticalAlignment = Alignment.CenterVertically){
                             IconButton(onClick = { selected.value = Icons.Default.Home
                                 navController.navigate("journal")}) {
-                                Icon(imageVector = Icons.Outlined.Create, contentDescription = "home")
+                                Icon(imageVector = Icons.Outlined.Create, contentDescription = "journal")
 
                             }
                             IconButton(onClick = { selected.value = Icons.Default.Home
                                 navController.navigate("list")}) {
-                                Icon(imageVector = Icons.AutoMirrored.Outlined.List, contentDescription = "home")
+                                Icon(imageVector = Icons.AutoMirrored.Outlined.List, contentDescription = "list")
 
                             }
                             IconButton(onClick = { selected.value = Icons.Default.Home
@@ -216,16 +216,16 @@ fun Navigation(navController: NavHostController){
                             }
                             IconButton(onClick = { selected.value = Icons.Default.Home
                                 navController.navigate("calendar")}) {
-                                Icon(imageVector = Icons.Outlined.DateRange, contentDescription = "home")
+                                Icon(imageVector = Icons.Outlined.DateRange, contentDescription = "calendar")
 
                             }
                             IconButton(onClick = { selected.value = Icons.Default.Home
                                 navController.navigate("event")}) {
-                                Icon(imageVector = Icons.Outlined.Star, contentDescription = "home")
+                                Icon(imageVector = Icons.Outlined.Star, contentDescription = "event")
 
                             }
                             IconButton(onClick = { coroutine.launch { drawerState.open() }}) {
-                                Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = "Menu")
+                                Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = "menu")
                             }
                         }
                     }
@@ -251,9 +251,9 @@ fun Navigation(navController: NavHostController){
                     composable("weekly") { WeeklyScreen(navController) }
                     composable("daily/{date}") {backStackEntry -> DailyScreen(navController, backStackEntry.arguments?.getString("date"))}
 
-        //newJournal
-        composable("newJournal") { NewJournalScreen(navController) }
-        composable("journalEntry") { JournalEntry(navController) }
+                    //newJournal
+                    composable("newJournal") { NewJournalScreen(navController) }
+                    composable("journalEntry") { JournalEntry(navController) }
                 }
             }
         }
