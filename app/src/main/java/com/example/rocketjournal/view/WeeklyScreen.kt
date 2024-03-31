@@ -29,11 +29,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+
+
+
 import com.example.rocketjournal.view.BottomNavigationBar
 import com.example.rocketjournal.viewmodel.CalendarViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -67,7 +71,7 @@ fun WeeklyScreen(navController: NavController, viewModel: CalendarViewModel = hi
             DayEntry(viewModel.currentWeekStart.value.plusDays(i.toLong()))
         }
     }
-    BottomNavigationBar(navController)
+
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
