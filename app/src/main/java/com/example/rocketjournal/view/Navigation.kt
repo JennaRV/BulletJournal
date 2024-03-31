@@ -145,6 +145,95 @@ fun Navigation(navController: NavHostController){
         "loginPage" -> false
         else -> true // in all other cases show bottom bar
     }
+
+        ModalNavigationDrawer( // Shows the drawer on the left
+            drawerContent = {
+                ModalDrawerSheet (modifier = Modifier.width(280.dp)){
+                    Box(modifier = Modifier
+                        .background(Color(0xFFEBAD53))
+                        .height(150.dp)
+                        .fillMaxWidth())
+                    HorizontalDivider()
+                    NavigationDrawerItem(
+                        label = { Text(text = "Profile") },
+                        selected = false,
+                        icon = { Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "profile")},
+                        onClick = {
+                            coroutine.launch {
+                                drawerState.close()
+                            }
+                            navController.navigate("profile")
+                        })
+                    NavigationDrawerItem(
+                        label = { Text(text = "Settings") },
+                        selected = false,
+                        icon = { Icon(imageVector = Icons.Default.Settings, contentDescription = "setting")},
+                        onClick = {
+                            coroutine.launch {
+                                drawerState.close()
+                            }
+
+                        })
+                    NavigationDrawerItem(
+                        label = { Text(text = "Logout") },
+                        selected = false,
+                        icon = { Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Logout")},
+                        onClick = {
+                            coroutine.launch {
+                                drawerState.close()
+                            }
+                            signOutViewModel.signOut()
+                            navController.navigate("login")
+
+
+                        })
+                }
+            },
+            drawerState= drawerState,
+            gesturesEnabled = true
+        )
+        {
+
+            Scaffold(
+                bottomBar = {if (showBottomBar){
+                    BottomAppBar(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(65.dp)
+                        .border(1.dp, Color.Black),
+                        containerColor = Color(0xFF8FA1F8)
+                    ) {
+                        Row (modifier = Modifier.fillMaxSize(),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            verticalAlignment = Alignment.CenterVertically){
+                            IconButton(onClick = { selected.value = Icons.Default.Home
+                                navController.navigate("journal")}) {
+                                Icon(imageVector = Icons.Outlined.Create, contentDescription = "journal")
+
+                            }
+                            IconButton(onClick = { selected.value = Icons.Default.Home
+                                navController.navigate("list")}) {
+                                Icon(imageVector = Icons.AutoMirrored.Outlined.List, contentDescription = "list")
+
+                            }
+                            IconButton(onClick = { selected.value = Icons.Default.Home
+                                navController.navigate("home")}) {
+                                Icon(imageVector = Icons.Outlined.Home, contentDescription = "home")
+
+                            }
+                            IconButton(onClick = { selected.value = Icons.Default.Home
+                                navController.navigate("calendar")}) {
+                                Icon(imageVector = Icons.Outlined.DateRange, contentDescription = "calendar")
+
+                            }
+                            IconButton(onClick = { selected.value = Icons.Default.Home
+                                navController.navigate("event")}) {
+                                Icon(imageVector = Icons.Outlined.Star, contentDescription = "event")
+
+                            }
+                            IconButton(onClick = { coroutine.launch { drawerState.open() }}) {
+                                Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = "menu")
+                            }
+
     ModalNavigationDrawer( // Shows the drawer on the left
         drawerContent = {
             ModalDrawerSheet (modifier = Modifier.width(280.dp)){
@@ -231,9 +320,35 @@ fun Navigation(navController: NavHostController){
                         }
                         IconButton(onClick = { coroutine.launch { drawerState.open() }}) {
                             Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = "Menu")
+
                         }
                     }
                 }
+
+            ) {
+                NavHost(navController = navController, startDestination = "login") {
+
+                    // Main Navigation
+                    composable("home") { MainDashboard(navController) }
+                    composable("calendar") { CalendarScreen(navController)  }
+                    composable("list") { ListsScreen(navController) }
+                    composable("journal") { JournalMainDash(navController) }
+                    composable("event") {  }
+                    // Setting Navigation
+                    composable("settings") {  }
+                    composable("profile") { ProfileUI(navController) }
+                    // Login Navigation
+                    composable("login") { LoginScreen(navController) }
+                    composable("signup") { SignUp(navController) }
+                    composable("loginPage"){LoginPage(navController)}
+                    // Other Navigation
+                    composable("weekly") { WeeklyScreen(navController) }
+                    composable("daily/{date}") {backStackEntry -> DailyScreen(navController, backStackEntry.arguments?.getString("date"))}
+
+                    //newJournal
+                    composable("newJournal") { NewJournalScreen(navController) }
+                    composable("journalEntry") { JournalEntry(navController) }
+
             }
             }
         ) {
