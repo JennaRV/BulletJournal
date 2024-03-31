@@ -75,8 +75,8 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.rocketjournal.model.dataModel.EventData
-import com.example.rocketjournal.view.BottomNavigationBar
-import com.example.rocketjournal.view.HeaderRow
+//import com.example.rocketjournal.view.BottomNavigationBar
+//import com.example.rocketjournal.view.HeaderRow
 import com.example.rocketjournal.viewmodel.EventViewModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate

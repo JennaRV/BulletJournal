@@ -48,8 +48,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.rocketjournal.model.dataModel.EventData
-import com.example.rocketjournal.view.BottomNavigationBar
-import com.example.rocketjournal.view.HeaderRow
+//import com.example.rocketjournal.view.BottomNavigationBar
+//import com.example.rocketjournal.view.HeaderRow
 import com.example.rocketjournal.viewmodel.EventViewModel
 
 
@@ -126,7 +126,7 @@ fun MainEvent(navController: NavController, viewModel: EventViewModel = hiltView
                 }
             }
 
-            BottomNavigationBar(navController = navController)
+//            BottomNavigationBar(navController = navController)
         }
     }
 }
