@@ -178,7 +178,7 @@ fun DailyScreen(navController : NavController, date : String?) { //viewModel: Ca
 
 
     }
-    BottomNavigationBar(navController)
+
 }
 
 @Composable

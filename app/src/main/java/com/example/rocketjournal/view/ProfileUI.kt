@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
-@Preview
+
 @Composable
 fun ProfileUI(navController: NavController) {
     AppBackgroundGeneral {

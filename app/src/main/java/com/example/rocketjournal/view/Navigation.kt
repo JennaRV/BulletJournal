@@ -63,7 +63,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.Composable
+
 import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -113,7 +113,7 @@ import io.github.jan.supabase.SupabaseClient
 
 import io.ktor.websocket.Frame
 import kotlinx.coroutines.launch
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -146,32 +146,7 @@ fun Navigation(navController: NavHostController){
                     Box(modifier = Modifier
                         .background(Color(0xFFEBAD53))
                         .height(150.dp)
-                        .fillMaxWidth()){
-
-
-
-
-    NavHost(navController = navController, startDestination = "login") {
-
-        // Main Navigation
-        composable("home") { MainDashboard(navController) }
-        composable("calendar") { CalendarScreen(navController)  }
-        composable("list") { ListsScreen(navController) }
-        composable("journal") { JournalMainDash(navController) }
-        composable("habit") {  }
-        // Setting Navigation
-        composable("settings") {  }
-        composable("profile") {  }
-        // Login Navigation
-        composable("login") { LoginScreen(navController) }
-        composable("signup") { SignUp(navController) }
-        composable("loginPage"){LoginPage(navController)}
-        // Other Navigation
-        composable("weekly") { WeeklyScreen(navController) }
-        composable("daily/{date}") {backStackEntry -> DailyScreen(navController, backStackEntry.arguments?.getString("date"))}
-
-
-                    }
+                        .fillMaxWidth())
                     HorizontalDivider()
                     NavigationDrawerItem(
                         label = { Text(text = "Profile") },
@@ -263,7 +238,7 @@ fun Navigation(navController: NavHostController){
                     composable("home") { MainDashboard(navController) }
                     composable("calendar") { CalendarScreen(navController)  }
                     composable("list") { ListsScreen(navController) }
-                    composable("journal") {  }
+                    composable("journal") { JournalMainDash(navController) }
                     composable("event") {  }
                     // Setting Navigation
                     composable("settings") {  }
@@ -274,27 +249,14 @@ fun Navigation(navController: NavHostController){
                     composable("loginPage"){LoginPage(navController)}
                     // Other Navigation
                     composable("weekly") { WeeklyScreen(navController) }
-
-        // Define other destinations here
+                    composable("daily/{date}") {backStackEntry -> DailyScreen(navController, backStackEntry.arguments?.getString("date"))}
 
         //newJournal
-
         composable("newJournal") { NewJournalScreen(navController) }
         composable("journalEntry") { JournalEntry(navController) }
-
-
-
-    }
-}
-
-
-
                 }
             }
-
         }
-
 }
-
 
 

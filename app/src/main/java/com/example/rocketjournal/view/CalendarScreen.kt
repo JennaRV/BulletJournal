@@ -39,7 +39,7 @@ import androidx.navigation.NavController
 
 
 
-import com.example.rocketjournal.view.BottomNavigationBar
+
 import com.example.rocketjournal.viewmodel.CalendarViewModel
 import java.time.DayOfWeek
 import java.time.LocalDate

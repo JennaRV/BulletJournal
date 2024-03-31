@@ -48,7 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.rocketjournal.model.dataModel.JournalData
 import com.example.rocketjournal.model.dataModel.JournalEntryData
-import com.example.rocketjournal.view.BottomNavigationBar
+
 import com.example.rocketjournal.viewmodel.JournalEntryViewModel
 import java.time.format.DateTimeFormatter
 
@@ -144,7 +144,7 @@ fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewMod
 
             //PlaceholderEntryList(navController =navController)
 
-            BottomNavigationBar(navController = navController)
+
         }
     }
 }
@@ -276,7 +276,7 @@ fun PlaceholderEntryList(navController: NavController){
             }
         }
 
-        BottomNavigationBar(navController = navController)
+
     }
 
 
