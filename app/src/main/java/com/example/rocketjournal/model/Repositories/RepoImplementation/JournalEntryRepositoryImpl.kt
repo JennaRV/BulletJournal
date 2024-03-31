@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.LocalDateTime
 import javax.inject.Inject
+import com.example.rocketjournal.model.Repositories.RepoImplementation.UserRepositoryImpl
 
 class JournalEntryRepositoryImpl @Inject constructor(
     private val postgrest: Postgrest,
@@ -39,9 +40,17 @@ class JournalEntryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getJournalEntries(): List<JournalEntryDTO>? {
+
+        //val currentUserJournalID = userRepositoryImpl.getCurrentUserJournalID()?.toInt()
+
         return withContext(Dispatchers.IO) {
-            val result = postgrest.from("journal_entries")
-                .select().decodeList<JournalEntryDTO>()
+            val result = postgrest.from("journal_entry")
+                .select{
+                    filter {
+                        userRepositoryImpl.getCurrentUserJournalID()?.let { eq("journal_id", it)}
+                    }
+                }
+                .decodeList<JournalEntryDTO>()
             result
         }
     }
@@ -87,22 +96,22 @@ class JournalEntryRepositoryImpl @Inject constructor(
         }
     }
 
-    suspend fun getCurrentUserJournalID(): Int? {
-        val currentUserId = userRepositoryImpl.getCurrentUserID()
-
-        return withContext(Dispatchers.IO) {
-            //this is attempting to find the user with that user UID (user_auth_id) and retrieving the userDTO associated with it.
-            val userIDQueryResult = postgrest.from("user")
-                .select() {
-                    filter {
-                        if (currentUserId != null) {
-                            eq("user_id", currentUserId)
-                        }
-                    }
-                }.decodeSingle<UserDTO>().journal_id
-            userIDQueryResult
-        }
-
-    }
+//    suspend fun getCurrentUserJournalID(): Int? {
+//        val currentUserId = userRepositoryImpl.getCurrentUserID()
+//
+//        return withContext(Dispatchers.IO) {
+//            //this is attempting to find the user with that user UID (user_auth_id) and retrieving the userDTO associated with it.
+//            val userIDQueryResult = postgrest.from("user")
+//                .select() {
+//                    filter {
+//                        if (currentUserId != null) {
+//                            eq("user_id", currentUserId)
+//                        }
+//                    }
+//                }.decodeSingle<UserDTO>().journal_id
+//            userIDQueryResult
+//        }
+//
+//    }
 
 }

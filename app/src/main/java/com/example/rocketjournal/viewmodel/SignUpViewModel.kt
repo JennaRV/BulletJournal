@@ -54,6 +54,7 @@ class SignUpViewModel @Inject constructor(
             val lastNameValue = lastName.value
             val usernameValue = username.value
 
+
             //result to check if signUp was successful
             val result = authenticationRepository.signUp(emailValue, passwordValue)
 
@@ -69,8 +70,10 @@ class SignUpViewModel @Inject constructor(
                     email = emailValue,
                     password = passwordValue,
                     theme = "default",
-                    user_auth_id = userAuthId,
-                   // journal_id = journal
+
+                    user_auth_id = userAuthId
+                    //journal_id =
+
                 )
 
                 //this checks if the create user function was successful.

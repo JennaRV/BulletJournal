@@ -86,7 +86,7 @@ fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltVi
 
     AppBackgroundGeneral {
         Column {
-            BackButton(navController)
+            BackButton(navController,"home")
             MyListsHeader()
             CreateList()
 
@@ -147,14 +147,14 @@ fun MyListsHeader() {
 }
 
 @Composable
-fun BackButton(navController: NavController) {
+fun BackButton(navController: NavController, route: String) {
     Button(
-        onClick = { navController.navigate("home") },
+        onClick = { navController.navigate("$route") },
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp) // Adjust padding as needed
             .border(
-                BorderStroke(2.dp, Color.Black),
-                shape = RoundedCornerShape(15.dp)
+                BorderStroke(1.dp, Color.Black),
+                shape = RoundedCornerShape(25.dp)
             )
             .height(50.dp),
         shape = RoundedCornerShape(60.dp),
