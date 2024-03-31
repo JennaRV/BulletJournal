@@ -5,6 +5,7 @@ import com.example.rocketjournal.model.Repositories.RepoImplementation.EventRepo
 import com.example.rocketjournal.model.Repositories.RepoImplementation.JournalEntryRepositoryImpl
 import com.example.rocketjournal.model.Repositories.RepoImplementation.JournalRepositoryImpl
 import com.example.rocketjournal.model.Repositories.RepoImplementation.ListsRepositoryImpl
+import com.example.rocketjournal.model.Repositories.RepoImplementation.TaskRepositoryImplementation
 import com.example.rocketjournal.model.Repositories.RepoImplementation.UserRepositoryImpl
 import dagger.Binds
 import dagger.Module
@@ -32,4 +33,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindEventRepository(eventRepositoryImpl: EventRepositoryImpl): EventRepository
+
+    @Binds
+    abstract fun bindTaskRepository(taskRepositoryImplementation: TaskRepositoryImplementation): TaskRepository
 }

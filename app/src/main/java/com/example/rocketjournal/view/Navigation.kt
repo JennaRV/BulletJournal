@@ -1,6 +1,7 @@
 package com.example.rocketjournal.view
 
 import LoginButtons
+
 import android.annotation.SuppressLint
 
 import android.os.Build
@@ -118,11 +119,13 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(navController: NavHostController){
     // should use the signOutViewModel instances.
     val signOutViewModel: SignOutViewModel = viewModel()
+
 
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentRoute = navBackStackEntry?.destination?.route
@@ -132,6 +135,7 @@ fun Navigation(navController: NavHostController){
     val selected = remember{
         mutableStateOf(Icons.Default.Home)
     }
+
 
 
     showBottomBar = when (currentRoute) {
