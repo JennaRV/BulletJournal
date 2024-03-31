@@ -1,10 +1,7 @@
 package com.example.rocketjournal.model.dataModel
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
-import kotlinx.serialization.Serializable
-import java.util.Date
 
-@Serializable
 data class TaskData (
     val task_id: Int? = null,
     val list_id: Int,

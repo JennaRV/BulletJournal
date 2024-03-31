@@ -43,7 +43,7 @@ fun SignUp(
     }
 
     AppBackgroundFront {
-        SignUpForm(navController, signUpViewModel)
+        SignUpForm(navController, signUpViewModel, context)
 
     }
 }

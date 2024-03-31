@@ -23,6 +23,12 @@ data class UserDTO(
     @SerialName("password")
     var password: String,
 
-    @SerialName("Theme")
-    var theme: String = "default"
+    @SerialName("theme")
+    var theme: String = "default",
+
+    @SerialName("user_auth_id")
+    var user_auth_id: String,
+
+    @SerialName("journal_id")
+    val journal_id: Int? = null
 )

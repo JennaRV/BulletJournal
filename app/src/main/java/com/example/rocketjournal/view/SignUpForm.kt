@@ -1,5 +1,7 @@
 package com.example.rocketjournal.view
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,17 +45,11 @@ import com.example.rocketjournal.viewmodel.SignUpViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel, context: Context) {
+    val firstName by signUpViewModel.firstName.collectAsState()
+    val lastName by signUpViewModel.lastName.collectAsState()
+    val username by signUpViewModel.username.collectAsState()
     var confirmPassword by remember { mutableStateOf("") }
-    val context = LocalContext.current
-    //val signUpViewModel: SignUpViewModel
-   // val userState: UserState
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    var currentUserState by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -76,7 +72,7 @@ fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = firstName,
-                onValueChange = { firstName = it },
+                onValueChange = { signUpViewModel.firstName.value = it },
                 label = { Text("First Name") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -94,7 +90,7 @@ fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = lastName,
-                onValueChange = { lastName= it },
+                onValueChange = { signUpViewModel.lastName.value = it },
                 label = { Text("Last Name") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -112,7 +108,7 @@ fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = username,
-                onValueChange = { username = it },
+                onValueChange = { signUpViewModel.username.value = it },
                 label = { Text("Username") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -185,13 +181,16 @@ fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
             Button(
                 onClick = {
 
-
-        //            supabaseViewModel.saveUser(firstName,lastName,username,email,password)
-                    signUpViewModel.onSignUp()
-
-                    navController.navigate("login")
-
-
+                    // Check if passwords match
+                    if (confirmPassword.equals(password.value)) {
+                        // Call the ViewModel's onSignUp method
+                        signUpViewModel.onSignUp(navController, context)
+                        // Navigate to the next page upon successful sign up
+                        //
+                    } else {
+                        // Show error message indicating passwords do not match
+                        Toast.makeText(context, "Passwords did not match", Toast.LENGTH_SHORT).show()
+                    }
                           },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -208,27 +207,6 @@ fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel) {
                     color = Color(red = 100, green = 110, blue = 245)
                 )
             }
-
-
-//            when(userState){
-//                is UserState.Loading -> {
-//                    LoadingComponent()
-//                }
-//                is UserState.Success -> {
-//                    val message = (userState as UserState.Success).message
-//                    currentUserState = message
-//                }
-//                is UserState.Error -> {
-//                    val message = (userState as UserState.Error).message
-//                    currentUserState = message
-//                }
-//            }
-//
-//            if(currentUserState.isNotEmpty()){
-//                Text(text = currentUserState)
-//            }
-
-
         }
     }
 }

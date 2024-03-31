@@ -1,64 +1,49 @@
 package com.example.rocketjournal.view
 
-import LoginButtons
+
+
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-
-import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ComposeCompilerApi
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
-
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.rocketjournal.model.Repositories.AuthenticationRepository
-import com.example.rocketjournal.viewmodel.SignUpViewModel
+import com.example.rocketjournal.view.Journal.JournalEntry
+import com.example.rocketjournal.view.Journal.JournalMainDash
+import com.example.rocketjournal.view.Journal.NewJournalScreen
 import com.example.test.CalendarScreen
-
-
-
 import com.example.test.WeeklyScreen
 
-import io.ktor.websocket.Frame
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
-
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(navController: NavHostController){
+
+
 
     NavHost(navController = navController, startDestination = "login") {
 
@@ -66,7 +51,7 @@ fun Navigation(navController: NavHostController){
         composable("home") { MainDashboard(navController) }
         composable("calendar") { CalendarScreen(navController)  }
         composable("list") { ListsScreen(navController) }
-        composable("journal") {  }
+        composable("journal") { JournalMainDash(navController) }
         composable("habit") {  }
         // Setting Navigation
         composable("settings") {  }
@@ -79,8 +64,15 @@ fun Navigation(navController: NavHostController){
         composable("weekly") { WeeklyScreen(navController) }
 
 
-
         // Define other destinations here
+
+        //newJournal
+
+        composable("newJournal") { NewJournalScreen(navController) }
+        composable("journalEntry") { JournalEntry(navController) }
+
+
+
     }
 }
 

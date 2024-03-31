@@ -39,6 +39,8 @@ android {
         }
     }
     compileOptions {
+
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -52,6 +54,8 @@ android {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
 }
+
+
 
 dependencies {
 
@@ -92,11 +96,15 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:2.51")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
+    //implementation ("com.github.vsnappy1:ComposeDatePicker:2.2.0")
+
     //unit testing
     testImplementation ("junit:junit:4.13.2")
     testImplementation ("org.mockito:mockito-core:3.+")
     testImplementation ("org.mockito:mockito-inline:3.+")
     testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2")
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.6")
 
 
 }

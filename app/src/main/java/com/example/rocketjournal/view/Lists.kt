@@ -44,6 +44,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.collectAsState
 //import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.unit.dp
@@ -55,13 +56,22 @@ import com.example.rocketjournal.viewmodel.ListsViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltViewModel()) {
+
+    //the listsState is a list of all to-do lists, this will fetch the lists from the database,
+    //its initial/default value is an empty list, if the database is empty, otherwise it will be populates with
+    //the to-do lists
     val listsState = viewModel.listFlow.collectAsState(initial = emptyList()).value ?: emptyList()
+    //this is the boolean that states that the program is in a "loading state"
     val isLoading = viewModel.isLoading.collectAsState(initial = true).value
 
     AppBackgroundGeneral {
         Column {
-            BackButton(navController)
+            BackButton(navController,"home")
             MyListsHeader()
+            CreateList()
+
+            //this is where the lists are displayed, it will either have a loading progress indicator,
+            //display that o lists were fetched, or display the lists
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             } else if (listsState.isEmpty()) {
@@ -73,6 +83,7 @@ fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltVi
                     }
                 }
             }
+
         }
     }
 }
@@ -105,14 +116,14 @@ fun MyListsHeader() {
 }
 
 @Composable
-fun BackButton(navController: NavController) {
+fun BackButton(navController: NavController, route: String) {
     Button(
-        onClick = { navController.navigate("home") },
+        onClick = { navController.navigate("$route") },
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp) // Adjust padding as needed
             .border(
-                BorderStroke(2.dp, Color.Black),
-                shape = RoundedCornerShape(15.dp)
+                BorderStroke(1.dp, Color.Black),
+                shape = RoundedCornerShape(25.dp)
             )
             .height(50.dp),
         shape = RoundedCornerShape(60.dp),
@@ -163,4 +174,11 @@ fun ListDataItemView(list: ListData, onCheckedChange: (ListData) -> Unit) {
 }
 
 
+
+
+@Preview
+@Composable
+fun CreateListPreview(){
+    CreateList()
+}
 
