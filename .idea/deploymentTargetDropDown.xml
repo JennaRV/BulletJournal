@@ -5,6 +5,15 @@
       <entry key="App">
         <State />
       </entry>
+      <entry key="logInTest()">
+        <State />
+      </entry>
+      <entry key="signUpTest()">
+        <State />
+      </entry>
+      <entry key="test_navigation_clicks()">
+        <State />
+      </entry>
     </value>
   </component>
 </project>
