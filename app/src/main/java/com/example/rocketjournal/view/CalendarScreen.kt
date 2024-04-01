@@ -193,7 +193,7 @@ fun Calendar(navController: NavController, viewModel: CalendarViewModel) {
             Button(
                 onClick = {
                     viewModel.month.value = viewModel.month.value.minusMonths(1)
-                    viewModel.shownDate.value = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value.month, 1)
+                    viewModel.shownDate.value = LocalDate.of(viewModel.month.value.year, viewModel.month.value.month, 1)
                 },
                 colors = ButtonDefaults.buttonColors(unselectedColor),
                 border = BorderStroke(width = 1.dp, color = Color.Black)
@@ -218,7 +218,7 @@ fun Calendar(navController: NavController, viewModel: CalendarViewModel) {
             Button(
                 onClick = {
                     viewModel.month.value = viewModel.month.value.plusMonths(1)
-                    viewModel.shownDate.value = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value.month, 1)
+                    viewModel.shownDate.value = LocalDate.of(viewModel.month.value.year, viewModel.month.value.month, 1)
                 },
                 colors = ButtonDefaults.buttonColors(unselectedColor),
                 border = BorderStroke(width = 1.dp, color = Color.Black)
@@ -231,7 +231,7 @@ fun Calendar(navController: NavController, viewModel: CalendarViewModel) {
 
         }
         // fill calendar with weekButtons
-        val firstDay = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value.month, 1)
+        val firstDay = LocalDate.of(viewModel.month.value.year, viewModel.month.value.month, 1)
         var counter = firstDay
         var firstDayOfWeek = counter.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
 
