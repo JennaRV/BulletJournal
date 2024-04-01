@@ -311,6 +311,8 @@ fun Navigation(navController: NavHostController) {
                 //newJournal
                 composable("newJournal") { NewJournalScreen(navController) }
                 composable("journalEntry") { JournalEntry(navController) }
+
+                composable("newEvent") { EventCreation(navController) }
             }
         }
     }
