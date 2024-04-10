@@ -1,5 +1,7 @@
 package com.example.rocketjournal.view
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +20,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,22 +40,16 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.rocketjournal.model.dataModel.UserState
-import com.example.rocketjournal.viewmodel.SupabaseAuthViewModel
+import com.example.rocketjournal.viewmodel.SignUpViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpForm(navController: NavController) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun SignUpForm(navController: NavController, signUpViewModel: SignUpViewModel, context: Context) {
+    val firstName by signUpViewModel.firstName.collectAsState()
+    val lastName by signUpViewModel.lastName.collectAsState()
+    val username by signUpViewModel.username.collectAsState()
     var confirmPassword by remember { mutableStateOf("") }
-    val authViewModel: SupabaseAuthViewModel = viewModel()
-    val context = LocalContext.current
-    val userState by authViewModel.userState
-
-    var userEmail by remember { mutableStateOf("") }
-    var userPassword by remember { mutableStateOf("") }
-    var currentUserState by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -70,10 +67,66 @@ fun SignUpForm(navController: NavController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            var email = signUpViewModel.email.collectAsState(initial = "")
+            val password = signUpViewModel.password.collectAsState()
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = email,
-                onValueChange = { email = it },
+                value = firstName,
+                onValueChange = { signUpViewModel.firstName.value = it },
+                label = { Text("First Name") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedLabelColor = Color.White, // Label color when focused
+                    unfocusedLabelColor = Color.White, // Label color when not focused
+                    focusedBorderColor = Color.White, // Border color when focused
+                    unfocusedBorderColor = Color.White, // Border color when not focused
+                ),
+                shape = RoundedCornerShape(60.dp)
+
+            )
+            Spacer(modifier = Modifier.height(1.dp))
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = lastName,
+                onValueChange = { signUpViewModel.lastName.value = it },
+                label = { Text("Last Name") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedLabelColor = Color.White, // Label color when focused
+                    unfocusedLabelColor = Color.White, // Label color when not focused
+                    focusedBorderColor = Color.White, // Border color when focused
+                    unfocusedBorderColor = Color.White, // Border color when not focused
+                ),
+                shape = RoundedCornerShape(60.dp)
+
+            )
+            Spacer(modifier = Modifier.height(1.dp))
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = username,
+                onValueChange = { signUpViewModel.username.value = it },
+                label = { Text("Username") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedLabelColor = Color.White, // Label color when focused
+                    unfocusedLabelColor = Color.White, // Label color when not focused
+                    focusedBorderColor = Color.White, // Border color when focused
+                    unfocusedBorderColor = Color.White, // Border color when not focused
+                ),
+                shape = RoundedCornerShape(60.dp)
+
+            )
+            Spacer(modifier = Modifier.height(1.dp))
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = email.value,
+                onValueChange = { signUpViewModel.onEmailChange(it) },
                 label = { Text("Email") },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedTextColor = Color.White,
@@ -86,11 +139,11 @@ fun SignUpForm(navController: NavController) {
                 shape = RoundedCornerShape(60.dp)
 
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(1.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = password,
-                onValueChange = { password = it },
+                value = password.value,
+                onValueChange = { signUpViewModel.onPasswordChange(it) },
                 label = { Text("Password") },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -105,7 +158,7 @@ fun SignUpForm(navController: NavController) {
                 shape = RoundedCornerShape(60.dp)
 
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(1.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = confirmPassword,
@@ -124,16 +177,20 @@ fun SignUpForm(navController: NavController) {
                 shape = RoundedCornerShape(60.dp)
 
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(1.dp))
             Button(
                 onClick = {
-                    //navController.navigate("")
-                    authViewModel.signUp(
-                        context,
-                        email,
-                        password
-                    )
 
+                    // Check if passwords match
+                    if (confirmPassword.equals(password.value)) {
+                        // Call the ViewModel's onSignUp method
+                        signUpViewModel.onSignUp(navController, context)
+                        // Navigate to the next page upon successful sign up
+                        //
+                    } else {
+                        // Show error message indicating passwords do not match
+                        Toast.makeText(context, "Passwords did not match", Toast.LENGTH_SHORT).show()
+                    }
                           },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -150,25 +207,6 @@ fun SignUpForm(navController: NavController) {
                     color = Color(red = 100, green = 110, blue = 245)
                 )
             }
-            
-            when(userState){
-                is UserState.Loading -> {
-                    LoadingComponent()
-                }
-                is UserState.Success -> {
-                    val message = (userState as UserState.Success).message
-                    currentUserState = message
-                }
-                is UserState.Error -> {
-                    val message = (userState as UserState.Error).message
-                    currentUserState = message
-                }
-            }
-            
-            if(currentUserState.isNotEmpty()){
-                Text(text = currentUserState)
-            }
-
         }
     }
 }
