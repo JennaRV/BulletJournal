@@ -41,6 +41,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,6 +49,7 @@ import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -96,7 +98,7 @@ fun MainDashboard(navController: NavController) {
                     .border(1.dp, Color.Black, shape = RoundedCornerShape(35.dp)),
                 shape = RoundedCornerShape(35.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFF8B450)
+                    containerColor = Color(0xFFB98231)
                 )
             ) {
                 Text(
@@ -121,23 +123,76 @@ fun SingleComponent() {
     val boxWidth = screenWidth * 0.9f
     val offsetX = screenWidth * 0.05f
     val scope = rememberCoroutineScope()
-    val pagerState = rememberPagerState(initialPage = 1,pageCount = {
+    val pagerState = rememberPagerState(initialPage = 1, pageCount = {
         3
     })
 
-    val contentState = mutableListOf("Journal", "List","Events")
+    val contentState = mutableListOf("Journal", "List", "Events")
+    Column {
 
-    // Our page content
-    Box(
+        Box(
+            modifier = Modifier
+                .offset(offsetX, screenHeight * 0.5f)
+                .size(boxWidth, 50.dp)
+                .align(Alignment.CenterHorizontally)
+                .border(
+                    1.dp,
+                    Color.Black,
+                    shape = RoundedCornerShape(topEnd = 20.dp, topStart = 20.dp)
+                )
+                .background(
+                    Color(0xFFB98231),
+                    shape = RoundedCornerShape(topEnd = 20.dp, topStart = 20.dp)
+                )
+                .clip(RoundedCornerShape(20.dp))
+                .padding(8.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            IconButton(
+                onClick = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(
+                            pagerState.currentPage - 1
+                        )
+                    }
+
+                },
+                modifier = Modifier.align(Alignment.CenterStart)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                    contentDescription = "backward"
+                )
+            }
+
+            Text(text = contentState.getOrNull(pagerState.currentPage) ?: "")
+            IconButton(
+                onClick = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(
+                            pagerState.currentPage + 1
+                        )
+                    }
+                },
+                modifier = Modifier.align(Alignment.CenterEnd)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = "forward"
+                )
+            }
+        }
+        // Our page content
+        Box(
 
             modifier = Modifier
-                .offset(offsetX, screenHeight * 0.15f)
+                .offset(offsetX, screenHeight * 0.5f)
                 .size(boxWidth, 150.dp)
-                .border(1.dp, Color.Black, shape = RoundedCornerShape(20.dp))
-                .background(color = Color(0xFFE8D5BA), shape = RoundedCornerShape(20.dp))
+                .border(1.dp, Color.Black)
+                .background(color = Color(0xFFE8D5BA))
 
 
-        ){
+        ) {
 
             HorizontalPager(
                 state = pagerState,
@@ -145,7 +200,7 @@ fun SingleComponent() {
             ) { page ->
 //                Text(text = "${journal.content}", maxLines = 3)
 
-                when(page){
+                when (page) {
                     0 -> JournalScreen()
                     1 -> ListScreen()
                     2 -> EventScreen()
@@ -155,38 +210,10 @@ fun SingleComponent() {
                 }
             }
 
-            Box (modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter)
-                .background(Color(0xFFF8B450), shape = RoundedCornerShape(20.dp))
-                .clip(RoundedCornerShape(20.dp))
-                .padding(8.dp),
-                contentAlignment = Alignment.Center){
-                IconButton(onClick = {
-                    scope.launch {
-                        pagerState.animateScrollToPage(
-                            pagerState.currentPage -1
-                        )
-                    }
-
-                },
-                    modifier = Modifier.align(Alignment.CenterStart)) {
-                   Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "backward")
-                }
-                //TODO: sync the text with the list contentState
-                Text(text = contentState.getOrNull(pagerState.currentPage) ?: "")
-                IconButton(onClick = {  scope.launch {
-                    pagerState.animateScrollToPage(
-                        pagerState.currentPage +1
-                    )
-                } },
-                    modifier = Modifier.align(Alignment.CenterEnd)) {
-                    Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "forward")
-                }
-            }
 
         }
 
+    }
 }
 
 @Composable
@@ -195,13 +222,13 @@ fun ListScreen(viewModel: ListsViewModel = hiltViewModel()) {
     val isLoading = viewModel.isLoading.collectAsState(initial = true).value
 
     Column {
-        LazyColumn {
+        LazyColumn (contentPadding = PaddingValues(top = 8.dp, start = 20.dp)){
             item {
                 if (isLoading) {
-                    CircularProgressIndicator(
+                    LinearProgressIndicator(
+                        color = Color(0xFF646EF5),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 16.dp)
                             .align(Alignment.CenterHorizontally)
                     )
                 } else if (listsState.isEmpty()) {
@@ -215,7 +242,8 @@ fun ListScreen(viewModel: ListsViewModel = hiltViewModel()) {
                 }
             }
             items(listsState) { lists ->
-                Text(text = "${lists.name[1]}")
+                Text(text = "List: ${lists.name}")
+                Text(text = "-========================-")
             }
 
 
@@ -229,13 +257,13 @@ fun JournalScreen(viewModel: JournalEntryViewModel = hiltViewModel()) {
     val entriesState = viewModel.entryList.collectAsState(initial = emptyList()).value ?: emptyList()
     val isLoading = viewModel.isLoading.collectAsState(initial = true).value
     Column {
-        LazyColumn {
+        LazyColumn(contentPadding = PaddingValues(top = 8.dp, start = 20.dp)) {
             item {
                 if (isLoading) {
-                    CircularProgressIndicator(
+                    LinearProgressIndicator(
+                        color = Color(0xFF646EF5),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 16.dp)
                             .align(Alignment.CenterHorizontally)
                     )
                 } else if (entriesState.isEmpty()) {
@@ -247,10 +275,14 @@ fun JournalScreen(viewModel: JournalEntryViewModel = hiltViewModel()) {
                             .align(Alignment.CenterHorizontally)
                     )
                 }
+                else {
+                    // Display the first entry only if it hasn't been displayed before
+                        Text(text = "${entriesState.first().created_at.date}",fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                        Text(text = "Journal: ${entriesState.first().content}", maxLines = 4)
+
+                }
             }
-            items(entriesState) { journalEntry ->
-                Text(text = "List: ${journalEntry.content[0]}")
-            }
+
 
 
         }
@@ -263,14 +295,14 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel()) {
     val eventState = viewModel.eventList.collectAsState(initial = emptyList()).value ?: emptyList()
     val isLoading = viewModel.isLoading.collectAsState(initial = true).value
     Column {
-        LazyColumn {
+        LazyColumn (contentPadding = PaddingValues(top = 8.dp, start = 20.dp)){
             item {
                 if (isLoading) {
-                    CircularProgressIndicator(
+                    LinearProgressIndicator(
+                        color = Color(0xFF646EF5),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 16.dp)
-                            .align(Alignment.CenterHorizontally)
+                            .align(Alignment.CenterHorizontally),
                     )
                 } else if (eventState.isEmpty()) {
                     Text(
@@ -283,8 +315,9 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel()) {
                 }
             }
             items(eventState) { events ->
-                Text(text = "${events.name[0]}")
-                Text(text = "${events.details[0]}")
+                Text(text = "${events.date_time.date}",fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text(text = "Events: ${events.name}")
+                Text(text = "-========================-")
             }
 
 
