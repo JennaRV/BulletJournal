@@ -8,6 +8,6 @@ data class TaskData (
     val name: String = "",
     val deadline_date: LocalDate? = null, // Maps to SQL's date type
     val deadline_time: LocalTime? = null, // Maps to SQL's time type
-    val details: String = ""
+    var is_complete: Boolean
 
 )

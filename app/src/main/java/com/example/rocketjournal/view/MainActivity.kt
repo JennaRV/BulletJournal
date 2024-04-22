@@ -2,9 +2,11 @@ package com.example.rocketjournal.view
 
 import AppBackgroundFront
 import LoginButtons
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,6 +28,7 @@ import io.github.jan.supabase.postgrest.Postgrest
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.rocketjournal.viewmodel.SignOutViewModel
 //import com.example.rocketjournal.viewmodel.SupabaseAuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.SupabaseClient
@@ -35,18 +38,22 @@ import io.github.jan.supabase.SupabaseClient
 //import io.supabase.client.SupabaseClient.Companion.create
 
 import io.github.jan.supabase.gotrue.*
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             RocketJournalTheme {
+
                 val navController = rememberNavController()
-                Navigation(navController = navController)
+                Navigation(navController)
+
             }
         }
     }

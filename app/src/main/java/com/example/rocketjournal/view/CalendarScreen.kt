@@ -36,11 +36,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.rocketjournal.view.BottomNavigationBar
+
+
+
+
 import com.example.rocketjournal.viewmodel.CalendarViewModel
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
+
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -105,8 +109,7 @@ fun CalendarScreen(navController: NavController, viewModel: CalendarViewModel = 
             ) {
                 JournalEntry(text = "Journal Entry #2")
             }
-            BottomNavigationBar(navController = navController)
-        }
+            }
     }
 }
 
@@ -190,7 +193,7 @@ fun Calendar(navController: NavController, viewModel: CalendarViewModel) {
             Button(
                 onClick = {
                     viewModel.month.value = viewModel.month.value.minusMonths(1)
-                    viewModel.shownDate.value = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value.month, 1)
+                    viewModel.shownDate.value = LocalDate.of(viewModel.month.value.year, viewModel.month.value.month, 1)
                 },
                 colors = ButtonDefaults.buttonColors(unselectedColor),
                 border = BorderStroke(width = 1.dp, color = Color.Black)
@@ -215,7 +218,7 @@ fun Calendar(navController: NavController, viewModel: CalendarViewModel) {
             Button(
                 onClick = {
                     viewModel.month.value = viewModel.month.value.plusMonths(1)
-                    viewModel.shownDate.value = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value.month, 1)
+                    viewModel.shownDate.value = LocalDate.of(viewModel.month.value.year, viewModel.month.value.month, 1)
                 },
                 colors = ButtonDefaults.buttonColors(unselectedColor),
                 border = BorderStroke(width = 1.dp, color = Color.Black)
@@ -228,7 +231,7 @@ fun Calendar(navController: NavController, viewModel: CalendarViewModel) {
 
         }
         // fill calendar with weekButtons
-        val firstDay = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value.month, 1)
+        val firstDay = LocalDate.of(viewModel.month.value.year, viewModel.month.value.month, 1)
         var counter = firstDay
         var firstDayOfWeek = counter.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
 

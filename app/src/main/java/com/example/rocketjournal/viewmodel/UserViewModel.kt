@@ -74,7 +74,7 @@ class UserViewModel @Inject constructor(
             password = this.password,
             theme = this.theme,
             user_auth_id = this.user_auth_id,
-            journal_id = this.journal_id
+            //journal_id = this.journal_id
         )
     }
 
