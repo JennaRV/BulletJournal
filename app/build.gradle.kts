@@ -68,24 +68,17 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.7")
+    implementation("androidx.test.ext:junit-ktx:1.1.5")
+    implementation("androidx.test.espresso:espresso-intents:3.5.1")
     //implementation("io.github.jan-tennert.supabase:gotrue-kt:2.2.0-alpha-2")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
-
-
     implementation ("androidx.navigation:navigation-compose:2.7.7")
     implementation("io.ktor:ktor-client-android:2.3.8")
-
     implementation("io.ktor:ktor-client-cio:2.3.8")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-
     implementation ("io.github.jan-tennert.supabase:postgrest-kt:2.1.6")
     implementation ("io.github.jan-tennert.supabase:storage-kt:2.1.6")
     implementation ("io.github.jan-tennert.supabase:gotrue-kt:2.1.6")
@@ -98,12 +91,15 @@ dependencies {
 
     //implementation ("com.github.vsnappy1:ComposeDatePicker:2.2.0")
 
-    //unit testing
-    testImplementation ("junit:junit:4.13.2")
-    testImplementation ("org.mockito:mockito-core:3.+")
-    testImplementation ("org.mockito:mockito-inline:3.+")
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2")
 
+    // Test rules and transitive dependencies:
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.4")
+    // Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.4")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.1.0-alpha03")
+    testImplementation("org.mockito:mockito-core:3.12.4")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.6")
 
 

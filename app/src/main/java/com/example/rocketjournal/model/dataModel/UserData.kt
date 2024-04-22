@@ -10,3 +10,4 @@ data class UserData (
     val user_auth_id: String,
     val journal_id: Int? = null
 )
+
