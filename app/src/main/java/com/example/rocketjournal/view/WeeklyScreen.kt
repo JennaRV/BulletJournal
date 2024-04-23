@@ -7,7 +7,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -84,6 +86,7 @@ fun WeeklyScreen(navController: NavController, viewModel: CalendarViewModel = hi
                 val currentJournalEntry = sortedJournals.find {it.created_at.date.toJavaLocalDate() == viewModel.currentWeekStart.value.plusDays(i.toLong())}
                 item{
                     DayEntry(
+                        navController,
                         viewModel.currentWeekStart.value.plusDays(i.toLong()),
                         if (currentJournalEntry != null) {
                             currentJournalEntry.content
@@ -166,47 +169,57 @@ fun ThreePartWidget(viewModel: CalendarViewModel) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DayEntry(date: LocalDate, text: String?) {
+fun DayEntry(navController:NavController, date: LocalDate, text: String?) {
     val backgroundColor = Color(0xFFB98231)
     val mainColor = Color(0xFFE8D5BA)
-    Row(
-        modifier = Modifier
-            .padding(16.dp)
-            .background(mainColor, shape = RoundedCornerShape(10.dp))
-            .fillMaxWidth()
-            .border(
-                BorderStroke(width = 1.dp, color = Color.Black),
-                shape = RoundedCornerShape(10.dp)
-            )
+    Button (
+        onClick = {navController.navigate("daily/$date")},
+        shape = RoundedCornerShape(10.dp),
+        contentPadding = PaddingValues(0.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
     ) {
-        // Display the day
-        Text(
-            date.format(DateTimeFormatter.ofPattern("EEE", Locale.ENGLISH))
-                    + " "
-                    + date.dayOfMonth,
+        Row(
             modifier = Modifier
-                .background(backgroundColor, shape = RoundedCornerShape(10.dp))
-                .padding(4.dp)
-                .height(48.dp),
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-        )
+                .padding(16.dp)
+                .background(mainColor, shape = RoundedCornerShape(10.dp))
+                .fillMaxWidth()
+                .border(
+                    BorderStroke(width = 1.dp, color = Color.Black),
+                    shape = RoundedCornerShape(10.dp)
+                )
+        ) {
+            // Display the day
+            Text(
+                date.format(DateTimeFormatter.ofPattern("EEE", Locale.ENGLISH))
+                        + "\n"
+                        + date.dayOfMonth,
+                modifier = Modifier
+                    .background(backgroundColor, shape = RoundedCornerShape(10.dp))
+                    .padding(4.dp)
+                    .height(48.dp)
+                    .defaultMinSize(minWidth = 60.dp),
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp,
+            )
 
-        // Display the text
-        if (text == null)
-        {
-            Text(
-                "",
-                modifier = Modifier
-                    .padding(4.dp)
-            )
-        }
-        else {
-            Text(
-                text,
-                modifier = Modifier
-                    .padding(4.dp)
-            )
+            // Display the text
+            if (text == null) {
+                Text(
+                    "",
+                    modifier = Modifier
+                        .padding(4.dp)
+                )
+            } else {
+                Text(
+                    text,
+                    color = Color.Black,
+                    fontSize = 20.sp,
+                    modifier = Modifier
+                        .padding(4.dp)
+                )
+            }
         }
     }
 }

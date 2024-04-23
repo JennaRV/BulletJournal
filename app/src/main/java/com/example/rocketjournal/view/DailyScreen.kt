@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,6 +19,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -27,24 +27,33 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.rocketjournal.viewmodel.CalendarViewModel
+import com.example.rocketjournal.viewmodel.EventViewModel
+import com.example.rocketjournal.viewmodel.JournalEntryViewModel
+import com.example.rocketjournal.viewmodel.ListsViewModel
+import kotlinx.datetime.toJavaLocalDate
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DailyScreen(navController : NavController, date : String?) { //viewModel: CalendarViewModel = hiltViewModel()
+fun DailyScreen(
+    navController : NavController,
+    date : String?,
+    JEViewModel: JournalEntryViewModel = hiltViewModel(),
+    LViewModel: ListsViewModel = hiltViewModel(),
+    EViewModel: EventViewModel = hiltViewModel()
+) {
     val primaryColor = Color(0xFF606BD1)
     val secondaryColor = Color(0xFFBA355D)
     val selectedColor = Color(0xFFB98231)
     val unselectedColor = Color(0xFFE8D5BA)
     val day = LocalDate.parse(date)
+    val eventsState = EViewModel.eventList.collectAsState(initial = emptyList()).value ?: emptyList()
+    val listsState = LViewModel.listFlow.collectAsState(initial = emptyList()).value ?: emptyList()
+    val journalsState = JEViewModel.entryList.collectAsState(initial = emptyList()).value ?: emptyList()
     Column(modifier = Modifier
         .background(primaryColor)
         .fillMaxSize()
@@ -92,101 +101,196 @@ fun DailyScreen(navController : NavController, date : String?) { //viewModel: Ca
                 ),
             )
         }
-        // Events
-        Row (
-            modifier = Modifier.padding(12.dp)
-        ){
-            Text(
-                "Events",
-                modifier = Modifier
-                    .weight(.35f)
-                    .padding(horizontal = 10.dp)
-                    .background(selectedColor, shape = RoundedCornerShape(10.dp))
-                    .border(
-                        BorderStroke(width = 1.dp, color = Color.Black),
-                        shape = RoundedCornerShape(10.dp)
-                    ),
-                fontWeight = FontWeight.Bold,
-                style = TextStyle(
-                    color = Color.Black,
-                    fontSize = 25.sp,
-                    textAlign = TextAlign.Center
-                ),
-            )
-        }
-        Row(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
-            ItemEntry()
-        }
-        Row(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
-            ItemEntry()
-        }
 
-        // List
-        Row (
-            modifier = Modifier.padding(12.dp)
-        ){
-            Text(
-                "Lists",
-                modifier = Modifier
-                    .weight(.35f)
-                    .padding(horizontal = 10.dp)
-                    .background(selectedColor, shape = RoundedCornerShape(10.dp))
-                    .border(
-                        BorderStroke(width = 1.dp, color = Color.Black),
-                        shape = RoundedCornerShape(10.dp)
-                    ),
-                fontWeight = FontWeight.Bold,
-                style = TextStyle(
-                    color = Color.Black,
-                    fontSize = 25.sp,
-                    textAlign = TextAlign.Center
-                ),
-            )
-        }
-        Row(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
-            ItemEntry()
-        }
-        Row(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
-            ItemEntry()
-        }
+        LazyColumn(modifier = Modifier.padding(bottom = 60.dp)) {
+            // Events
+            item {
+                Row (
+                    modifier = Modifier.padding(12.dp)
+                ){
+                    Text(
+                        "Events",
+                        modifier = Modifier
+                            .weight(.35f)
+                            .padding(horizontal = 10.dp)
+                            .background(selectedColor, shape = RoundedCornerShape(10.dp))
+                            .border(
+                                BorderStroke(width = 1.dp, color = Color.Black),
+                                shape = RoundedCornerShape(10.dp)
+                            ),
+                        fontWeight = FontWeight.Bold,
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 25.sp,
+                            textAlign = TextAlign.Center
+                        ),
+                    )
+                }
+            }
 
-        // Journals
+            item {
+                var eventFound = false
+                eventsState.forEach {
+                    if (it.date_time.date.toJavaLocalDate() == LocalDate.parse(date)) {
+                        eventFound = true
+                        Row(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
+                            EventEntry(it.name, it.details)
+                        }
+                    }
+                }
+                if (!eventFound) {
+                    Row(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
+                        EventEntry()
+                    }
+                }
+            }
 
-        Row (
-            modifier = Modifier.padding(12.dp)
-        ){
-            Text(
-                "Journals",
-                modifier = Modifier
-                    .weight(.35f)
-                    .padding(horizontal = 10.dp)
-                    .background(selectedColor, shape = RoundedCornerShape(10.dp))
-                    .border(
-                        BorderStroke(width = 1.dp, color = Color.Black),
-                        shape = RoundedCornerShape(10.dp)
-                    ),
-                fontWeight = FontWeight.Bold,
-                style = TextStyle(
-                    color = Color.Black,
-                    fontSize = 25.sp,
-                    textAlign = TextAlign.Center
-                ),
-            )
-        }
-        Row(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
-            ItemEntry()
-        }
-        Row(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
-            ItemEntry()
-        }
+            // List
+
+            item {
+                Row (
+                    modifier = Modifier.padding(12.dp)
+                ){
+                    Text(
+                        "Lists",
+                        modifier = Modifier
+                            .weight(.35f)
+                            .padding(horizontal = 10.dp)
+                            .background(selectedColor, shape = RoundedCornerShape(10.dp))
+                            .border(
+                                BorderStroke(width = 1.dp, color = Color.Black),
+                                shape = RoundedCornerShape(10.dp)
+                            ),
+                        fontWeight = FontWeight.Bold,
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 25.sp,
+                            textAlign = TextAlign.Center
+                        ),
+                    )
+                }
+            }
+
+            item {
+                var listFound = false
+                listsState.forEach {
+                    if (it.deadline?.date?.toJavaLocalDate()?.isAfter(LocalDate.parse(date)) == true || it.deadline == null) {
+                        listFound = true
+                        Row(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
+                            ListEntry(navController,it.name, it.list_id)
+                        }
+                    }
+                }
+                if (!listFound) {
+                    Row(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
+                        ListEntry(navController)
+                    }
+                }
+            }
 
 
+            // Journals
+            item {
+                Row (
+                    modifier = Modifier.padding(12.dp)
+                ){
+                    Text(
+                        "Journals",
+                        modifier = Modifier
+                            .weight(.35f)
+                            .padding(horizontal = 10.dp)
+                            .background(selectedColor, shape = RoundedCornerShape(10.dp))
+                            .border(
+                                BorderStroke(width = 1.dp, color = Color.Black),
+                                shape = RoundedCornerShape(10.dp)
+                            ),
+                        fontWeight = FontWeight.Bold,
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 25.sp,
+                            textAlign = TextAlign.Center
+                        ),
+                    )
+                }
+            }
+            item {
+                var journalFound = false
+                journalsState.forEach {
+                    if (it.created_at.date.toJavaLocalDate() == LocalDate.parse(date)) {
+                        journalFound = true
+                        Row(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
+                            JournalEntry(it.content)
+                        }
+                    }
+                }
+                if (!journalFound) {
+                    Row(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
+                        JournalEntry()
+                    }
+                }
+            }
+        }
     }
-
 }
 
 @Composable
-fun ItemEntry(text: String = "Placeholder") {
+fun EventEntry(name: String = "No events found for this date", text: String? = null) {
+    val unselectedColor = Color(0xFFE8D5BA)
+    Row(
+        modifier = Modifier
+            .background(unselectedColor, shape = RoundedCornerShape(10.dp))
+            .padding(horizontal = 24.dp, vertical = 12.dp)
+            .fillMaxWidth()
+    ) {
+        Column {
+            if (text == null) {
+                Text(
+                    name,
+                    modifier = Modifier.padding(horizontal = 5.dp),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+            else {
+                Text(
+                    name,
+                    modifier = Modifier.padding(horizontal = 5.dp),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text,
+                    modifier = Modifier.padding(horizontal = 5.dp),
+                    fontSize = 20.sp,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ListEntry(navController: NavController, text: String = "No lists found for this date", listID: Int? = null) {
+    val unselectedColor = Color(0xFFE8D5BA)
+    Button(
+        onClick = {navController.navigate("task_list/$listID")},
+        modifier = Modifier
+            .background(unselectedColor, shape = RoundedCornerShape(10.dp))
+            .padding(horizontal = 24.dp, vertical = 12.dp)
+            .fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+    ) {
+        Text(
+            text,
+            modifier = Modifier.padding(horizontal = 5.dp),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+fun JournalEntry(text: String = "No journal entries found for this date") {
     val unselectedColor = Color(0xFFE8D5BA)
     Row(
         modifier = Modifier
@@ -196,6 +300,9 @@ fun ItemEntry(text: String = "Placeholder") {
     ) {
         Text(
             text,
-            modifier = Modifier.padding(horizontal = 5.dp))
+            modifier = Modifier.padding(horizontal = 5.dp),
+            fontSize = 20.sp,
+        )
     }
 }
+
