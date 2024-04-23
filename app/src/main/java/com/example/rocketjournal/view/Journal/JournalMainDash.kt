@@ -83,27 +83,28 @@ fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewMod
             Spacer(modifier = Modifier.size(20.dp))
 
             //A header that looks like a button that says Journals
-            Button(
-                onClick = {  navController.navigate("newJournal")  },
-                modifier = Modifier
-                    .offset(offsetX, screenHeight * 0.0012f)
-                    .size(boxWidth, 60.dp)
-                    .clipToBounds()
-                    .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
-                    .shadow(10.dp, RoundedCornerShape(15.dp)),
-                shape = RoundedCornerShape(15.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFB98231)
-                )
-
-            ) {
-                Text(
-                    text = "New Entry",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-            }
+//            Button(
+//                onClick = {  navController.navigate("newJournal")  },
+//                modifier = Modifier
+//                    .offset(offsetX, screenHeight * 0.0012f)
+//                    .size(boxWidth, 60.dp)
+//                    .clipToBounds()
+//                    .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
+//                    .shadow(10.dp, RoundedCornerShape(15.dp)),
+//                shape = RoundedCornerShape(15.dp),
+//                colors = ButtonDefaults.buttonColors(
+//                    containerColor = Color(0xFFB98231)
+//                )
+//
+//            ) {
+//                Text(
+//                    text = "New Entry",
+//                    fontSize = 20.sp,
+//                    fontWeight = FontWeight.Bold,
+//                    color = Color.Black
+//                )
+//            }
+            CreateJournalEntry()
 
 
             Spacer(modifier = Modifier.size(20.dp))
@@ -216,7 +217,7 @@ fun JournalEntryDataItemView(navController: NavController, journal: JournalEntry
             .height(100.dp)
             .padding(16.dp)
             .clickable {
-                       /* Handle click event here if needed */
+                /* Handle click event here if needed */
                 navController.navigate("journalEntry")
             },
         contentAlignment = Alignment.Center

@@ -24,9 +24,23 @@ class JournalEntryViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: Flow<Boolean> = _isLoading
 
+    private val _content = MutableStateFlow("")
+    val content = _content
+
     init {
         getJournalEntries()
     }
+
+
+    //ViewModel method that creates a journal entry in database
+    fun onCreateJournalEntry() {
+        viewModelScope.launch {
+            val contentValue = _content.value
+
+
+        }
+    }
+    
 
     fun getJournalEntries() {
         viewModelScope.launch {
