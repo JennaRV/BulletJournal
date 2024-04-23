@@ -131,10 +131,10 @@ fun DailyScreen(
             item {
                 var eventFound = false
                 eventsState.forEach {
-                    if (it.date_time.date.toJavaLocalDate() == LocalDate.parse(date)) {
+                    if (it.date_time.date.toJavaLocalDate() >= LocalDate.parse(date)) {
                         eventFound = true
                         Row(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
-                            EventEntry(it.name, it.details)
+                            EventEntry(it.name, it.details, it.date_time.date.toJavaLocalDate())
                         }
                     }
                 }
@@ -234,7 +234,7 @@ fun DailyScreen(
 }
 
 @Composable
-fun EventEntry(name: String = "No events found for this date", text: String? = null) {
+fun EventEntry(name: String = "No events found for this date", text: String? = null, date: LocalDate = LocalDate.now()) {
     val unselectedColor = Color(0xFFE8D5BA)
     Row(
         modifier = Modifier
@@ -253,7 +253,7 @@ fun EventEntry(name: String = "No events found for this date", text: String? = n
             }
             else {
                 Text(
-                    name,
+                    name + ": " + date.month.toString() + " " + date.dayOfMonth.toString() + ", " + date.year.toString(),
                     modifier = Modifier.padding(horizontal = 5.dp),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,

@@ -47,10 +47,8 @@ import com.example.rocketjournal.model.dataModel.JournalEntryData
 
 import com.example.rocketjournal.viewmodel.CalendarViewModel
 import com.example.rocketjournal.viewmodel.JournalEntryViewModel
-import kotlinx.datetime.toJavaLocalDateTime
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.temporal.TemporalAdjusters
 
 
@@ -63,7 +61,6 @@ fun CalendarScreen(navController: NavController, viewModel: CalendarViewModel = 
     val selectedColor = Color(0xFFB98231)
     val journalsState = JEViewModel.entryList.collectAsState(initial = emptyList()).value ?: emptyList()
     val sortedJournals = journalsState.sortedWith(LocalDateTimeComparator())
-        .filter { it.created_at.toJavaLocalDateTime().isAfter(LocalDateTime.now()) }
 
     Column(modifier = Modifier
         .background(primaryColor)
@@ -121,7 +118,7 @@ fun CalendarScreen(navController: NavController, viewModel: CalendarViewModel = 
                             Row(
                                 modifier = Modifier.padding(12.dp)
                             ) {
-                                JournalEntry(text = "No Upcoming Journal Entries Found", null)
+                                JournalEntry(text = "No Journal Entries Found", null)
                             }
 
                         } else {
@@ -352,7 +349,7 @@ fun JournalEntry (text: String, date: kotlinx.datetime.LocalDate?) {
 
 class LocalDateTimeComparator : Comparator<JournalEntryData> {
     override fun compare(j1: JournalEntryData, j2: JournalEntryData): Int {
-        val dateComparison = j1.created_at.compareTo(j2.created_at)
+        val dateComparison = j2.created_at.compareTo(j1.created_at)
         return dateComparison
     }
 }
