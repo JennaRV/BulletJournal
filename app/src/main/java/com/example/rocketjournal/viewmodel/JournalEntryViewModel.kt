@@ -37,7 +37,7 @@ class JournalEntryViewModel @Inject constructor(
         viewModelScope.launch {
             val contentValue = _content.value
 
-
+            getJournalEntries()
         }
     }
     
@@ -73,6 +73,14 @@ class JournalEntryViewModel @Inject constructor(
             getJournalEntries()
         }
     }
+
+    fun deleteJournalEntry(journalEntryData: JournalEntryData){
+        viewModelScope.launch {
+            journalEntryRepository.deleteJournalEntry(journalEntryData.entry_id)
+            getJournalEntries()
+        }
+    }
+
 
     private fun JournalEntryDTO.asDomainModel(): JournalEntryData {
         return JournalEntryData(
