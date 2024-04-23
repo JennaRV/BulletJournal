@@ -12,9 +12,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -67,8 +72,14 @@ fun WeeklyScreen(navController: NavController, viewModel: CalendarViewModel = hi
         ) {
             ThreePartWidget(viewModel)
         }
-        for(i in 0..6) {
-            DayEntry(viewModel.currentWeekStart.value.plusDays(i.toLong()))
+        LazyColumn (
+            modifier = Modifier.padding(bottom = 60.dp)
+        ) {
+            for(i in 0..6) {
+                item{
+                    DayEntry(viewModel.currentWeekStart.value.plusDays(i.toLong()))
+                }
+            }
         }
     }
 
@@ -94,13 +105,18 @@ fun ThreePartWidget(viewModel: CalendarViewModel) {
             colors = ButtonDefaults.buttonColors(backgroundColor),
             border = BorderStroke(width = 1.dp, color = Color.Black)
         ) {
-            Text(
-                "<---" // replace with icon
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                contentDescription = "backward"
             )
         }
         Text(
-            viewModel.currentWeekStart.value.month.toString()
-                    + "\n"
+            viewModel.currentWeekStart.value.month.toString() +
+                    if (viewModel.currentWeekStart.value.month != viewModel.currentWeekStart.value.plusDays(6).month) {
+                       "-" + viewModel.currentWeekStart.value.plusDays(6).month.toString() + "\n"
+                    } else {
+                        "\n"
+                    }
                     + viewModel.currentWeekStart.value.dayOfMonth
                     + "-"
                     + viewModel.currentWeekStart.value.plusDays(6).dayOfMonth,
@@ -125,8 +141,9 @@ fun ThreePartWidget(viewModel: CalendarViewModel) {
             colors = ButtonDefaults.buttonColors(backgroundColor),
             border = BorderStroke(width = 1.dp, color = Color.Black)
         ) {
-        Text(
-                "--->" // replace with icon
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = "forward"
             )
         }
     }
