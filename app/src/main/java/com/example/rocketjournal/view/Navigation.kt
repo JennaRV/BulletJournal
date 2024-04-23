@@ -58,6 +58,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemColors
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -142,15 +144,17 @@ fun Navigation(navController: NavHostController) {
     }
     ModalNavigationDrawer( // Shows the drawer on the left
         drawerContent = {
-            ModalDrawerSheet(modifier = Modifier.width(280.dp)) {
+            ModalDrawerSheet(modifier = Modifier.width(280.dp), drawerContainerColor = Color(0xFF646EF5)) {
                 Box(
                     modifier = Modifier
-                        .background(Color(0xFFEBAD53))
+                        .background(Color(red = 214, green = 66, blue = 105))
                         .height(150.dp)
                         .fillMaxWidth()
                 )
                 HorizontalDivider()
-                NavigationDrawerItem(
+                NavigationDrawerItem(colors = NavigationDrawerItemDefaults.colors(unselectedContainerColor = Color(0xFF646EF5),
+                    unselectedTextColor = Color(0xFFFFFFFF),
+                    unselectedIconColor = Color(0xFFFFFFFF)),
                     label = { Text(text = "Profile") },
                     selected = false,
                     icon = {
@@ -165,7 +169,9 @@ fun Navigation(navController: NavHostController) {
                         }
                         navController.navigate("profile")
                     })
-                NavigationDrawerItem(
+                NavigationDrawerItem(colors = NavigationDrawerItemDefaults.colors(unselectedContainerColor = Color(0xFF646EF5),
+                    unselectedTextColor = Color(0xFFFFFFFF),
+                    unselectedIconColor = Color(0xFFFFFFFF)),
                     label = { Text(text = "Settings") },
                     selected = false,
                     icon = {
@@ -180,7 +186,9 @@ fun Navigation(navController: NavHostController) {
                         }
 
                     })
-                NavigationDrawerItem(
+                NavigationDrawerItem(colors = NavigationDrawerItemDefaults.colors(unselectedContainerColor = Color(0xFF646EF5),
+                    unselectedTextColor = Color(0xFFFFFFFF),
+                    unselectedIconColor = Color(0xFFFFFFFF)),
                     label = { Text(text = "Logout") },
                     selected = false,
                     icon = {
