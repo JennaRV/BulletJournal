@@ -22,6 +22,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -39,6 +40,8 @@ import androidx.navigation.NavController
 
 
 import com.example.rocketjournal.viewmodel.CalendarViewModel
+import com.example.rocketjournal.viewmodel.JournalEntryViewModel
+import kotlinx.datetime.toJavaLocalDate
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -46,9 +49,11 @@ import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun WeeklyScreen(navController: NavController, viewModel: CalendarViewModel = hiltViewModel()) {
+fun WeeklyScreen(navController: NavController, viewModel: CalendarViewModel = hiltViewModel(), JEViewModel: JournalEntryViewModel = hiltViewModel()) {
     val primaryColor = Color(0xFF606BD1)
     val secondaryColor = Color(0xFFBA355D)
+    val journalsState = JEViewModel.entryList.collectAsState(initial = emptyList()).value ?: emptyList()
+    val sortedJournals = journalsState.sortedWith(LocalDateTimeComparator())
     Column(modifier = Modifier
         .background(primaryColor)
         .drawBehind {
@@ -76,8 +81,18 @@ fun WeeklyScreen(navController: NavController, viewModel: CalendarViewModel = hi
             modifier = Modifier.padding(bottom = 60.dp)
         ) {
             for(i in 0..6) {
+                val currentJournalEntry = sortedJournals.find {it.created_at.date.toJavaLocalDate() == viewModel.currentWeekStart.value.plusDays(i.toLong())}
                 item{
-                    DayEntry(viewModel.currentWeekStart.value.plusDays(i.toLong()))
+                    DayEntry(
+                        viewModel.currentWeekStart.value.plusDays(i.toLong()),
+                        if (currentJournalEntry != null) {
+                            currentJournalEntry.content
+                        }
+                        else
+                        {
+                            null
+                        }
+                    )
                 }
             }
         }
@@ -151,7 +166,7 @@ fun ThreePartWidget(viewModel: CalendarViewModel) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DayEntry(date: LocalDate) {
+fun DayEntry(date: LocalDate, text: String?) {
     val backgroundColor = Color(0xFFB98231)
     val mainColor = Color(0xFFE8D5BA)
     Row(
@@ -164,6 +179,7 @@ fun DayEntry(date: LocalDate) {
                 shape = RoundedCornerShape(10.dp)
             )
     ) {
+        // Display the day
         Text(
             date.format(DateTimeFormatter.ofPattern("EEE", Locale.ENGLISH))
                     + " "
@@ -174,13 +190,24 @@ fun DayEntry(date: LocalDate) {
                 .height(48.dp),
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-        ) // Display the day
+        )
 
-        Text(
-            "Placeholder Journal Entry\n Lorem Ipsum",
-            modifier = Modifier
-                .padding(4.dp)
-        ) // Display the text
+        // Display the text
+        if (text == null)
+        {
+            Text(
+                "",
+                modifier = Modifier
+                    .padding(4.dp)
+            )
+        }
+        else {
+            Text(
+                text,
+                modifier = Modifier
+                    .padding(4.dp)
+            )
+        }
     }
 }
 
