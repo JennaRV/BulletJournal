@@ -105,6 +105,10 @@ class EventViewModel @Inject constructor(
         }
     }
 
+    suspend fun getEvents(EventID: Int): EventDTO? {
+        return eventRepository.getEvent(EventID)
+    }
+
 
 
     fun updateEvent(eventData: EventData){

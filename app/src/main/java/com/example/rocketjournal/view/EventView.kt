@@ -47,7 +47,7 @@ fun EventView(navController: NavController,
 
     LaunchedEffect(Unit) {
         coroutine.launch {
-            //event = eventViewModel.getEvents(eventID)
+            event = eventViewModel.getEvents(eventID)
 
         }
     }
@@ -68,7 +68,9 @@ fun EventView(navController: NavController,
                 )  //Add navController = navController Later
                 Spacer(modifier = Modifier.weight(1f))
 
+
                 event?.let { EventViewHeader(it.name) }
+
 
 
             }
