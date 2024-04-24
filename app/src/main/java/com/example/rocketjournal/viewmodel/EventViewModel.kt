@@ -105,6 +105,8 @@ class EventViewModel @Inject constructor(
         }
     }
 
+
+
     fun updateEvent(eventData: EventData){
         viewModelScope.launch {
             eventRepository.updateEvent(

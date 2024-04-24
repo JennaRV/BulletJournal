@@ -219,6 +219,15 @@ fun Navigation(navController: NavHostController){
                 // Create Event
                 //Event Creation Page
                 //composable("newEvent") { EventCreation(navController) }
+                composable("event_list/{eventId}") { backStackEntry ->
+                    // Extract the listId from the backStackEntry
+                    val eventId = backStackEntry.arguments?.getString("eventId")?.toIntOrNull()
+
+                    // Pass the listId to your TaskList composable
+                    if (eventId != null) {
+                        EventView(navController, eventId)
+                    }
+                }
             }
         }
     }

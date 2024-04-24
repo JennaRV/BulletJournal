@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -90,38 +91,68 @@ fun MainEvent(navController: NavController, viewModel: EventViewModel = hiltView
             Spacer(modifier = Modifier.size(20.dp))
 
             //This is where the events go
-            LazyColumn {
-                item {
-                    if (isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 16.dp)
-                                .align(Alignment.CenterHorizontally)
-                        )
-                    } else if (eventState.isEmpty()) {
-                        Text(
-                            text = "No Events Available",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 16.dp)
-                                .align(Alignment.CenterHorizontally)
+//            LazyColumn {
+//                item {
+//                    if (isLoading) {
+//                        CircularProgressIndicator(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(vertical = 16.dp)
+//                                .align(Alignment.CenterHorizontally)
+//                        )
+//                    } else if (eventState.isEmpty()) {
+//                        Text(
+//                            text = "No Events Available",
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(vertical = 16.dp)
+//                                .align(Alignment.CenterHorizontally)
+//                        )
+//                    }
+//                }
+////                items(eventState) { eventEntry ->
+////                    EventDataItemView(event = eventEntry
+////                    onEventClicked = { clickedEvent ->
+////                        navController.navigate("event_list/${clickedEvent.event_id}")
+////                    },
+////                    onDeleteClicked = {
+////                        viewModel.deleteEvent(eventEntry)
+////                    }
+////
+////                }
+//            }
+
+//            BottomNavigationBar(navController = navController)
+            if (isLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            } else if (eventState.isEmpty()) {
+                Text("No Events available", modifier = Modifier.align(Alignment.CenterHorizontally))
+            } else {
+                LazyColumn {
+                    items(eventState) { event ->
+                        EventDataItemView(
+                            event = event,
+                            onEventClicked = { clickedEvent ->
+                                navController.navigate("event_list/${clickedEvent.event_id}")
+                            },
+//                            onDeleteClicked = {
+//                                viewModel.deleteEvent(event)
+//                            }
+
                         )
                     }
                 }
-                items(eventState) { eventEntry ->
-                    EventDataItemView(event = eventEntry)
-
-                }
             }
-
-//            BottomNavigationBar(navController = navController)
         }
     }
 }
 
 @Composable
-fun EventDataItemView(event: EventData) {
+fun EventDataItemView(event: EventData,
+                      onEventClicked: (EventData) -> Unit)
+                      //onDeleteClicked: (EventData) -> Unit)
+{
+
     Box(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -129,13 +160,26 @@ fun EventDataItemView(event: EventData) {
             .background(color = Color(0xFFE8D5BA), shape = RoundedCornerShape(15.dp))
             .fillMaxWidth()
             .height(100.dp)
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable {
+                onEventClicked(event)
+
+            },
         contentAlignment = Alignment.Center
     ) {
         Column (horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = event.name, fontSize = 20.sp, fontWeight = FontWeight.Bold)
 
             Text(text = event.details, maxLines = 2)
+//            Icon(
+//                imageVector = Icons.Default.Delete,
+//                contentDescription = "Delete",
+//                tint = Color.Black, // Adjust the color as needed
+//                modifier = Modifier
+//                    .clickable {
+//                        onDeleteClicked(event) // Invoke the delete callback
+//                    }
+//            )
         }
     }
 }
