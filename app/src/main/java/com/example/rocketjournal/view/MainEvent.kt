@@ -53,7 +53,7 @@ fun MainEvent(navController: NavController, viewModel: EventViewModel = hiltView
         val screenWidth = LocalConfiguration.current.screenWidthDp.dp
         val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
-        val boxWidth = screenWidth * 0.9f
+        val boxWidth = screenWidth * 1f
         val offsetX = screenWidth * 0.05f
 
         Column {
@@ -128,7 +128,7 @@ fun MainEvent(navController: NavController, viewModel: EventViewModel = hiltView
             } else if (eventState.isEmpty()) {
                 Text("No Events available", modifier = Modifier.align(Alignment.CenterHorizontally))
             } else {
-                LazyColumn {
+                LazyColumn (modifier = Modifier .size(boxWidth, 450.dp)){
                     items(eventState) { event ->
                         EventDataItemView(
                             event = event,

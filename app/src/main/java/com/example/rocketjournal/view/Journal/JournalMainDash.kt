@@ -65,7 +65,7 @@ fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewMod
         val screenWidth = LocalConfiguration.current.screenWidthDp.dp
         val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
-        val boxWidth = screenWidth * 0.9f
+        val boxWidth = screenWidth * 1f
         val offsetX = screenWidth * 0.05f
 
 
@@ -112,7 +112,7 @@ fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewMod
 
             //PlaceholderEntry()
 
-            LazyColumn {
+            LazyColumn (modifier = Modifier .size(boxWidth, 450.dp)){
                 item {
                     if (isLoading) {
                         CircularProgressIndicator(

@@ -132,7 +132,7 @@ fun SingleComponent() {
 
         Box(
             modifier = Modifier
-                .offset(offsetX, screenHeight * 0.5f)
+                .offset(offsetX, screenHeight * 0.25f)
                 .size(boxWidth, 50.dp)
                 .align(Alignment.CenterHorizontally)
                 .border(
@@ -186,8 +186,8 @@ fun SingleComponent() {
         Box(
 
             modifier = Modifier
-                .offset(offsetX, screenHeight * 0.5f)
-                .size(boxWidth, 150.dp)
+                .offset(offsetX, screenHeight * 0.25f)
+                .size(boxWidth, 350.dp)
                 .border(1.dp, Color.Black)
                 .background(color = Color(0xFFE8D5BA))
 
@@ -278,7 +278,7 @@ fun JournalScreen(viewModel: JournalEntryViewModel = hiltViewModel()) {
                 else {
                     // Display the first entry only if it hasn't been displayed before
                     Text(text = "${entriesState.first().created_at?.date}",fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Text(text = "Journal: ${entriesState.first().content}", maxLines = 4)
+                    Text(text = "Journal: ${entriesState.first().content}", maxLines = 10)
                 }
             }
 
