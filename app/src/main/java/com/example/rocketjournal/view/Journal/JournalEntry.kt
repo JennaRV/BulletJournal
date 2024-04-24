@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,14 @@ fun JournalEntry(
     navController: NavController,
     viewModel: JournalEntryViewModel = hiltViewModel(),
     journalEntryID: Int) {
+
+
+    val entriesState = viewModel.entryList.collectAsState(initial = emptyList()).value ?: emptyList()
+    val isLoading = viewModel.isLoading.collectAsState(initial = true).value
+
+    val entry = entriesState.find { it.entry_id == journalEntryID } ?: JournalEntryData(0, 0, null, null, "")
+
+
 
 
     AppBackgroundGeneral {
