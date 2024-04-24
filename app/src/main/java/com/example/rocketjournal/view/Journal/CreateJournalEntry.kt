@@ -177,7 +177,7 @@ fun CreateJournalEntry(viewModel: JournalEntryViewModel = hiltViewModel()) {
                         modifier = Modifier.fillMaxWidth(),
                         value = content,
                         onValueChange = { viewModel.content.value = it },
-                        label = { Text(text = "Enter Jounal Content",
+                        label = { Text(text = "Enter Journal Content",
                             color = Color.Black,
                         ) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -228,7 +228,7 @@ fun DateTimePickerComponent(viewModel: JournalEntryViewModel) {
     val datePickerState = rememberDatePickerState()
     var showDatePicker by remember { mutableStateOf(false) }
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
-    var selectedTime by remember { mutableStateOf<LocalTime?>(null) } // Declare selectedTime
+    val selectedTime by remember { mutableStateOf<LocalTime?>(LocalTime(0,0)) } // Declare selectedTime
     val selectedDateMillis = datePickerState.selectedDateMillis
     var selectedDateText by remember { mutableStateOf("No Date Selected") }
     var selectedTimeText by remember { mutableStateOf("No Date Selected") }
@@ -259,7 +259,6 @@ fun DateTimePickerComponent(viewModel: JournalEntryViewModel) {
         }
 
     }
-
     // date picker component
     if (showDatePicker) {
         DatePickerDialog(
@@ -270,12 +269,18 @@ fun DateTimePickerComponent(viewModel: JournalEntryViewModel) {
                         val selectedDateMillis = datePickerState.selectedDateMillis
                         if (selectedDateMillis != null) {
                             // Convert milliseconds to LocalDateTime
-                            val selectedDate = Instant.fromEpochMilliseconds(selectedDateMillis)
+                            val selectedLocalDateTime = Instant.fromEpochMilliseconds(selectedDateMillis)
                                 .toLocalDateTime(TimeZone.currentSystemDefault())
                             // Format the date
-                            val formattedDate = "${selectedDate.monthNumber}/${selectedDate.dayOfMonth}/${selectedDate.year}"
-                            selectedDateText = formattedDate
-                        } else {
+                            selectedDate = selectedLocalDateTime.date
+//                            val formattedDate = "${selectedDates.monthNumber}/${selectedDates.dayOfMonth}/${selectedDates.year}"
+//                            selectedDateText = formattedDate
+                            selectedDateText = "${selectedLocalDateTime.monthNumber}/${selectedLocalDateTime.dayOfMonth}/${selectedLocalDateTime.year}"
+                            Log.e("date", selectedDate.toString())
+
+
+                        }
+                        else {
                             // Handle error or display a message
                         }
                         showDatePicker = false
@@ -295,47 +300,14 @@ fun DateTimePickerComponent(viewModel: JournalEntryViewModel) {
         }
     }
 
-// time picker component
-    if (showTimePicker) {
-        TimePickerDialog(
-            onDismissRequest = { /*TODO*/ },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        val selectedHour = if(timePickerState.hour > 12) timePickerState.hour-12 else timePickerState.hour
-                        val selectedMinute = timePickerState.minute
-                        if (selectedHour != null && selectedMinute != null) {
-                            // val selectedTime = selectedTime
-                            // Store or process the selected time as needed
-                            // For example, you can format it and display it in the UI
-                            selectedTimeText = "$selectedHour:$selectedMinute"
-                        } else {
-                            // Handle error or display a message
-                        }
-                        showTimePicker = false
-                    }
-                ) { Text("OK") }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showTimePicker = false
-                    }
-                ) { Text("Cancel") }
-            }
-        )
-        {
-            TimePicker(state = timePickerState)
-        }
-    }
-
     //combine date and time
     val combinedDateTime: LocalDateTime? = selectedDate?.let {
         selectedTime?.let { time ->
             LocalDateTime(selectedDate!!.year, selectedDate!!.month, selectedDate!!.dayOfMonth, time.hour, time.minute)
         }
     }
-    //viewModel.setDeadline(combinedDateTime)
+    Log.e("DATETIME", combinedDateTime.toString())
+    viewModel.setCreatedAt(combinedDateTime)
 
 }
 
@@ -406,7 +378,7 @@ fun OpenSheetButton(onClick: () -> Unit) {
             containerColor = Color(0xFFB98231)
         )
     ) {
-        Text("Add List",
+        Text("Add Journal",
             style = TextStyle(color = Color.Black)
         )
     }

@@ -21,13 +21,13 @@ class JournalEntryRepositoryImpl @Inject constructor(
             withContext(Dispatchers.IO) {
 
                 val journalEntryDTO = JournalEntryDTO(
-                    entry_id = journalEntry.entry_id,
+
                     journal_id = journalEntry.journal_id,
                     created_at = journalEntry.created_at,
                     last_updated = journalEntry.last_updated,
                     content = journalEntry.content
                 )
-                postgrest.from("journal_entry").insert(JournalEntryDTO)
+                postgrest.from("journal_entry").insert(journalEntryDTO)
                 true
             }
             true
