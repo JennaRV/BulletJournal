@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,8 +23,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,8 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
@@ -48,9 +43,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.rocketjournal.model.dataModel.JournalData
 import com.example.rocketjournal.model.dataModel.JournalEntryData
+import com.example.rocketjournal.model.dataModel.ListData
 
 import com.example.rocketjournal.viewmodel.JournalEntryViewModel
 import java.time.format.DateTimeFormatter
+import com.example.rocketjournal.view.Journal.JournalEntry as JournalEntry
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,27 +80,28 @@ fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewMod
             Spacer(modifier = Modifier.size(20.dp))
 
             //A header that looks like a button that says Journals
-            Button(
-                onClick = {  navController.navigate("newJournal")  },
-                modifier = Modifier
-                    .offset(offsetX, screenHeight * 0.0012f)
-                    .size(boxWidth, 60.dp)
-                    .clipToBounds()
-                    .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
-                    .shadow(10.dp, RoundedCornerShape(15.dp)),
-                shape = RoundedCornerShape(15.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFB98231)
-                )
-
-            ) {
-                Text(
-                    text = "New Entry",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-            }
+//            Button(
+//                onClick = {  navController.navigate("newJournal")  },
+//                modifier = Modifier
+//                    .offset(offsetX, screenHeight * 0.0012f)
+//                    .size(boxWidth, 60.dp)
+//                    .clipToBounds()
+//                    .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
+//                    .shadow(10.dp, RoundedCornerShape(15.dp)),
+//                shape = RoundedCornerShape(15.dp),
+//                colors = ButtonDefaults.buttonColors(
+//                    containerColor = Color(0xFFB98231)
+//                )
+//
+//            ) {
+//                Text(
+//                    text = "New Entry",
+//                    fontSize = 20.sp,
+//                    fontWeight = FontWeight.Bold,
+//                    color = Color.Black
+//                )
+//            }
+            CreateJournalEntry()
 
 
             Spacer(modifier = Modifier.size(20.dp))
@@ -135,7 +133,15 @@ fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewMod
                 }
                 items(entriesState) { journalEntry ->
 //                    JournalDataItemView(journal = journal)
-                    JournalEntryDataItemView(navController, journal = journalEntry)
+                    JournalEntryDataItemView(journal = journalEntry,
+                        onEntryClicked = { clickedEntry ->
+                            // Handle navigation or any other action here
+                            // For example, navigate to another screen
+                            navController.navigate("task_list/${clickedEntry.entry_id}")
+                        },
+                        onDeleteClicked = {
+                            viewModel.deleteJournalEntry(journalEntry)
+                        })
                 }
 
 
@@ -203,9 +209,12 @@ fun JournalDataItemView(journal: JournalData) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun JournalEntryDataItemView(navController: NavController, journal: JournalEntryData) {
+fun JournalEntryDataItemView(
+    journal: JournalEntryData,
+    onEntryClicked: (JournalEntryData) -> Unit,
+    onDeleteClicked: (JournalEntryData) -> Unit,) {
 
-    val formattedDate = formatDate(journal.created_at)
+    val formattedDate = journal.created_at?.let { formatDate(it) }
 
     Box(
         modifier = Modifier
@@ -216,8 +225,8 @@ fun JournalEntryDataItemView(navController: NavController, journal: JournalEntry
             .height(100.dp)
             .padding(16.dp)
             .clickable {
-                       /* Handle click event here if needed */
-                navController.navigate("journalEntry")
+                /* Handle click event here if needed */
+
             },
         contentAlignment = Alignment.Center
     ) {
