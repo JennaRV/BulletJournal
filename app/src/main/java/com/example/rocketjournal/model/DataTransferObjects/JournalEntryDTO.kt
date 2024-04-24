@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class JournalEntryDTO (
+data class JournalEntryDTO(
 
     @SerialName("entry_id")
     val entry_id: Int? = null,
@@ -14,10 +14,10 @@ data class JournalEntryDTO (
     val journal_id: Int,
 
     @SerialName("created_at")
-    val created_at: LocalDateTime,
+    val created_at: LocalDateTime?,
 
     @SerialName("last_updated")
-    val last_updated: LocalDateTime,
+    val last_updated: LocalDateTime?,
 
     @SerialName("content")
     val content: String

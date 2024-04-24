@@ -5,17 +5,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rocketjournal.model.DataTransferObjects.JournalEntryDTO
 import com.example.rocketjournal.model.Repositories.JournalEntryRepository
+import com.example.rocketjournal.model.Repositories.RepoImplementation.UserRepositoryImpl
 import com.example.rocketjournal.model.dataModel.JournalEntryData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDateTime
 import javax.inject.Inject
 
 
 @HiltViewModel
 class JournalEntryViewModel @Inject constructor(
-    private val journalEntryRepository: JournalEntryRepository
+    private val journalEntryRepository: JournalEntryRepository,
+    private val userRepositoryImpl: UserRepositoryImpl
 ): ViewModel() {
 
     private val _entryList = MutableStateFlow<List<JournalEntryData>?>(listOf())
@@ -24,9 +27,48 @@ class JournalEntryViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: Flow<Boolean> = _isLoading
 
+    private val _content = MutableStateFlow("")
+    val content = _content
+
+    private val _created_at = MutableStateFlow<LocalDateTime?>(null)
+    val created_at = _created_at
+
     init {
         getJournalEntries()
     }
+
+    fun setCreatedAt(created_at: LocalDateTime?) {
+        _created_at.value = created_at
+        Log.e("JournalEntryViewModel", "$created_at")
+    }
+
+
+    //ViewModel method that creates a journal entry in database
+    fun onCreateJournalEntry() {
+        viewModelScope.launch {
+            val contentValue = _content.value
+            val journalID = userRepositoryImpl.getCurrentUserJournalID()?.toInt()
+
+            val journalEntry = JournalEntryData(
+                entry_id = 0,
+                journal_id = journalID ?: 0,
+                created_at = _created_at.value,
+                last_updated = _created_at.value,
+                content = contentValue
+            )
+
+            val result = journalEntryRepository.createJournalEntry(journalEntry)
+
+            if (result) {
+                Log.d("JournalEntryViewModel", "Journal entry created successfully.")
+            } else {
+                Log.e("JournalEntryViewModel", "Error creating journal entry.")
+            }
+
+            getJournalEntries()
+        }
+    }
+    
 
     fun getJournalEntries() {
         viewModelScope.launch {
@@ -59,6 +101,14 @@ class JournalEntryViewModel @Inject constructor(
             getJournalEntries()
         }
     }
+
+    fun deleteJournalEntry(journalEntryData: JournalEntryData){
+        viewModelScope.launch {
+            journalEntryRepository.deleteJournalEntry(journalEntryData.entry_id)
+            getJournalEntries()
+        }
+    }
+
 
     private fun JournalEntryDTO.asDomainModel(): JournalEntryData {
         return JournalEntryData(

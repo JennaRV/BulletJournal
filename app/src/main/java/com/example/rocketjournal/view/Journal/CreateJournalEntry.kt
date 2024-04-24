@@ -1,8 +1,12 @@
-package com.example.rocketjournal.view
+package com.example.rocketjournal.view.Journal
 
 //import android.app.TimePickerDialog
 import android.annotation.SuppressLint
+import android.app.TimePickerDialog
 import android.os.Build
+import android.util.Log
+import android.widget.DatePicker
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -14,10 +18,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -30,6 +36,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,6 +46,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -55,11 +64,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.rocketjournal.model.Repositories.RepoImplementation.ListsRepositoryImpl
+import com.example.rocketjournal.view.DateTimePickerComponent
+import com.example.rocketjournal.view.OpenSheetButton
+import com.example.rocketjournal.view.PlaceholderLazyColumn
+import com.example.rocketjournal.viewmodel.JournalEntryViewModel
 import com.example.rocketjournal.viewmodel.ListsViewModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
@@ -68,20 +85,22 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import javax.inject.Scope
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateList(viewModel: ListsViewModel = hiltViewModel()) {
+fun CreateJournalEntry(viewModel: JournalEntryViewModel = hiltViewModel()) {
     val sheetState = rememberModalBottomSheetState(
-       // skipPartiallyExpanded = true
+        skipPartiallyExpanded = true
     )
     val scope = rememberCoroutineScope()
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
-   // val desiredHeight = screenHeight * 0.85f
+    val desiredHeight = screenHeight * 0.85f
 
     //Date and Time variables
     val date = remember {
@@ -102,7 +121,7 @@ fun CreateList(viewModel: ListsViewModel = hiltViewModel()) {
     )
     var showTimePicker by remember { mutableStateOf(false) }
 
-    val name by viewModel.name.collectAsState()
+    val content by viewModel.content.collectAsState()
     //val deadline by viewModel.deadline.collectAsState()
 
     //mutable variables
@@ -111,10 +130,12 @@ fun CreateList(viewModel: ListsViewModel = hiltViewModel()) {
     var isTimePickerVisible by remember { mutableStateOf(false) }
 //    val selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     var selectedTime by remember { mutableStateOf<LocalTime?>(null) }
-    var listName by remember { mutableStateOf("") } // Store the list name here
     var selectedDateTime: LocalDateTime? by remember { mutableStateOf(null) } // Store the selected date and time here
 
-    OpenSheetButton(onClick = {
+
+    var journalContent by remember { mutableStateOf("") } // Store the list name here
+
+    OpenSheetButtonJournal(onClick = {
         scope.launch {
             sheetState.show()
         }
@@ -129,7 +150,7 @@ fun CreateList(viewModel: ListsViewModel = hiltViewModel()) {
                 }
             },
             modifier = Modifier,
-            containerColor = Color(0xFFE8D5BA),
+            containerColor = Color(0xFFE8D5BA)
 
         ) {
             var listDeadlineDate: LocalDate
@@ -137,7 +158,7 @@ fun CreateList(viewModel: ListsViewModel = hiltViewModel()) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    //.height(desiredHeight)
+                    .height(desiredHeight)
                     .padding(horizontal = 40.dp),
             ) {
                 Column(
@@ -146,129 +167,68 @@ fun CreateList(viewModel: ListsViewModel = hiltViewModel()) {
 
                         .fillMaxWidth()
                         //Use a fraction of the screen height
-                        //.height(desiredHeight)
+                        .height(desiredHeight)
                         .padding(horizontal = 40.dp),
 
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text("New List", modifier = Modifier.padding(16.dp))
+                    Text("New Journal", modifier = Modifier.padding(16.dp))
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
-                        value = name,
-                        onValueChange = { viewModel.name.value = it },
-                        label = { Text("List Name") },
+                        value = content,
+                        onValueChange = { viewModel.content.value = it },
+                        label = { Text(text = "Enter Journal Content",
+                            color = Color.Black,
+                        ) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        shape = RoundedCornerShape(60.dp)
+                        shape = MaterialTheme.shapes.medium,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color(0xFFB98231),
+                            unfocusedBorderColor = Color(0xFFB98231),
+                            cursorColor = Color(0xFFB98231)
+                        )
                     )
 
-                    Button(
-                        onClick = {
-                            //Log.e("", "$deadline")
-                            // Call the view model function to add the list
-                            viewModel.onCreateList()
-                            viewModel.name.value = ""
-                            scope.launch {
-                                sheetState.hide()
-                            }
-
-                        },
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(20.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFB98231)
-                        )
-                    ) {
-                        Text("Add List", style = TextStyle(color = Color.Black))
-
-
+                    Box(modifier = Modifier) {
+                        DateTimePickerComponent(viewModel)
                     }
-
-//                    Box(modifier = Modifier) {
-//                        DateTimePickerComponent(viewModel)
-//                    }
                     //PlaceholderLazyColumn()
-                    }
                 }
+            }
             //AddListItemText {}
-//            Button(
-//                onClick = {
-//                    //Log.e("", "$deadline")
-//                    // Call the view model function to add the list
-//                        viewModel.onCreateList()
-//                        viewModel.name.value = ""
-//                        scope.launch {
-//                            sheetState.hide()
-//                        }
-//
-//                },
-//                modifier = Modifier
-//                    .align(Alignment.CenterHorizontally)
-//                    .padding(20.dp)
-//            ) {
-//                Text("Add List")
-//            }
-        }
-    }
-}
+            Button(
+                onClick = {
+                    //Log.e("", "$deadline")
+                    // Call the view model function to add the list
+                    viewModel.onCreateJournalEntry()
+                    viewModel.content.value = ""
+                    scope.launch {
+                        sheetState.hide()
+                    }
 
-@Composable
-fun AddListItemText(onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp) // Adjust vertical padding as needed
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(top = 8.dp) // Adjust top padding to move it to the top
-                .fillMaxWidth(),
-
-            verticalAlignment = Alignment.Top, // Align to the top
-            horizontalArrangement = Arrangement.Center // Center horizontally
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Add"
-
-            )
-            Text(
-                text = "Add List Item",
-                modifier = Modifier.padding(start = 8.dp) // Add padding between icon and text
-            )
-        }
-    }
-}
-
-
-@Composable
-fun PlaceholderLazyColumn() {
-    val items = List(2) { index -> index } // Creating a list of size 2 with dummy values
-    LazyColumn {
-        itemsIndexed(items) { index, _ ->
-            Box(
+                },
                 modifier = Modifier
-                    .fillParentMaxWidth()
-                    .height(200.dp)
-                    .background(Color.Black)
-                    .padding(8.dp)
-            )
+                    .align(Alignment.CenterHorizontally)
+                    .padding(20.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFB98231)
+                ),
+            ) {
+                Text("Add Journal")
+            }
         }
     }
 }
-
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DateTimePickerComponent(viewModel: ListsViewModel) {
+fun DateTimePickerComponent(viewModel: JournalEntryViewModel) {
     val datePickerState = rememberDatePickerState()
     var showDatePicker by remember { mutableStateOf(false) }
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
-    var selectedTime by remember { mutableStateOf<LocalTime?>(null) } // Declare selectedTime
+    val selectedTime by remember { mutableStateOf<LocalTime?>(LocalTime(0,0)) } // Declare selectedTime
     val selectedDateMillis = datePickerState.selectedDateMillis
     var selectedDateText by remember { mutableStateOf("No Date Selected") }
     var selectedTimeText by remember { mutableStateOf("No Date Selected") }
@@ -281,7 +241,7 @@ fun DateTimePickerComponent(viewModel: ListsViewModel) {
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-       // verticalArrangement = Arrangement.Center,
+        // verticalArrangement = Arrangement.Center,
     ) {
 
         Text(text = selectedDateText, modifier = Modifier.padding(bottom = 16.dp))
@@ -291,26 +251,14 @@ fun DateTimePickerComponent(viewModel: ListsViewModel) {
                 showDatePicker = true //changing the visibility state
             },
             modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFB98231)
+            ),
         ) {
             Text(text = "Date Picker")
         }
 
-        Divider(modifier = Modifier.padding(vertical = 24.dp))
-
-        Text(text = selectedTimeText, modifier = Modifier.padding(bottom = 16.dp))
-
-        //time picker
-        Button(
-            onClick = {
-                showTimePicker = true //changing the visibility state
-            },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(text = "Time Picker")
-        }
-
     }
-
     // date picker component
     if (showDatePicker) {
         DatePickerDialog(
@@ -321,12 +269,18 @@ fun DateTimePickerComponent(viewModel: ListsViewModel) {
                         val selectedDateMillis = datePickerState.selectedDateMillis
                         if (selectedDateMillis != null) {
                             // Convert milliseconds to LocalDateTime
-                            val selectedDate = Instant.fromEpochMilliseconds(selectedDateMillis)
+                            val selectedLocalDateTime = Instant.fromEpochMilliseconds(selectedDateMillis)
                                 .toLocalDateTime(TimeZone.currentSystemDefault())
                             // Format the date
-                            val formattedDate = "${selectedDate.monthNumber}/${selectedDate.dayOfMonth}/${selectedDate.year}"
-                            selectedDateText = formattedDate
-                        } else {
+                            selectedDate = selectedLocalDateTime.date
+//                            val formattedDate = "${selectedDates.monthNumber}/${selectedDates.dayOfMonth}/${selectedDates.year}"
+//                            selectedDateText = formattedDate
+                            selectedDateText = "${selectedLocalDateTime.monthNumber}/${selectedLocalDateTime.dayOfMonth}/${selectedLocalDateTime.year}"
+                            Log.e("date", selectedDate.toString())
+
+
+                        }
+                        else {
                             // Handle error or display a message
                         }
                         showDatePicker = false
@@ -346,47 +300,14 @@ fun DateTimePickerComponent(viewModel: ListsViewModel) {
         }
     }
 
-// time picker component
-    if (showTimePicker) {
-        TimePickerDialog(
-            onDismissRequest = { /*TODO*/ },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        val selectedHour = if(timePickerState.hour > 12) timePickerState.hour-12 else timePickerState.hour
-                        val selectedMinute = timePickerState.minute
-                        if (selectedHour != null && selectedMinute != null) {
-                           // val selectedTime = selectedTime
-                            // Store or process the selected time as needed
-                            // For example, you can format it and display it in the UI
-                            selectedTimeText = "$selectedHour:$selectedMinute"
-                        } else {
-                            // Handle error or display a message
-                        }
-                        showTimePicker = false
-                    }
-                ) { Text("OK") }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showTimePicker = false
-                    }
-                ) { Text("Cancel") }
-            }
-        )
-        {
-            TimePicker(state = timePickerState)
-        }
-    }
-
     //combine date and time
     val combinedDateTime: LocalDateTime? = selectedDate?.let {
         selectedTime?.let { time ->
             LocalDateTime(selectedDate!!.year, selectedDate!!.month, selectedDate!!.dayOfMonth, time.hour, time.minute)
         }
     }
-    viewModel.setDeadline(combinedDateTime)
+    Log.e("DATETIME", combinedDateTime.toString())
+    viewModel.setCreatedAt(combinedDateTime)
 
 }
 
@@ -443,21 +364,21 @@ fun TimePickerDialog(
 }
 
 @Composable
-fun OpenSheetButton(onClick: () -> Unit) {
+fun OpenSheetButtonJournal(onClick: () -> Unit) {
     Button(onClick = onClick,
         modifier = Modifier
-        .padding(horizontal = 16.dp, vertical = 8.dp) // Adjust padding as needed
-    .border(
-        BorderStroke(2.dp, Color.Black),
-        shape = RoundedCornerShape(15.dp)
-    )
-        .height(50.dp),
-    shape = RoundedCornerShape(60.dp),
-    colors = ButtonDefaults.buttonColors(
-        containerColor = Color(0xFFB98231)
-    )
-        ) {
-        Text("Add List",
+            .padding(horizontal = 16.dp, vertical = 8.dp) // Adjust padding as needed
+            .border(
+                BorderStroke(2.dp, Color.Black),
+                shape = RoundedCornerShape(15.dp)
+            )
+            .height(50.dp),
+        shape = RoundedCornerShape(60.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFFB98231)
+        )
+    ) {
+        Text("Add Journal",
             style = TextStyle(color = Color.Black)
         )
     }

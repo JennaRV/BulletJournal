@@ -1,17 +1,14 @@
 package com.example.rocketjournal.model.Repositories.RepoImplementation
 
 import com.example.rocketjournal.model.DataTransferObjects.JournalEntryDTO
-import com.example.rocketjournal.model.DataTransferObjects.UserDTO
 import com.example.rocketjournal.model.Repositories.JournalEntryRepository
 import com.example.rocketjournal.model.dataModel.JournalEntryData
-import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.storage.Storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.LocalDateTime
 import javax.inject.Inject
-import com.example.rocketjournal.model.Repositories.RepoImplementation.UserRepositoryImpl
 
 class JournalEntryRepositoryImpl @Inject constructor(
     private val postgrest: Postgrest,
@@ -24,13 +21,13 @@ class JournalEntryRepositoryImpl @Inject constructor(
             withContext(Dispatchers.IO) {
 
                 val journalEntryDTO = JournalEntryDTO(
-                    entry_id = journalEntry.entry_id,
+
                     journal_id = journalEntry.journal_id,
                     created_at = journalEntry.created_at,
                     last_updated = journalEntry.last_updated,
                     content = journalEntry.content
                 )
-                postgrest.from("journal_entry").insert(JournalEntryDTO)
+                postgrest.from("journal_entry").insert(journalEntryDTO)
                 true
             }
             true
@@ -78,8 +75,8 @@ class JournalEntryRepositoryImpl @Inject constructor(
     override suspend fun updateJournalEntry(
         entry_id: Int,
         journal_id: Int,
-        created_at: LocalDateTime,
-        last_updated: LocalDateTime,
+        created_at: LocalDateTime?,
+        last_updated: LocalDateTime?,
         content: String
     ) {
         withContext(Dispatchers.IO){

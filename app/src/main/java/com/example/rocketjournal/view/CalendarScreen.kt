@@ -16,13 +16,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,11 +42,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-
-
+import com.example.rocketjournal.model.dataModel.JournalEntryData
 
 
 import com.example.rocketjournal.viewmodel.CalendarViewModel
+import com.example.rocketjournal.viewmodel.JournalEntryViewModel
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
@@ -49,9 +55,13 @@ import java.time.temporal.TemporalAdjusters
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarScreen(navController: NavController, viewModel: CalendarViewModel = hiltViewModel()) {
+fun CalendarScreen(navController: NavController, viewModel: CalendarViewModel = hiltViewModel(), JEViewModel: JournalEntryViewModel = hiltViewModel()) {
     val primaryColor = Color(0xFF606BD1)
     val secondaryColor = Color(0xFFBA355D)
+    val selectedColor = Color(0xFFB98231)
+    val journalsState = JEViewModel.entryList.collectAsState(initial = emptyList()).value ?: emptyList()
+    val sortedJournals = journalsState.sortedWith(LocalDateTimeComparator())
+
     Column(modifier = Modifier
         .background(primaryColor)
         .fillMaxSize()
@@ -70,46 +80,71 @@ fun CalendarScreen(navController: NavController, viewModel: CalendarViewModel = 
             ) {
                 ToggleButton(navController)
             }
+            LazyColumn {
+                item {
+                    Row(modifier = Modifier
+                        .padding(16.dp)
+                    ) {
+                        Calendar(navController, viewModel)
+                    }
 
-            Row(modifier = Modifier
-                .padding(16.dp)
-            ) {
-                Calendar(navController, viewModel)
-            }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        // Add Journal Entry Button
+                        Button(
+                            onClick = {navController.navigate("newJournal")},
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            colors = ButtonDefaults.buttonColors(selectedColor)
+                        ) {
+                            Text(
+                                "Add Journal Entry",
+                                style = TextStyle(color = Color.Black, fontSize = 16.sp, textAlign = TextAlign.Center),
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+                    }
+                }
 
-            Row(
-                modifier = Modifier
-                    .background(primaryColor)
-                    .fillMaxWidth()
-            ) {
-                // Add Journal Entry Button
-                Button(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    colors = ButtonDefaults.buttonColors(secondaryColor)
-                ) {
-                    Text(
-                        "Add Journal Entry",
-                        style = TextStyle(color = Color.Black, fontSize = 16.sp, textAlign = TextAlign.Center),
-                        fontWeight = FontWeight.Bold,
-                    )
+                item {
+                    Column(
+                        modifier = Modifier.padding(bottom = 60.dp)
+                    ) {
+                        if (sortedJournals.isEmpty()) {
+
+                            Row(
+                                modifier = Modifier.padding(12.dp)
+                            ) {
+                                JournalEntry(text = "No Journal Entries Found", null)
+                            }
+
+                        } else {
+
+                            Row(
+                                modifier = Modifier.padding(12.dp)
+                            ) {
+                                JournalEntry(
+                                    text = sortedJournals.elementAt(0).content,
+                                    date = sortedJournals.elementAt(0).created_at?.date
+                                )
+                            }
+
+                            Row(
+                                modifier = Modifier.padding(12.dp)
+                            ) {
+                                JournalEntry(
+                                    text = sortedJournals.elementAt(1).content,
+                                    date = sortedJournals.elementAt(1).created_at?.date
+                                )
+                            }
+                        }
+                    }
                 }
             }
-
-            Row(
-                modifier = Modifier.padding(12.dp)
-            ) {
-                JournalEntry(text = "Journal Entry #1")
-            }
-
-            Row(
-                modifier = Modifier.padding(12.dp)
-            ) {
-                JournalEntry(text = "Journal Entry #2")
-            }
-            }
+        }
     }
 }
 
@@ -193,14 +228,15 @@ fun Calendar(navController: NavController, viewModel: CalendarViewModel) {
             Button(
                 onClick = {
                     viewModel.month.value = viewModel.month.value.minusMonths(1)
-                    viewModel.shownDate.value = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value.month, 1)
+                    viewModel.shownDate.value = LocalDate.of(viewModel.month.value.year, viewModel.month.value.month, 1)
                 },
                 colors = ButtonDefaults.buttonColors(unselectedColor),
                 border = BorderStroke(width = 1.dp, color = Color.Black)
             ) {
-                Text(
-                    "<---", // replace with icon
-                    color = Color.Black,
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                    contentDescription = "backward",
+                    tint = Color.Black,
                 )
             }
             Text(
@@ -218,20 +254,21 @@ fun Calendar(navController: NavController, viewModel: CalendarViewModel) {
             Button(
                 onClick = {
                     viewModel.month.value = viewModel.month.value.plusMonths(1)
-                    viewModel.shownDate.value = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value.month, 1)
+                    viewModel.shownDate.value = LocalDate.of(viewModel.month.value.year, viewModel.month.value.month, 1)
                 },
                 colors = ButtonDefaults.buttonColors(unselectedColor),
                 border = BorderStroke(width = 1.dp, color = Color.Black)
             ) {
-                Text(
-                    "--->", // replace with icon
-                    color = Color.Black,
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = "forward",
+                    tint = Color.Black,
                 )
             }
 
         }
         // fill calendar with weekButtons
-        val firstDay = LocalDate.of(viewModel.shownDate.value.year, viewModel.month.value.month, 1)
+        val firstDay = LocalDate.of(viewModel.month.value.year, viewModel.month.value.month, 1)
         var counter = firstDay
         var firstDayOfWeek = counter.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
 
@@ -286,14 +323,33 @@ fun WeekButtons(navController: NavController, weekDates : List<LocalDate>, viewM
 }
 
 @Composable
-fun JournalEntry (text: String) {
+fun JournalEntry (text: String, date: kotlinx.datetime.LocalDate?) {
     val unselectedColor = Color(0xFFE8D5BA)
-    Row(
-        modifier = Modifier
-            .background(unselectedColor, shape = RoundedCornerShape(10.dp))
-            .padding(12.dp)
-            .fillMaxWidth()
-    ) {
-        Text(text)
+    if (date == null) {
+        Column(
+            modifier = Modifier
+                .background(unselectedColor, shape = RoundedCornerShape(10.dp))
+                .padding(12.dp)
+                .fillMaxWidth()
+        ) {
+            Text(text, fontWeight = FontWeight.Bold, fontSize = 24.sp)
+        }
+    }
+    else {
+        Column(
+            modifier = Modifier
+                .background(unselectedColor, shape = RoundedCornerShape(10.dp))
+                .padding(12.dp)
+                .fillMaxWidth()
+        ) {
+            Text(date.toString(), fontWeight = FontWeight.Bold, fontSize = 24.sp)
+            Text(text, fontSize = 20.sp)
+        }
+    }
+}
+
+class LocalDateTimeComparator : Comparator<JournalEntryData> {
+    override fun compare(j1: JournalEntryData, j2: JournalEntryData): Int {
+        return j1.created_at?.let { j2.created_at?.compareTo(it) } ?: 0
     }
 }
