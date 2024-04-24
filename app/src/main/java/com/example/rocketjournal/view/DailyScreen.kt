@@ -216,7 +216,7 @@ fun DailyScreen(
             item {
                 var journalFound = false
                 journalsState.forEach {
-                    if (it.created_at.date.toJavaLocalDate() == LocalDate.parse(date)) {
+                    if (it.created_at!!.date.toJavaLocalDate() == LocalDate.parse(date)) {
                         journalFound = true
                         Row(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
                             JournalEntry(it.content)

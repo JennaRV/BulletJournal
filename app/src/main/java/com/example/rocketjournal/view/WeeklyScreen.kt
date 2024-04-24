@@ -83,7 +83,7 @@ fun WeeklyScreen(navController: NavController, viewModel: CalendarViewModel = hi
             modifier = Modifier.padding(bottom = 60.dp)
         ) {
             for(i in 0..6) {
-                val currentJournalEntry = sortedJournals.find {it.created_at.date.toJavaLocalDate() == viewModel.currentWeekStart.value.plusDays(i.toLong())}
+                val currentJournalEntry = sortedJournals.find { it.created_at!!.date.toJavaLocalDate() == viewModel.currentWeekStart.value.plusDays(i.toLong())}
                 item{
                     DayEntry(
                         navController,

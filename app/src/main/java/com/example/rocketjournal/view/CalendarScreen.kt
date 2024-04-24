@@ -128,7 +128,7 @@ fun CalendarScreen(navController: NavController, viewModel: CalendarViewModel = 
                             ) {
                                 JournalEntry(
                                     text = sortedJournals.elementAt(0).content,
-                                    date = sortedJournals.elementAt(0).created_at.date
+                                    date = sortedJournals.elementAt(0).created_at?.date
                                 )
                             }
 
@@ -137,7 +137,8 @@ fun CalendarScreen(navController: NavController, viewModel: CalendarViewModel = 
                             ) {
                                 JournalEntry(
                                     text = sortedJournals.elementAt(1).content,
-                                    date = sortedJournals.elementAt(1).created_at.date)
+                                    date = sortedJournals.elementAt(1).created_at?.date
+                                )
                             }
                         }
                     }
@@ -349,7 +350,6 @@ fun JournalEntry (text: String, date: kotlinx.datetime.LocalDate?) {
 
 class LocalDateTimeComparator : Comparator<JournalEntryData> {
     override fun compare(j1: JournalEntryData, j2: JournalEntryData): Int {
-        val dateComparison = j2.created_at.compareTo(j1.created_at)
-        return dateComparison
+        return j1.created_at?.let { j2.created_at?.compareTo(it) } ?: 0
     }
 }
