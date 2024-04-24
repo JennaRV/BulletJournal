@@ -90,12 +90,12 @@ import javax.inject.Scope
 @Composable
 fun CreateList(viewModel: ListsViewModel = hiltViewModel()) {
     val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
+       // skipPartiallyExpanded = true
     )
     val scope = rememberCoroutineScope()
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
-    val desiredHeight = screenHeight * 0.85f
+   // val desiredHeight = screenHeight * 0.85f
 
     //Date and Time variables
     val date = remember {
@@ -150,7 +150,7 @@ fun CreateList(viewModel: ListsViewModel = hiltViewModel()) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(desiredHeight)
+                    //.height(desiredHeight)
                     .padding(horizontal = 40.dp),
             ) {
                 Column(
@@ -159,7 +159,7 @@ fun CreateList(viewModel: ListsViewModel = hiltViewModel()) {
 
                         .fillMaxWidth()
                         //Use a fraction of the screen height
-                        .height(desiredHeight)
+                        //.height(desiredHeight)
                         .padding(horizontal = 40.dp),
 
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -174,30 +174,48 @@ fun CreateList(viewModel: ListsViewModel = hiltViewModel()) {
                         shape = RoundedCornerShape(60.dp)
                     )
 
-                    Box(modifier = Modifier) {
-                        DateTimePickerComponent(viewModel)
+                    Button(
+                        onClick = {
+                            //Log.e("", "$deadline")
+                            // Call the view model function to add the list
+                            viewModel.onCreateList()
+                            viewModel.name.value = ""
+                            scope.launch {
+                                sheetState.hide()
+                            }
+
+                        },
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(20.dp)
+                    ) {
+                        Text("Add List")
                     }
-                    PlaceholderLazyColumn()
+
+//                    Box(modifier = Modifier) {
+//                        DateTimePickerComponent(viewModel)
+//                    }
+                    //PlaceholderLazyColumn()
                     }
                 }
             //AddListItemText {}
-            Button(
-                onClick = {
-                    //Log.e("", "$deadline")
-                    // Call the view model function to add the list
-                        viewModel.onCreateList()
-                        viewModel.name.value = ""
-                        scope.launch {
-                            sheetState.hide()
-                        }
-
-                },
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(20.dp)
-            ) {
-                Text("Add List")
-            }
+//            Button(
+//                onClick = {
+//                    //Log.e("", "$deadline")
+//                    // Call the view model function to add the list
+//                        viewModel.onCreateList()
+//                        viewModel.name.value = ""
+//                        scope.launch {
+//                            sheetState.hide()
+//                        }
+//
+//                },
+//                modifier = Modifier
+//                    .align(Alignment.CenterHorizontally)
+//                    .padding(20.dp)
+//            ) {
+//                Text("Add List")
+//            }
         }
     }
 }
