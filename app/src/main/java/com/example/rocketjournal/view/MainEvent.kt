@@ -86,7 +86,7 @@ fun MainEvent(navController: NavController, viewModel: EventViewModel = hiltView
 //                    color = Color.Black
 //                )
 //            }
-            EventCreation()
+            EventCreation(navController)
 
             Spacer(modifier = Modifier.size(20.dp))
 

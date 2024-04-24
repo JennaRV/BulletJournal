@@ -94,7 +94,7 @@ fun CalendarScreen(navController: NavController, viewModel: CalendarViewModel = 
                     ) {
                         // Add Journal Entry Button
                         Button(
-                            onClick = {navController.navigate("newJournal")},
+                            onClick = {navController.navigate("journal")},
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp),
