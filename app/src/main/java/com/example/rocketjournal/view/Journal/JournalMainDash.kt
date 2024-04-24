@@ -214,7 +214,7 @@ fun JournalEntryDataItemView(
     onEntryClicked: (JournalEntryData) -> Unit,
     onDeleteClicked: (JournalEntryData) -> Unit,) {
 
-    val formattedDate = formatDate(journal.created_at)
+    val formattedDate = journal.created_at?.let { formatDate(it) }
 
     Box(
         modifier = Modifier

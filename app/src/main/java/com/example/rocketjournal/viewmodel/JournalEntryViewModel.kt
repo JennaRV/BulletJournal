@@ -57,6 +57,14 @@ class JournalEntryViewModel @Inject constructor(
                 content = contentValue
             )
 
+            val result = journalEntryRepository.createJournalEntry(journalEntry)
+
+            if (result) {
+                Log.d("JournalEntryViewModel", "Journal entry created successfully.")
+            } else {
+                Log.e("JournalEntryViewModel", "Error creating journal entry.")
+            }
+
             getJournalEntries()
         }
     }

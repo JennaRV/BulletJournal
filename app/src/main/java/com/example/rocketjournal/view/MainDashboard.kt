@@ -277,7 +277,7 @@ fun JournalScreen(viewModel: JournalEntryViewModel = hiltViewModel()) {
                 }
                 else {
                     // Display the first entry only if it hasn't been displayed before
-                    Text(text = "${entriesState.first().created_at.date}",fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "${entriesState.first().created_at?.date}",fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     Text(text = "Journal: ${entriesState.first().content}", maxLines = 4)
                 }
             }
