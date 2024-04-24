@@ -68,6 +68,13 @@ class ListsRepositoryImpl @Inject constructor(
 
     override suspend fun deleteList(id: Int) {
         return withContext(Dispatchers.IO) {
+            //first delete the tasks with that list ID
+            postgrest.from("task").delete {
+                filter {
+                    eq("list_id", id)
+                }
+            }
+            //then delete the list itself
             postgrest.from("task_list").delete {
                 filter {
                     eq("list_id", id)
