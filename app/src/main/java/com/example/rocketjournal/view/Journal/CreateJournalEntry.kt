@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -148,7 +149,8 @@ fun CreateJournalEntry(viewModel: JournalEntryViewModel = hiltViewModel()) {
                     sheetState.hide()
                 }
             },
-            modifier = Modifier
+            modifier = Modifier,
+            containerColor = Color(0xFFE8D5BA)
 
         ) {
             var listDeadlineDate: LocalDate
@@ -175,15 +177,22 @@ fun CreateJournalEntry(viewModel: JournalEntryViewModel = hiltViewModel()) {
                         modifier = Modifier.fillMaxWidth(),
                         value = content,
                         onValueChange = { viewModel.content.value = it },
-                        label = { Text(text = "New Journal") },
+                        label = { Text(text = "Enter Jounal Content",
+                            color = Color.Black,
+                        ) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        shape = RoundedCornerShape(60.dp)
+                        shape = MaterialTheme.shapes.medium,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color(0xFFB98231),
+                            unfocusedBorderColor = Color(0xFFB98231),
+                            cursorColor = Color(0xFFB98231)
+                        )
                     )
 
                     Box(modifier = Modifier) {
                         DateTimePickerComponent(viewModel)
                     }
-                    PlaceholderLazyColumn()
+                    //PlaceholderLazyColumn()
                 }
             }
             //AddListItemText {}
@@ -200,9 +209,12 @@ fun CreateJournalEntry(viewModel: JournalEntryViewModel = hiltViewModel()) {
                 },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(20.dp)
+                    .padding(20.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFB98231)
+                ),
             ) {
-                Text("Add List")
+                Text("Add Journal")
             }
         }
     }
@@ -239,22 +251,11 @@ fun DateTimePickerComponent(viewModel: JournalEntryViewModel) {
                 showDatePicker = true //changing the visibility state
             },
             modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFB98231)
+            ),
         ) {
             Text(text = "Date Picker")
-        }
-
-        Divider(modifier = Modifier.padding(vertical = 24.dp))
-
-        Text(text = selectedTimeText, modifier = Modifier.padding(bottom = 16.dp))
-
-        //time picker
-        Button(
-            onClick = {
-                showTimePicker = true //changing the visibility state
-            },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(text = "Time Picker")
         }
 
     }
