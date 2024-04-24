@@ -69,13 +69,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 import com.example.rocketjournal.viewmodel.SignOutViewModel
-
-
 import com.example.rocketjournal.view.Journal.JournalEntry
 import com.example.rocketjournal.view.Journal.JournalMainDash
 import com.example.rocketjournal.view.Journal.NewJournalScreen
-import com.example.rocketjournal.viewmodel.SignOutViewModel
 import com.example.test.CalendarScreen
+import com.example.test.EventCreation
 import com.example.test.MainEvent
 import com.example.test.WeeklyScreen
 

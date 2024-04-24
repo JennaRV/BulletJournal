@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.rocketjournal.view.OpenSheetButton
 import com.example.rocketjournal.viewmodel.EventViewModel
 import kotlinx.coroutines.launch
@@ -69,7 +70,7 @@ import java.util.Calendar
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventCreation(viewModel: EventViewModel = hiltViewModel()) {
+fun EventCreation(navController: NavController,viewModel: EventViewModel = hiltViewModel()) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
