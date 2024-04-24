@@ -142,7 +142,8 @@ fun CreateList(viewModel: ListsViewModel = hiltViewModel()) {
                     sheetState.hide()
                 }
             },
-            modifier = Modifier
+            modifier = Modifier,
+            containerColor = Color(0xFFE8D5BA),
 
         ) {
             var listDeadlineDate: LocalDate
@@ -187,9 +188,14 @@ fun CreateList(viewModel: ListsViewModel = hiltViewModel()) {
                         },
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            .padding(20.dp)
+                            .padding(20.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFB98231)
+                        )
                     ) {
-                        Text("Add List")
+                        Text("Add List", style = TextStyle(color = Color.Black))
+
+
                     }
 
 //                    Box(modifier = Modifier) {
