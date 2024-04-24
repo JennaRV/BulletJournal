@@ -135,7 +135,7 @@ fun CreateJournalEntry(viewModel: JournalEntryViewModel = hiltViewModel()) {
 
     var journalContent by remember { mutableStateOf("") } // Store the list name here
 
-    OpenSheetButton(onClick = {
+    OpenSheetButtonJournal(onClick = {
         scope.launch {
             sheetState.show()
         }
@@ -364,7 +364,7 @@ fun TimePickerDialog(
 }
 
 @Composable
-fun OpenSheetButton(onClick: () -> Unit) {
+fun OpenSheetButtonJournal(onClick: () -> Unit) {
     Button(onClick = onClick,
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp) // Adjust padding as needed
