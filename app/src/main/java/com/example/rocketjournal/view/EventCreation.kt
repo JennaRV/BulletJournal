@@ -2,6 +2,7 @@ package com.example.test
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -85,30 +86,13 @@ fun EventCreation(viewModel: EventViewModel = hiltViewModel()) {
             set(Calendar.DAY_OF_MONTH, 23)
         }.timeInMillis
     }
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = date
-    )
-    var showDatePicker by remember { mutableStateOf(false) }
-
-    val timePickerState = rememberTimePickerState(
-        initialHour = 12,
-        initialMinute = 30,
-    )
-    var showTimePicker by remember { mutableStateOf(false) }
 
     val name by viewModel.name.collectAsState()
     val details by viewModel.details.collectAsState()
-    val date_time by viewModel.date_time.collectAsState(initial = null)
+    val dateTime by viewModel.date_time.collectAsState(initial = null)
+
 
     //mutable variables
-
-    var isDatePickerVisible by remember { mutableStateOf(false) }
-    var isTimePickerVisible by remember { mutableStateOf(false) }
-//    val selectedDate by remember { mutableStateOf<LocalDate?>(null) }
-    var selectedTime by remember { mutableStateOf<LocalTime?>(null) }
-    var listName by remember { mutableStateOf("") } // Store the list name here
-    var selectedDateTime: LocalDateTime? by remember { mutableStateOf(null) } // Store the selected date and time here
-
     OpenSheetButton(onClick = {
         scope.launch {
             sheetState.show()
@@ -179,7 +163,8 @@ fun EventCreation(viewModel: EventViewModel = hiltViewModel()) {
                     viewModel.onEventCreation()
                     viewModel.name.value = ""
                     viewModel.details.value = ""
-                    //viewModel.date_time.value = null
+                    viewModel.date_time.value = dateTime
+
                     scope.launch {
                         sheetState.hide()
                     }
@@ -304,12 +289,17 @@ fun DateTimePickerComponent(viewModel: EventViewModel) {
                         val selectedDateMillis = datePickerState.selectedDateMillis
                         if (selectedDateMillis != null) {
                             // Convert milliseconds to LocalDateTime
-                            val selectedDate = Instant.fromEpochMilliseconds(selectedDateMillis)
+                            val selectedLocalDateTime = Instant.fromEpochMilliseconds(selectedDateMillis)
                                 .toLocalDateTime(TimeZone.currentSystemDefault())
                             // Format the date
-                            val formattedDate = "${selectedDate.monthNumber}/${selectedDate.dayOfMonth}/${selectedDate.year}"
-                            selectedDateText = formattedDate
-                        } else {
+                            selectedDate = selectedLocalDateTime.date
+//                            val formattedDate = "${selectedDates.monthNumber}/${selectedDates.dayOfMonth}/${selectedDates.year}"
+//                            selectedDateText = formattedDate
+                            Log.e("date", selectedDate.toString())
+
+
+                        }
+                        else {
                             // Handle error or display a message
                         }
                         showDatePicker = false
@@ -342,7 +332,8 @@ fun DateTimePickerComponent(viewModel: EventViewModel) {
                             // val selectedTime = selectedTime
                             // Store or process the selected time as needed
                             // For example, you can format it and display it in the UI
-                            selectedTimeText = "$selectedHour:$selectedMinute"
+                            selectedTime = LocalTime(selectedHour,selectedMinute)
+                            Log.e("time", selectedTime.toString())
 
                         } else {
                             // Handle error or display a message
@@ -370,10 +361,11 @@ fun DateTimePickerComponent(viewModel: EventViewModel) {
             LocalDateTime(selectedDate!!.year, selectedDate!!.month, selectedDate!!.dayOfMonth, time.hour, time.minute)
         }
     }
+    Log.e("COMBINEDDATE", combinedDateTime.toString())
+
     if (combinedDateTime != null) {
         viewModel.setDateTime(combinedDateTime)
     }
-
 }
 
 @Composable

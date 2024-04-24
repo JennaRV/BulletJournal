@@ -33,7 +33,7 @@ class EventViewModel @Inject constructor(
 //    private val _date_time = MutableStateFlow<LocalDateTime>(LocalDateTime.now())
 //    val date_time = _date_time
     private val _date_time = MutableStateFlow<LocalDateTime?>(null)
-    val date_time: Flow<LocalDateTime?> = _date_time
+    val date_time = _date_time
 
     private val _details = MutableStateFlow("")
     val details = _details
