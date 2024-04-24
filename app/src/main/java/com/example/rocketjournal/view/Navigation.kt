@@ -133,23 +133,6 @@ fun Navigation(navController: NavHostController) {
                 NavigationDrawerItem(colors = NavigationDrawerItemDefaults.colors(unselectedContainerColor = Color(0xFF646EF5),
                     unselectedTextColor = Color(0xFFFFFFFF),
                     unselectedIconColor = Color(0xFFFFFFFF)),
-                    label = { Text(text = "Settings") },
-                    selected = false,
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = "setting"
-                        )
-                    },
-                    onClick = {
-                        coroutine.launch {
-                            drawerState.close()
-                        }
-
-                    })
-                NavigationDrawerItem(colors = NavigationDrawerItemDefaults.colors(unselectedContainerColor = Color(0xFF646EF5),
-                    unselectedTextColor = Color(0xFFFFFFFF),
-                    unselectedIconColor = Color(0xFFFFFFFF)),
                     label = { Text(text = "Logout") },
                     selected = false,
                     icon = {
@@ -164,8 +147,6 @@ fun Navigation(navController: NavHostController) {
                         }
                         signOutViewModel.signOut()
                         navController.navigate("login")
-
-
                     })
             }
         },
