@@ -17,8 +17,8 @@ interface JournalEntryRepository {
     suspend fun updateJournalEntry(
         entry_id: Int,
         journal_id: Int,
-        created_at: LocalDateTime,
-        last_updated: LocalDateTime,
+        created_at: LocalDateTime?,
+        last_updated: LocalDateTime?,
         content: String
     )
 

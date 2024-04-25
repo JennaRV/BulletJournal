@@ -5,7 +5,6 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,7 +33,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -117,7 +115,8 @@ fun NewJournalScreen(navController: NavController) {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
 
-                daterPicker()
+                //daterPicker()
+                DatePickerTest()
 
                 val state = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
                 DatePicker(state = state,
@@ -172,12 +171,13 @@ fun NewJournalScreen(navController: NavController) {
     }
 }
 
+//@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun daterPicker() {
     //TODO
     val state = rememberDatePickerState()
-    val openDialog = remember { mutableStateOf(true) }
+    val openDialog = remember { mutableStateOf(true) }// This holds the state of the dialog and does
 
     if (openDialog.value) {
         DatePickerDialog(
@@ -224,7 +224,8 @@ fun daterPicker() {
                     .fillMaxWidth()
                     .background(Color(0xFFE8D5BA)) // Set background color
                     .padding(horizontal = 16.dp, vertical = 8.dp),
-                showModeToggle = false
+                showModeToggle = false,
+                //colors =
 
             )
         }
@@ -243,14 +244,90 @@ fun daterPicker() {
 
 
 }
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun DatePickerTest(){
-    val date = remember { LocalDate.now() }
+    val state = rememberDatePickerState()
+    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+    val openDialog = remember { mutableStateOf(true) }// This holds the state of the dialog and does
 
-    Box(modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = date.toString())
+    if (openDialog.value) {
+        DatePickerDialog(
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        openDialog.value = false
+                    }
+                ) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        openDialog.value = false
+                    }
+                ) {
+                    Text("CANCEL")
+                }
+            },
+            modifier = Modifier
+                //.padding(16.dp)
+                //.background(Color(0xFFE8D5BA)) // Set background color
+                //.border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))//
+                .animateContentSize()
+                .shadow(10.dp)
+                .background(shape = RoundedCornerShape(15.dp), color = Color(0xFFE8D5BA)),
+            colors = DatePickerDefaults.colors(
+                containerColor = Color.White,
+                titleContentColor = Color.Yellow,
+                headlineContentColor = Color.Green,
+                weekdayContentColor = Color.Blue,
+                selectedDayContentColor = Color(red = 214, green = 66, blue = 105),
+            ),
+            shape = RoundedCornerShape(15.dp),
+        ) {
+            DatePicker(
+                state = state,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFE8D5BA)) // Set background color
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                showModeToggle = false,
+                colors = DatePickerDefaults.colors(
+                    containerColor= Color.White,
+                    titleContentColor= Color.White,
+                    headlineContentColor= Color.White,
+                    weekdayContentColor= Color.White,
+                    subheadContentColor= Color.White,
+                    navigationContentColor=  Color.White,
+                    yearContentColor= Color.White,
+                    disabledYearContentColor= Color.White,
+                    currentYearContentColor= Color.White,
+                    selectedYearContentColor= Color.White,
+                    disabledSelectedYearContentColor= Color.White,
+                    selectedYearContainerColor= Color.White,
+                    disabledSelectedYearContainerColor= Color.White,
+                    dayContentColor= Color.White,
+                    disabledDayContentColor= Color.White,
+                    selectedDayContentColor= Color.White,
+                    disabledSelectedDayContentColor= Color.White,
+                    selectedDayContainerColor= Color.White,
+                    disabledSelectedDayContainerColor= Color.White,
+                    todayContentColor= Color.White,
+                    todayDateBorderColor= Color.White,
+                    dayInSelectionRangeContentColor= Color.White,
+                    dayInSelectionRangeContainerColor= Color.White,
+                    dividerColor= Color.Red
+                )
+
+
+            )
+        }
     }
 }
+

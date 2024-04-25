@@ -21,7 +21,6 @@ class EventRepositoryImpl @Inject constructor(
         return try {
             withContext(Dispatchers.IO){
                 val eventDTO = EventDTO(
-                    event_id = event.event_id,
                     user_id = event.user_id,
                     name = event.name,
                     date_time = event.date_time,

@@ -5,17 +5,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rocketjournal.model.DataTransferObjects.EventDTO
 import com.example.rocketjournal.model.Repositories.EventRepository
+import com.example.rocketjournal.model.Repositories.RepoImplementation.UserRepositoryImpl
 import com.example.rocketjournal.model.dataModel.EventData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDateTime
 import javax.inject.Inject
 
 
 @HiltViewModel
 class EventViewModel @Inject constructor(
-    private val eventRepository: EventRepository
+    private val eventRepository: EventRepository,
+    private val userRepositoryImpl: UserRepositoryImpl
 ): ViewModel() {
 
     private val _eventList = MutableStateFlow<List<EventData>?>(listOf())
@@ -24,9 +27,63 @@ class EventViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: Flow<Boolean> = _isLoading
 
+    //Added here
+    private val _name = MutableStateFlow("")
+    val name = _name
+//    private val _date_time = MutableStateFlow<LocalDateTime>(LocalDateTime.now())
+//    val date_time = _date_time
+    private val _date_time = MutableStateFlow<LocalDateTime?>(null)
+    val date_time = _date_time
+
+    private val _details = MutableStateFlow("")
+    val details = _details
+    // finish adding here
+
     init{
         getEvents()
     }
+
+    //Added here
+    fun setDateTime(date_time: LocalDateTime) {
+        _date_time.value = date_time // Update the StateFlow value
+        Log.e("EVM", "$date_time")
+    }
+    // finish adding here
+
+    //Added here
+    fun onEventCreation() {
+        viewModelScope.launch {
+            val nameValue = _name.value
+            val dateTimeValue = _date_time.value
+            val eventID = 23
+            val detailsValue = _details.value
+            val getUserID = userRepositoryImpl.getCurrentUserID()
+            val userID: Int = if (getUserID != null) getUserID else 0
+
+            Log.e("CREATEEVENT", "$nameValue, $dateTimeValue")
+
+            val event = dateTimeValue?.let {
+                EventData(
+                    eventID,
+                    userID,
+                    nameValue,
+                    it,
+                    detailsValue
+
+                )
+            }
+
+            val result = event?.let { eventRepository.createEvent(it) }
+
+            if (result == true) {
+                Log.e("EventViewModel", "create event was successful")
+                getEvents()
+            } else { //if not it log that the create user was failed
+                Log.e("EventViewModel", "create event failed")
+            }
+        }
+    }
+    //finished adding here
 
     fun getEvents() {
         viewModelScope.launch {
@@ -47,6 +104,12 @@ class EventViewModel @Inject constructor(
             }
         }
     }
+
+    suspend fun getEvents(EventID: Int): EventDTO? {
+        return eventRepository.getEvent(EventID)
+    }
+
+
 
     fun updateEvent(eventData: EventData){
         viewModelScope.launch {
@@ -69,6 +132,4 @@ class EventViewModel @Inject constructor(
             details = this.details
         )
     }
-
-
 }

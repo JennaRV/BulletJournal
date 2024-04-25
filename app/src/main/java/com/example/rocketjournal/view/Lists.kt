@@ -55,6 +55,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalConfiguration
 //import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -70,7 +71,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltViewModel(), taskViewModel: TaskViewModel = hiltViewModel()) {
-
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val boxWidth = screenWidth * 1f
+    val offsetX = screenWidth * 0.05f
     //the listsState is a list of all to-do lists, this will fetch the lists from the database,
     //its initial/default value is an empty list, if the database is empty, otherwise it will be populates with
     //the to-do lists
@@ -97,7 +101,7 @@ fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltVi
             } else if (listsState.isEmpty()) {
                 Text("No lists available", modifier = Modifier.align(Alignment.CenterHorizontally))
             } else {
-                LazyColumn {
+                LazyColumn (modifier = Modifier .size(boxWidth, 450.dp)){
                     items(listsState) { list ->
                         ListDataItemView(
                             list = list,
@@ -112,6 +116,7 @@ fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltVi
                         )
                     }
                 }
+
             }
 
         }
