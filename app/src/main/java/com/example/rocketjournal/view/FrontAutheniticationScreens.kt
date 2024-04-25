@@ -20,6 +20,7 @@ import com.example.rocketjournal.viewmodel.SignUpViewModel
 @Composable
 fun LoginScreen(navController: NavController) {
     AppBackgroundFront {
+        ShowImage()
         LoginButtons(navController)
     }
 }
@@ -43,6 +44,7 @@ fun SignUp(
     }
 
     AppBackgroundFront {
+        ShowImage()
         SignUpForm(navController, signUpViewModel, context)
 
     }
@@ -66,6 +68,7 @@ fun LoginPage(
     }
 
     AppBackgroundFront {
+        ShowImage()
         LogInForm(navController, signInViewModel)
 
     }
