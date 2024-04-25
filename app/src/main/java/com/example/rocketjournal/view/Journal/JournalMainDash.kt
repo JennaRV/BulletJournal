@@ -89,7 +89,7 @@ fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewMod
 //                    .border(1.dp, Color.Black, shape = RoundedCornerShape(15.dp))
 //                    .shadow(10.dp, RoundedCornerShape(15.dp)),
 //                shape = RoundedCornerShape(15.dp),
-//                colors = ButtonDefaults.buttonColors(
+//                colors = ButtonDefaults.buttonColors(w
 //                    containerColor = Color(0xFFB98231)
 //                )
 //
