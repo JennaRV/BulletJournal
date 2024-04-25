@@ -35,11 +35,7 @@ fun AppBackgroundFront(content: @Composable () -> Unit) {
                         radius = circleRadius,
                         center = circleCenter
                     )
-                    drawCircle(
-                        color = Color(red = 252, green = 228, blue = 187),
-                        radius = smallCircleRadius,
-                        center = Offset(maxWidth / 2, maxHeight / 4)
-                    )
+
                 }
         ) {
             content()
