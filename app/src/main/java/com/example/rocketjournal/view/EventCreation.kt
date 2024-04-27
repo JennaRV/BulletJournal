@@ -34,6 +34,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -108,7 +109,8 @@ fun EventCreation(navController: NavController,viewModel: EventViewModel = hiltV
                     sheetState.hide()
                 }
             },
-            modifier = Modifier
+            modifier = Modifier,
+            containerColor = Color(0xFFE8D5BA)
 
         ) {
             var listDeadlineDate: LocalDate
@@ -137,7 +139,12 @@ fun EventCreation(navController: NavController,viewModel: EventViewModel = hiltV
                         onValueChange = { viewModel.name.value = it },
                         label = { Text("Event Name") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        shape = RoundedCornerShape(60.dp)
+                        shape = RoundedCornerShape(60.dp),
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color(0xFFB98231),
+                            unfocusedBorderColor = Color(0xFFB98231),
+                            cursorColor = Color(0xFFB98231)
+                        )
                     )
 
                     //Text("New List", modifier = Modifier.padding(16.dp))
@@ -147,7 +154,12 @@ fun EventCreation(navController: NavController,viewModel: EventViewModel = hiltV
                         onValueChange = { viewModel.details.value = it },
                         label = { Text("Event Description") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        shape = RoundedCornerShape(60.dp)
+                        shape = RoundedCornerShape(60.dp),
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color(0xFFB98231),
+                            unfocusedBorderColor = Color(0xFFB98231),
+                            cursorColor = Color(0xFFB98231)
+                        )
                     )
 
                     Box(modifier = Modifier) {
@@ -173,7 +185,10 @@ fun EventCreation(navController: NavController,viewModel: EventViewModel = hiltV
                 },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(20.dp)
+                    .padding(20.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFB98231)
+                )
             ) {
                 Text("Add Event")
             }
@@ -260,6 +275,9 @@ fun DateTimePickerComponent(viewModel: EventViewModel) {
                 showDatePicker = true //changing the visibility state
             },
             modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFB98231)
+            )
         ) {
             Text(text = "Date Picker")
         }
@@ -274,6 +292,9 @@ fun DateTimePickerComponent(viewModel: EventViewModel) {
                 showTimePicker = true //changing the visibility state
             },
             modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFB98231)
+            )
         ) {
             Text(text = "Time Picker")
         }
