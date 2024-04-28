@@ -56,6 +56,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
 //import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -97,7 +98,7 @@ fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltVi
             //this is where the lists are displayed, it will either have a loading progress indicator,
             //display that o lists were fetched, or display the lists
             if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally).testTag("progress"))
             } else if (listsState.isEmpty()) {
                 Text("No lists available", modifier = Modifier.align(Alignment.CenterHorizontally))
             } else {

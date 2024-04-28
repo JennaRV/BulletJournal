@@ -59,6 +59,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -149,6 +150,7 @@ fun SingleComponent() {
             contentAlignment = Alignment.Center
         ) {
             IconButton(
+
                 onClick = {
                     scope.launch {
                         pagerState.animateScrollToPage(
@@ -157,7 +159,7 @@ fun SingleComponent() {
                     }
 
                 },
-                modifier = Modifier.align(Alignment.CenterStart)
+                modifier = Modifier.align(Alignment.CenterStart).testTag("left")
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
@@ -174,7 +176,7 @@ fun SingleComponent() {
                         )
                     }
                 },
-                modifier = Modifier.align(Alignment.CenterEnd)
+                modifier = Modifier.align(Alignment.CenterEnd).testTag("right")
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -230,6 +232,7 @@ fun ListScreen(viewModel: ListsViewModel = hiltViewModel()) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .align(Alignment.CenterHorizontally)
+                            .testTag("progress")
                     )
                 } else if (listsState.isEmpty()) {
                     Text(
@@ -265,6 +268,7 @@ fun JournalScreen(viewModel: JournalEntryViewModel = hiltViewModel()) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .align(Alignment.CenterHorizontally)
+                            .testTag("progress")
                     )
                 } else if (entriesState.isEmpty()) {
                     Text(
@@ -278,7 +282,7 @@ fun JournalScreen(viewModel: JournalEntryViewModel = hiltViewModel()) {
                 else {
                     // Display the first entry only if it hasn't been displayed before
                     Text(text = "${entriesState.first().created_at?.date}",fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Text(text = "Journal: ${entriesState.first().content}", maxLines = 10)
+                    Text(text = "Journal: ${entriesState.first().content}", maxLines = 10,modifier = Modifier.testTag("journal"))
                 }
             }
 
@@ -315,7 +319,7 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel()) {
             }
             items(eventState) { events ->
                 Text(text = "${events.date_time.date}",fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                Text(text = "Events: ${events.name}")
+                Text(text = "Events: ${events.name}",modifier = Modifier.testTag("event"))
                 Text(text = "-=================================-")
             }
 

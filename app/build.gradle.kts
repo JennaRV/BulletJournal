@@ -100,6 +100,7 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.1.0-alpha03")
     testImplementation("org.mockito:mockito-core:3.12.4")
+    androidTestImplementation("org.mockito:mockito-android:3.12.4")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.6")
 
 

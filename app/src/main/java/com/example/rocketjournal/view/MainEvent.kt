@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -124,7 +125,7 @@ fun MainEvent(navController: NavController, viewModel: EventViewModel = hiltView
 
 //            BottomNavigationBar(navController = navController)
             if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally).testTag("progress"))
             } else if (eventState.isEmpty()) {
                 Text("No Events available", modifier = Modifier.align(Alignment.CenterHorizontally))
             } else {
