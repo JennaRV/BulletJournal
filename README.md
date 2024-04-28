@@ -43,5 +43,5 @@ A mobile app that allows users to digitally plan and journal. Includes a calenda
 - Supabase
 
 # Licensing
-
+- MIT License
 
