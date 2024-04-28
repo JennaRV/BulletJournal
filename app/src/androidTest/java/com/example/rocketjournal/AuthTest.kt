@@ -1,4 +1,5 @@
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
@@ -58,6 +59,26 @@ class AuthTest {
         composeTestRule.onNodeWithText("Sign Up").performClick()
         Thread.sleep(2000)
 
+    }
+    @Test
+    fun logOutTest(){
+        composeTestRule.onNodeWithText("Login").performClick()
+        composeTestRule.onNodeWithText("Log In").assertExists()
+        Thread.sleep(2000)
+        composeTestRule.onNodeWithText("Email").assertExists()
+        composeTestRule.onNodeWithText("Email").performTextInput("test@ggc.edu")
+        Thread.sleep(2000)
+        composeTestRule.onNodeWithText("Password").assertExists()
+        composeTestRule.onNodeWithText("Password").performTextInput("123456!")
+        Thread.sleep(2000)
+        composeTestRule.onNodeWithText("Log In").performClick()
+        Thread.sleep(2000)
+        composeTestRule.onNodeWithText("Welcome!").assertExists()
+        Thread.sleep(2000)
+        composeTestRule.onNodeWithContentDescription("menu").assertExists()
+        composeTestRule.onNodeWithContentDescription("menu").performClick()
+        composeTestRule.onNodeWithContentDescription("Logout").assertExists()
+        composeTestRule.onNodeWithContentDescription("Logout").performClick()
     }
 
 }

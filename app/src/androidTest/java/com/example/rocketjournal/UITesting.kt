@@ -58,12 +58,17 @@ class UITesting {
             composeTestRule.onNodeWithTag("progress").isNotDisplayed()
 
         }
+        composeTestRule.onNodeWithTag("journalColumn").assertExists()
         composeTestRule.onNodeWithContentDescription("list").performClick()
         composeTestRule.waitUntil {
             // Wait until the LinearProgressIndicator is present
             composeTestRule.onNodeWithTag("progress").isNotDisplayed()
 
         }
+        composeTestRule.onNodeWithTag("listColumn").assertExists()
+        composeTestRule.onNodeWithContentDescription("calendar").performClick()
+        composeTestRule.onNodeWithText("Add Journal Entry").assertExists()
+        composeTestRule.onNodeWithText("1").performClick()
         composeTestRule.onNodeWithContentDescription("calendar").performClick()
         composeTestRule.onNodeWithText("Weekly").performClick()
         composeTestRule.onNodeWithContentDescription("event").performClick()
@@ -72,6 +77,7 @@ class UITesting {
             composeTestRule.onNodeWithTag("progress").isNotDisplayed()
 
         }
+        composeTestRule.onNodeWithTag("eventColumn").assertExists()
 
     }
 

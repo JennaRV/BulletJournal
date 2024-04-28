@@ -129,7 +129,7 @@ fun MainEvent(navController: NavController, viewModel: EventViewModel = hiltView
             } else if (eventState.isEmpty()) {
                 Text("No Events available", modifier = Modifier.align(Alignment.CenterHorizontally))
             } else {
-                LazyColumn (modifier = Modifier .size(boxWidth, 450.dp)){
+                LazyColumn (modifier = Modifier .size(boxWidth, 450.dp).testTag("eventColumn")){
                     items(eventState) { event ->
                         EventDataItemView(
                             event = event,

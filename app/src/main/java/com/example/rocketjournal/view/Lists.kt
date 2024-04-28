@@ -102,7 +102,7 @@ fun ListsScreen(navController: NavController, viewModel: ListsViewModel = hiltVi
             } else if (listsState.isEmpty()) {
                 Text("No lists available", modifier = Modifier.align(Alignment.CenterHorizontally))
             } else {
-                LazyColumn (modifier = Modifier .size(boxWidth, 450.dp)){
+                LazyColumn (modifier = Modifier .size(boxWidth, 450.dp).testTag("listColumn")){
                     items(listsState) { list ->
                         ListDataItemView(
                             list = list,

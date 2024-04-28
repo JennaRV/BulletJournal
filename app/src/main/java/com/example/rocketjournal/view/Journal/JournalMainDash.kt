@@ -113,7 +113,7 @@ fun JournalMainDash(navController: NavController, viewModel: JournalEntryViewMod
 
             //PlaceholderEntry()
 
-            LazyColumn (modifier = Modifier .size(boxWidth, 450.dp)){
+            LazyColumn (modifier = Modifier .size(boxWidth, 450.dp).testTag("journalColumn")){
                 item {
                     if (isLoading) {
                         CircularProgressIndicator(
